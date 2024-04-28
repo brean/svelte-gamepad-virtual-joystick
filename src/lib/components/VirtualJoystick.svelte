@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { fly, fade } from 'svelte/transition';
   import { angle, distance, clamp, findCoord } from "$lib/utils.js";
-  import { cubicOut } from 'svelte/easing';
+  import { gamepad_listener } from "$lib/store/gamepad_listener.js";
+  import { onMount } from "svelte";
 
   export let touchOnly=false; // only accept touch-events, no joystick
   export let gamepadOnly=false; // only gamepad, no touch
-  export let axis=0; //the axis we listen on from the real joystick
+  export let xaxes=0; //the axis we listen on from the real joystick
+  export let yaxes=1; //the axis we listen on from the real joystick
   export let gamepadIndex=-1; //-1 means we accept all gamepads
   export let size = 100;
   export let backgroundWidth = 200;
   export let backgroundHeight = 200;
+  export let deadzoneX = 0.05;
+  export let deadzoneY = 0.05;
   export let color = 'rgb(106, 191, 163)'; // default color for the joystick, ABISKO_GREEN
   export let background = 'rgb(215, 219, 221)' // default color for the background, MOON_GREY
   export let defaultOpacity: number = 0.5;
@@ -46,11 +49,19 @@
     let dist = clamp(raw_dist, radius);
     let coords = findCoord(dist, a);
     // normalize corrds
-    position = [coords[0] / radius, -coords[1] / radius]
+    let xcoord = coords[0] / radius
+    let ycoord = coords[1] / radius
+    if (Math.abs(xcoord) < deadzoneX && 
+        Math.abs(ycoord) < deadzoneY) {
+      position = [0, 0]
+      return;
+    }
+    position = [xcoord, ycoord]
   }
 
-  function update() {
-    // translate position values to 
+  export function update(pos: [x: number, y: number]) {
+    // get position values from gamepad
+    position = pos;
   }
 
   function reset() {
@@ -58,6 +69,29 @@
     opacity = defaultOpacity;
     position = [0, 0]
   }
+
+  function gamepad_update(gamepad: Gamepad) {
+    if (pointerActive) {
+      return;
+    }
+    if (gamepadIndex === -1 || gamepad.index === gamepadIndex) {
+      let xcoord = gamepad.axes[xaxes];
+      let ycoord = gamepad.axes[yaxes];
+      if (Math.abs(xcoord) < deadzoneX && 
+          Math.abs(ycoord) < deadzoneY) {
+        position = [0, 0]
+        return;
+      }
+      position = [xcoord, ycoord];
+    }
+  }
+
+  onMount(() => {
+    if (touchOnly) {
+      return;
+    }
+    $gamepad_listener = [...$gamepad_listener, gamepad_update];
+  });
 </script>
 
 <svelte:window on:pointerup={reset} />
@@ -66,7 +100,9 @@
     style:background-color={background}
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}
-    on:pointerdown={() => {pointerActive = true}}
+    on:pointerdown={(e) => {
+      pointerActive = true;
+      onpointermove(e)}}
     on:pointermove={onpointermove}
   >
   <div class="joystick_container"
@@ -82,7 +118,7 @@
     ></div>
     <div class="joystick_front"
       style:left={position[0] * radius + 'px'}
-      style:top={-position[1] * radius + 'px'}
+      style:top={position[1] * radius + 'px'}
       style:border={border > 0 ? border + 'px solid ' + borderColor : 0}
       style:transition={'none'}
       style:width={(radius) + 'px'}
