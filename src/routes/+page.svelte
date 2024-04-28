@@ -1,8 +1,20 @@
 <script lang="ts">
-  import Gamepad from "$lib/components/Gamepad.svelte";
+  import GamepadControl from "$lib/components/GamepadControl.svelte";
+  import VirtualJoystick from "$lib/components/VirtualJoystick.svelte";
   import { gamepad } from "$lib/store/gamepad.js";
   
 </script>
 Connected gamepads: {$gamepad.length}
 
-<Gamepad />
+<!-- GamepadControl should be unique in your page. -->
+<GamepadControl />
+<VirtualJoystick
+  background="black"
+  size={120}
+  axis={0}
+/>
+
+<VirtualJoystick
+  color={"red"}
+  axis={1}
+/>

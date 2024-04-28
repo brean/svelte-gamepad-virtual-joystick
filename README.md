@@ -21,7 +21,7 @@ If you like to extend the development take a look at the [Svelte complex input e
 ## Sources
 based code from
  - https://github.com/arturcarvalho/svelte-gamepad/ (I first thought to just use it and updated to use vite and integrate more complex button/axis handling but I also wanted to support more than 4 gamepads, have a virtual joystick and keyboard controls so this became its own thing instead of just a fork)
- - nipple.js (nipple.js itself is not mobile compatible because it direct accesses window)
+ - nipple.js (nipple.js itself is not svelte compatible because it directly accesses `window`)
 
 
 ## License
