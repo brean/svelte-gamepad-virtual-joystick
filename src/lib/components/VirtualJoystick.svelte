@@ -24,8 +24,7 @@
   let position: [x: number, y: number] = [0, 0];
   let opacity = defaultOpacity;
 
-  // TODO: control by gamepad
-  // TODO: fade in/out animation
+  // TODO: fade in/out animation (?)
   // TODO: alternative icons/images
 
   function onpointermove(evt) {

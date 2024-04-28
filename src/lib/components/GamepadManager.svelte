@@ -35,8 +35,8 @@
       }
     }
   }
-  // TODO: update on requestAnimationFrame or interval
-  // TODO: mapping
+
+  // TODO: touchpad-mapping
 
   function updateAnimationFrame() {
     updateGamepadValues();
