@@ -11,7 +11,7 @@ Connected gamepads: {$gamepad.length}
 <VirtualJoystick
   background="black"
   size={120}
-  axis={0}
+  axis={-1}
 />
 
 <VirtualJoystick
