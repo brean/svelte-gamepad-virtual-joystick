@@ -20,12 +20,10 @@
   export let border: number = 1;
   export let borderColor: string = 'black'
   const radius = size/2;
-  let pointerActive: boolean = false
+  let pointerActive: boolean = false;
+  // position is the relative position of the pad on the stick, between -1 and 1.
   let position: [x: number, y: number] = [0, 0];
   let opacity = defaultOpacity;
-
-  // TODO: fade in/out animation (?)
-  // TODO: alternative icons/images
 
   function onpointermove(evt) {
     if (gamepadOnly || !pointerActive) {
@@ -59,7 +57,10 @@
   }
 
   export function update(pos: [x: number, y: number]) {
-    // get position values from gamepad
+    // get position values from another external source.
+    // make sure x and y are valid in your own code.
+    // take a look at the onpointermove-function on how
+    // to clamp and validate your coordinates.
     position = pos;
   }
 
