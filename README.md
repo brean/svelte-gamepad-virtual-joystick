@@ -16,7 +16,9 @@ This library ~~can~~ (_should in the future be able to_) be installed with npm:
 ```
 npm i -D svelte-gamepad-virtual-joystick
 ```
-If you like to extend the development take a look at the ~~[Svelte complex input example](../../../svelte-complex-input-example)-app~~ (_this app does not exist yet, look at the +page.svelte-file for now_) how to use the development build in your project.
+
+## Usage
+For usage examples take a look at the ~~[Svelte complex input example](../../../svelte-complex-input-example)-app~~ (_this app does not exist yet, look at the +page.svelte-file for now_) how to use the development build in your project.
 
 ## Sources
 based on code from
