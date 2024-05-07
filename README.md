@@ -12,7 +12,7 @@ See the [Svelte complex input example](../../../svelte-complex-input-example)-ap
 This library is used to reimagine the control of robotic systems but can also be useful in web game development prototyping.
 
 ## Installation
-This library ~~can~~ (_should in the future be able to_) be installed with npm:
+This library can be installed using npm:
 ```
 npm i -D svelte-gamepad-virtual-joystick
 ```
