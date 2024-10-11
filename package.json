@@ -25,20 +25,20 @@
 		"!dist/**/*.spec.*"
 	],
 	"peerDependencies": {
-		"svelte": "^4.0.0"
+		"svelte": "^4.2.19"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
-		"@sveltejs/package": "^2.0.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"publint": "^0.1.9",
-		"sass": "^1.75.0",
-		"svelte": "^4.2.7",
-		"svelte-check": "^3.6.0",
-		"tslib": "^2.4.1",
-		"typescript": "^5.0.0",
-		"vite": "^5.0.11"
+		"@sveltejs/adapter-auto": "^3.2.5",
+		"@sveltejs/kit": "^2.3.5",
+		"@sveltejs/package": "^2.3.5",
+		"@sveltejs/vite-plugin-svelte": "^3.1.2",
+		"publint": "^0.2.11",
+		"sass": "^1.79.4",
+		"svelte": "^4.2.19",
+		"svelte-check": "^4.0.4",
+		"tslib": "^2.7.0",
+		"typescript": "^5.6.3",
+		"vite": "^5.4.8"
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
