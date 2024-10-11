@@ -22,11 +22,21 @@
   const radius = size/2;
   let pointerActive: boolean = false;
   // position is the relative position of the pad on the stick, between -1 and 1.
-  let position: [x: number, y: number] = [0, 0];
+  export let position: [x: number, y: number] = [0, 0];
   let opacity = defaultOpacity;
 
-  function onpointermove(evt) {
-    if (gamepadOnly || !pointerActive) {
+  function ontouchmove(evt: TouchEvent) {
+    if (gamepadOnly || !pointerActive|| !evt.target || evt.touches.length == 0) {
+      return
+    }
+    opacity = activeOpacity;
+    const rect = evt.target.getBoundingClientRect();
+    const mouseX = evt.touches[0].clientX - rect.x;
+    const mouseY = evt.touches[0].clientY - rect.y;
+  }
+
+  function onpointermove(evt: MouseEvent) {
+    if (gamepadOnly || !pointerActive || !evt.target) {
       return
     }
     opacity = activeOpacity;
@@ -34,10 +44,14 @@
     const mouseX = evt.x - rect.x;
     const mouseY = evt.y - rect.y;
 
+    setPosition(mouseX, mouseY)
+  }
+
+  function setPosition(posx: number, posy: number) {
     // get relative position or the pointer from the 
     // center of the joystick area
-    let x = (mouseX - (backgroundWidth / 2));
-    let y = (mouseY - (backgroundHeight / 2));
+    let x = (posx - (backgroundWidth / 2));
+    let y = (posy - (backgroundHeight / 2));
     
     // distance of touched point from the center
     const raw_dist = distance(x, y)
@@ -100,10 +114,12 @@
     style:background-color={background}
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}
-    on:pointerdown={(e) => {
+    on:pointerdown|capture|stopPropagation|nonpassive={(e) => {
       pointerActive = true;
       onpointermove(e)}}
-    on:pointermove={onpointermove}
+    on:pointermove|capture|stopPropagation={onpointermove}
+    on:touchstart|nonpassive|capture|stopPropagation|preventDefault={(e) => {}}
+    on:touchmove|nonpassive|capture|stopPropagation|preventDefault={ontouchmove}
   >
   <div class="joystick_container"
     style:left={((backgroundWidth - size) / 2) + 'px'}
@@ -132,8 +148,21 @@
 </div>
 
 <style>
+:global(html), :global(body) {
+    touch-action: none; /* This prevents pull-to-refresh */
+    overflow: hidden;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
+
+  #joystick_area {
+    touch-action: none;
+  }
+
   .joystick_container {
     position: relative;
+    touch-action: none;
   }
 
   .joystick_back {
@@ -143,6 +172,7 @@
     margin-left: 0px;
     margin-top: 0px;
     border-radius: 50%;
+    touch-action: none;
   }
 
   .joystick_front {
@@ -150,6 +180,7 @@
     position: absolute;
     display: block;
     border-radius: 50%;
+    touch-action: none;
     
   }
 </style>

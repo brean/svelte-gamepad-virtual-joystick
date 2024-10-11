@@ -26,5 +26,8 @@ based on code from
  - nipple.js (nipple.js itself is not svelte compatible because it directly accesses `window`)
 
 
+## Deploy to NPM
+TODO!
+
 ## License
 BSD-3
