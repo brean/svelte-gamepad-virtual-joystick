@@ -1,6 +1,8 @@
 {
 	"name": "svelte-gamepad-virtual-joystick",
-	"version": "0.0.3",
+	"author": "Andreas Bresser <self@andreasbresser.de>",
+	"license": "BSD-3-Clause",
+	"version": "0.0.4",
 	"publishConfig": {
 		"access": "public"
 	},
