@@ -2,12 +2,24 @@
   import { angle, distance, clamp, findCoord } from "$lib/utils.js";
   import { gamepad_listener } from "$lib/store/gamepad_listener.js";
   import { onMount } from "svelte";
+  import type VirtualJoystickInput from "$lib/models/VirtualJoystickInput.js";
+  import { virtual_joystick_inputs } from "$lib/store/virtual_joystick_inputs.js";
 
-  export let touchOnly=false; // only accept touch-events, no joystick
-  export let gamepadOnly=false; // only gamepad, no touch
-  export let xaxes=0; //the axis we listen on from the real joystick
-  export let yaxes=1; //the axis we listen on from the real joystick
-  export let gamepadIndex=-1; //-1 means we accept all gamepads
+  // TODO: get input_mapping from store/add defaults, add register function
+  // match data from config file with VirtualJoysticks
+  export let input_mapping:VirtualJoystickInput = {
+    gamepad: -1,
+    axes_x: 0,
+    axes_y: 1,
+    key_x: 'w',
+    key_y: 's',
+    keyboard: true,
+    touch: true,
+    mouse: true,
+    invert_x: false,
+    invert_y: false
+  };
+  $virtual_joystick_inputs.push(input_mapping);
   export let size = 100;
   export let backgroundWidth = 200;
   export let backgroundHeight = 200;
@@ -26,7 +38,7 @@
   let opacity = defaultOpacity;
 
   function ontouchmove(evt: TouchEvent) {
-    if (gamepadOnly || !pointerActive|| !evt.target || evt.touches.length == 0) {
+    if (!input_mapping.gamepad || !pointerActive|| !evt.target || evt.touches.length == 0) {
       return
     }
     opacity = activeOpacity;
@@ -36,7 +48,7 @@
   }
 
   function onpointermove(evt: MouseEvent) {
-    if (gamepadOnly || !pointerActive || !evt.target) {
+    if (!input_mapping.gamepad || !pointerActive || !evt.target) {
       return
     }
     opacity = activeOpacity;
@@ -88,9 +100,15 @@
     if (pointerActive) {
       return;
     }
-    if (gamepadIndex === -1 || gamepad.index === gamepadIndex) {
-      let xcoord = gamepad.axes[xaxes];
-      let ycoord = gamepad.axes[yaxes];
+    if (input_mapping.gamepad === -1 || gamepad.index === input_mapping.gamepad) {
+      let xcoord = gamepad.axes[input_mapping.axes_x];
+      let ycoord = gamepad.axes[input_mapping.axes_y];
+      if (input_mapping.invert_x) {
+        xcoord = -xcoord;
+      }
+      if (input_mapping.invert_y) {
+        ycoord = -ycoord;
+      }
       if (Math.abs(xcoord) < deadzoneX && 
           Math.abs(ycoord) < deadzoneY) {
         position = [0, 0]
@@ -101,7 +119,7 @@
   }
 
   onMount(() => {
-    if (touchOnly) {
+    if (!input_mapping.gamepad) {
       return;
     }
     $gamepad_listener = [...$gamepad_listener, gamepad_update];
