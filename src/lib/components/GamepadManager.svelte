@@ -12,13 +12,11 @@
   let navigator: any;
 
   function gamePadConnected(evt: any) {
-    console.log(evt);
     navigator = evt.target.navigator;
     $gamepad = [...$gamepad, evt.gamepad];
   }
 
   function gamePadDisconnected(evt: any) {
-    console.log(evt)
     gamepad.update(items => items.filter(item => item.id != evt.gamepad.id));
   }
 

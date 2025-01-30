@@ -1,8 +1,10 @@
 <script lang="ts">
   import GamepadManager from "$lib/components/GamepadManager.svelte";
+  import KeyboardManager from "$lib/components/KeyboardManager.svelte";
   import VirtualButton from "$lib/components/VirtualButton.svelte";
   import VirtualJoystick from "$lib/components/VirtualJoystick.svelte";
   import { gamepad } from "$lib/store/gamepad.js";
+  import { virtual_button_inputs } from "$lib/store/virtual_button_inputs.js";
   import { virtual_joystick_inputs } from "$lib/store/virtual_joystick_inputs.js";
   
   let position_first: [x: number, y: number] = [0, 0];
@@ -31,9 +33,9 @@ Connected gamepads: {$gamepad.length}
 </table>
 
 
-<!-- GamepadManager should be unique in your page. -->
-
+<!-- GamepadManager and KeyboardManager should be unique in your page. -->
 <GamepadManager />
+<KeyboardManager />
 
 <VirtualJoystick
   background="black"
@@ -71,8 +73,10 @@ Key Mapping joystick inputs
         (-1=all, -2&lt;=disabled)</td>
       <td>Gamepad X</td>
       <td>Gamepad Y</td>
-      <td>Keyboard X</td>
-      <td>Keyboard Y</td>
+      <td>Key X Positive</td>
+      <td>Key X Negative</td>
+      <td>Key Y Positive</td>
+      <td>Key Y Negative</td>
       <td>Invert X</td>
       <td>Invert Y</td>
     </tr>
@@ -83,8 +87,10 @@ Key Mapping joystick inputs
         </td>
       <td><input bind:value={vs.axes_x} type="number" /></td>
       <td><input bind:value={vs.axes_y} type="number" /></td>
-      <td><input bind:value={vs.key_x} /></td>
-      <td><input bind:value={vs.key_y} /></td>
+      <td><input bind:value={vs.key_x_pos} /></td>
+      <td><input bind:value={vs.key_x_neg} /></td>
+      <td><input bind:value={vs.key_y_pos} /></td>
+      <td><input bind:value={vs.key_y_neg} /></td>
       <td><input type="checkbox" bind:checked={vs.invert_x} /></td>
       <td><input type="checkbox" bind:checked={vs.invert_y} /></td>
     </tr>
@@ -92,6 +98,34 @@ Key Mapping joystick inputs
   </tbody>
 </table>
 <br />
-TODO: Key Mapping button inputs
+Buttons:<br />
+<table>
+  <tbody>
+    <tr>
+      <td>gamepad</td>
+      <td>gamepad button</td>
+      <td>key</td>
+    </tr>
+    {#each $virtual_button_inputs as vb}
+    <tr>
+      <td>
+        <input bind:value={vb.gamepad} type="number" />
+      </td>
+      <td>
+        {#each vb.gamepad_buttons as btn}
+          <input bind:value={btn} type="number" />
+        {/each}
+        <button>+</button>
+      </td>
+      <td>
+        {#each vb.keyboard_keys as key}
+          <input bind:value={key} type="text" />
+        {/each}
+        <button>+</button>
+      </td>
+    </tr>
+    {/each}
+  </tbody>
+</table>
 <br /><br />
 <button on:click={requestFullScreen}>Fullscreen</button>
