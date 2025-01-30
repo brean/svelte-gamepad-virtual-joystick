@@ -4,13 +4,13 @@
   import { keyboard_listener } from "$lib/store/keyboard_listener.js";
   import { virtual_button_inputs } from "$lib/store/virtual_button_inputs.js";
   import { onMount } from "svelte";
-  let { children, color, button, key, pressed = false } = $props();
+  let { children, color, pressed = false } = $props();
   let gamepadActive = true;
 
   let input_mapping:VirtualButtonInput = {
     gamepad: -1,
     gamepad_buttons: [0],
-    keyboard_keys: ['q'],
+    keyboard_keys: ['e', ' '],
   }
   $virtual_button_inputs.push(input_mapping);
 

@@ -13,7 +13,33 @@
   function requestFullScreen() {
     document.getElementById("main").requestFullscreen()
   }
+
+  // Nav based on https://www.w3schools.com/howto/howto_js_sidenav.asp 
+  function openNav() {
+    document.getElementById("sidenav").style.width = "250px";
+  }
+
+  /* Set the width of the side navigation to 0 */
+  function closeNav() {
+    document.getElementById("sidenav").style.width = "0";
+  } 
 </script>
+
+<div id="sidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn">&times;</a>
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+</div>
+
+<!-- TODO: press event -->
+<VirtualButton
+  color={"grey"}
+>
+  Side Menu
+</VirtualButton><br />
+
 Connected gamepads: {$gamepad.length}
 <table>
   <tbody>
@@ -54,8 +80,6 @@ x: {position_second[0]} y: {position_second[1]}
 <br /><br />
 <VirtualButton
   color={"yellow"}
-  button={"a"}
-  key={"q"}
 >
   PRESS ME!
 </VirtualButton>
@@ -64,19 +88,18 @@ x: {position_second[0]} y: {position_second[1]}
 <br />
 Configuration
 <br />
-Key Mapping joystick inputs
+Key Mapping joystick inputs (gamepad -1=all, -2&lt;=disabled)
 <br />
 <table>
   <tbody>
     <tr>
-      <td>Joystick<br />
-        (-1=all, -2&lt;=disabled)</td>
-      <td>Gamepad X</td>
-      <td>Gamepad Y</td>
-      <td>Key X Positive</td>
-      <td>Key X Negative</td>
-      <td>Key Y Positive</td>
-      <td>Key Y Negative</td>
+      <td>Gamepad</td>
+      <td>Pad X</td>
+      <td>Pad Y</td>
+      <td>Key X Pos</td>
+      <td>Key X Neg</td>
+      <td>Key Y Pos</td>
+      <td>Key Y Neg</td>
       <td>Invert X</td>
       <td>Invert Y</td>
     </tr>
@@ -84,7 +107,7 @@ Key Mapping joystick inputs
     <tr>
       <td>
         <input bind:value={vs.gamepad} type="number" />
-        </td>
+      </td>
       <td><input bind:value={vs.axes_x} type="number" /></td>
       <td><input bind:value={vs.axes_y} type="number" /></td>
       <td><input bind:value={vs.key_x_pos} /></td>
@@ -103,8 +126,10 @@ Buttons:<br />
   <tbody>
     <tr>
       <td>gamepad</td>
-      <td>gamepad button</td>
+      <td>Pad button</td>
+      <td></td>
       <td>key</td>
+      <td></td>
     </tr>
     {#each $virtual_button_inputs as vb}
     <tr>
@@ -113,14 +138,16 @@ Buttons:<br />
       </td>
       <td>
         {#each vb.gamepad_buttons as btn}
-          <input bind:value={btn} type="number" />
+          <input bind:value={btn} type="number" /><br />
         {/each}
+      </td><td>
         <button>+</button>
       </td>
       <td>
         {#each vb.keyboard_keys as key}
-          <input bind:value={key} type="text" />
+          <input bind:value={key} type="text" /><br />
         {/each}
+      </td><td>
         <button>+</button>
       </td>
     </tr>
@@ -129,3 +156,59 @@ Buttons:<br />
 </table>
 <br /><br />
 <button on:click={requestFullScreen}>Fullscreen</button>
+
+<style>
+  input {
+    max-width: 80px;
+  }
+  
+  /* sidenav based on https://www.w3schools.com/howto/howto_js_sidenav.asp */
+  .sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>

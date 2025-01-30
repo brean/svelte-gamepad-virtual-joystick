@@ -20,7 +20,7 @@
     invert_y: false
   };
   $virtual_joystick_inputs.push(input_mapping);
-  
+
   // if the user uses a touch, mouse or keyboard input device
   // we disable the gamepad
   let gamepadActive = true;
@@ -205,14 +205,14 @@
     <div class="joystick_front"
       style:left={position[0] * radius + 'px'}
       style:top={position[1] * radius + 'px'}
-      style:border={border > 0 ? border + 'px solid ' + borderColor : 0}
+      style:margin-top={(radius / 2) + 'px'}
+      style:margin-left={(radius / 2) + 'px'}
       style:transition={'none'}
       style:width={(radius) + 'px'}
       style:height={(radius) + 'px'}
-      style:margin-top={(radius / 2) + 'px'}
-      style:margin-left={(radius / 2) + 'px'}
       style:background={color}
       style:opacity={opacity}
+      style:border={border > 0 ? border + 'px solid ' + borderColor : 0}
     ></div>
   </div>
 </div>
