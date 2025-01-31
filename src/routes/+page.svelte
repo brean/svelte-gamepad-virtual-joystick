@@ -13,7 +13,7 @@
   let navopen: boolean = false
 
   function requestFullScreen() {
-    document.getElementById("main").requestFullscreen()
+    (document.getElementById("main") as any).requestFullscreen()
   }
 
   function toggleNav() {

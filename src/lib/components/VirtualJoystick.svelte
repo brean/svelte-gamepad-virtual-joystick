@@ -5,7 +5,20 @@
   import type VirtualJoystickInput from "$lib/models/VirtualJoystickInput.js";
   import { virtual_joystick_inputs } from "$lib/store/virtual_joystick_inputs.js";
   import { keyboard_listener } from "$lib/store/keyboard_listener.js";
-  import { preventDefault } from "svelte/legacy";
+
+  interface Props {
+    name?: string,
+    size?: number,
+    backgroundWidth?: number,
+    backgroundHeight?: number,
+    color?: string,
+    background?: string,
+    defaultOpacity?: number,
+    activeOpacity?: number,
+    border?: number,
+    borderColor?: string
+    position?: [x: number, y: number]
+  }
 
   let {
     name = 'Virtual Joystick',
@@ -20,19 +33,7 @@
     borderColor = 'black',
     // position is the relative position of the pad on the stick, between -1 and 1.
     position = $bindable<[x: number, y: number]>([0, 0])
-  }: {
-    name: string,
-    size: number,
-    backgroundWidth: number,
-    backgroundHeight: number,
-    color: string,
-    background: string,
-    defaultOpacity: number,
-    activeOpacity: number,
-    border: number,
-    borderColor: string
-    position: [x: number, y: number]
-  } = $props();
+  }: Props = $props();
 
   const radius = size/2;
   let pointerActive: boolean = false;
@@ -64,7 +65,7 @@
       return
     }
     gamepadActive = false;
-    const rect = evt.target.getBoundingClientRect();
+    const rect = (evt.target as any).getBoundingClientRect();
     const mouseX = evt.x - rect.x;
     const mouseY = evt.y - rect.y;
     setPosition(mouseX, mouseY);

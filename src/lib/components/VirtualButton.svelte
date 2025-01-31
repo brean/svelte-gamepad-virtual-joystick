@@ -5,6 +5,15 @@
   import { virtual_button_inputs } from "$lib/store/virtual_button_inputs.js";
   import { onMount, type Snippet } from "svelte";
 
+  interface Props {
+    children: Snippet,
+    name?: string,
+    color?: string,
+    onpress?: (() => void),
+    onhold?: (() => void),
+    pressed?: boolean
+  }
+
   let {
     children,
     name = 'Virtual Button',
@@ -12,14 +21,7 @@
     onpress = undefined,  // only once when the pressed-state changes
     onhold = undefined,   // every event while the button is pressed
     pressed = $bindable<boolean>(false)
-  }: {
-    children: Snippet,
-    name: string,
-    color: string,
-    onpress: (() => {}) | undefined,
-    onhold: (() => {}) | undefined,
-    pressed: boolean
-  } = $props();
+  }: Props = $props();
   let gamepadActive = true;
   // track if gamepad-button is down to prevent calling onpress multiple times
   let gamepadDown: boolean = false

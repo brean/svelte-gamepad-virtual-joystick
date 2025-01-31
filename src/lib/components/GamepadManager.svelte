@@ -3,17 +3,19 @@
   import { gamepad_listener } from "$lib/store/gamepad_listener.js";
   import { onMount } from "svelte";
 
+  interface Props {
+    updateUsingAnimationFrame?: boolean,
+    updateUsingInterval?: boolean,
+    timeout?: number
+  }
+
   // if you use another external animation frame update function
   // you can call .updateGamepadValues directly.
   let {
     updateUsingAnimationFrame = false,
     updateUsingInterval = true,
     timeout = 1000.0 / 25.0  // 25 fps = 40 ms.
-  }: {
-    updateUsingAnimationFrame: boolean,
-    updateUsingInterval: boolean,
-    timeout: number
-  } = $props();
+  }: Props = $props();
 
   let navigator: any;
 
