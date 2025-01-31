@@ -5,10 +5,10 @@ Svelte library for complex input to your app, provides Gamepad integration with 
 
 The virtual Joystick can either be used as fallback when a real gamepad is not connected but a touchscreen is present, as indicator of the gamepad state or to provide a virtual joystick to the user.
 
-~~Also allows keyboard inputs as fallback.~~
-
 ## Examples
-See the [Svelte complex input example](../../../svelte-complex-input-example)-app for usage examples.
+See the [+page.svelte](https://github.com/brean/svelte-gamepad-virtual-joystick/blob/main/src/routes/%2Bpage.svelte) file.
+
+~~See the [Svelte complex input example](../../../svelte-complex-input-example)-app for usage examples.~~
 
 ## Application
 This library is used to reimagine the control of robotic systems but can also be useful in web game development prototyping.
@@ -18,9 +18,6 @@ This library can be installed using npm:
 ```
 npm i -D svelte-gamepad-virtual-joystick
 ```
-
-## Usage
-For usage examples take a look at the ~~[Svelte complex input example](../../../svelte-complex-input-example)-app~~ (_this app does not exist yet, look at the +page.svelte-file for now_) how to use the development build in your project.
 
 ## Sources
 based on code from
