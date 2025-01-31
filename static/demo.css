@@ -1,0 +1,131 @@
+/* custom buttons */
+.vbutton {
+  border: 3px solid gray;
+  border-radius: 100px;
+  width: 100px;
+  height: 100px;
+}
+
+.vbutton.button_clicked {
+  border: 6px solid red;
+}
+
+/* Side nav  */
+/* Sidenav based on https://www.w3schools.com/howto/howto_js_sidenav.asp */
+.sidenav {
+  font-family: sans-serif;
+  height: 100%; /* 100% Full-height */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a,.sidenav li {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+ul {
+  list-style-type: none;
+}
+
+/* property for the animation of the gradient border background of the selected list item */
+@property --bg-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: "<angle>";
+}
+
+@keyframes spin {
+  to {
+    --bg-angle: 360deg;
+  }
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover,.sidenav li:hover {
+  color: #f1f1f1;
+}
+
+li {
+  border: 3px solid transparent;
+}
+
+li:hover {
+  animation: spin 2.5s infinite linear paused;
+  
+  background:
+    linear-gradient(
+        to bottom,
+        oklch(0.1 0.2 240 / 0.95),
+        oklch(0.1 0.2 240 / 0.95)
+      )
+      padding-box, /* ends at inner border edges */
+    conic-gradient(
+        from var(--bg-angle) in oklch longer hue,
+        oklch(0.85 0.37 0) 0 0
+      )
+      border-box; /* extends to outer border edges */
+  
+  /* a clear border lets the background gradient shine through */
+  border: 3px solid transparent;
+
+  animation-play-state: running;
+}
+
+li.selected:hover {
+  animation: spin 2.5s infinite linear paused;
+  color: black;
+  background:
+    linear-gradient(
+        to bottom,
+        yellow,
+        yellow
+      )
+      padding-box, /* ends at inner border edges */
+    conic-gradient(
+        from var(--bg-angle) in oklch longer hue,
+        oklch(0.85 0.37 0) 0 0
+      )
+      border-box; /* extends to outer border edges */
+  
+  /* a clear border lets the background gradient shine through */
+  border: 3px solid transparent;
+
+  animation-play-state: running;
+}
+
+li.selected {
+  background-color: yellow;
+  border-color: red;
+}
+
+li {
+  border-radius: 1rem;
+  color: white;
+  padding: 1rem;
+}

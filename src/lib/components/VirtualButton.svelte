@@ -8,19 +8,21 @@
   interface Props {
     children: Snippet,
     name?: string,
-    color?: string,
     onpress?: (() => void),
     onhold?: (() => void),
-    pressed?: boolean
+    pressed?: boolean,
+    style?: string,
+    cssclass?: string
   }
 
   let {
     children,
     name = 'Virtual Button',
-    color = 'light-gray',
     onpress = undefined,  // only once when the pressed-state changes
     onhold = undefined,   // every event while the button is pressed
-    pressed = $bindable<boolean>(false)
+    pressed = $bindable<boolean>(false),
+    style = '',
+    cssclass = 'vbutton'
   }: Props = $props();
   let gamepadActive = true;
   // track if gamepad-button is down to prevent calling onpress multiple times
@@ -81,8 +83,8 @@
 </script>
 
 <button
-    style:background-color={color}
-    class={pressed ? 'button_clicked' : ''}
+    {style}
+    class={pressed ? `${cssclass} button_clicked` : cssclass}
     onpointerdown={() => {
       pressed = true;
       gamepadActive = false;
@@ -96,16 +98,3 @@
     }}>
   {@render children()}
 </button>
-
-<style>
-  button {
-    border: 3px solid gray;
-    border-radius: 100px;
-    width: 100px;
-    height: 100px;
-  }
-
-  .button_clicked {
-    border: 6px solid red;
-  }
-</style>

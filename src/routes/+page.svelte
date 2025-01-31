@@ -3,6 +3,7 @@
   import KeyboardManager from "$lib/components/KeyboardManager.svelte";
   import VirtualButton from "$lib/components/VirtualButton.svelte";
   import VirtualJoystick from "$lib/components/VirtualJoystick.svelte";
+  import VirtualList from "$lib/components/VirtualList.svelte";
   import { gamepad } from "$lib/store/gamepad.js";
   import { virtual_button_inputs } from "$lib/store/virtual_button_inputs.js";
   import { virtual_joystick_inputs } from "$lib/store/virtual_joystick_inputs.js";
@@ -24,13 +25,16 @@
 
 <div id="sidenav" class="sidenav" style:width={sideNavWidth}>
   <a href="javascript:void(0)" class="closebtn" onclick={toggleNav}>&times;</a>
-  <a href="#">About</a>
-  <a href="#">Settings</a>
+  <VirtualList>
+    <li>Something</li>
+    <li>Settings</li>
+    <li>Something else</li>
+  </VirtualList>
 </div>
 
 <!-- TODO: press event -->
 <VirtualButton
-  color="grey"
+  style="backtround-color: blue"
   name="Nav Button"
   bind:pressed={navopen}
   onpress={toggleNav}
@@ -62,7 +66,8 @@ Connected gamepads: {$gamepad.length}
 <KeyboardManager />
 
 <VirtualJoystick
-  background="black"
+  name="first"
+  style="background-color: black"
   size={120}
   bind:position={position_first}
 /><br />
@@ -70,6 +75,7 @@ x: {position_first[0]} y: {position_first[1]}
 <br />
 
 <VirtualJoystick
+  name="second"
   color={"red"}
   bind:position={position_second}
 /><br />
@@ -77,7 +83,7 @@ x: {position_second[0]} y: {position_second[1]}
 
 <br /><br />
 <VirtualButton
-  color={"yellow"}
+  style="background-color: yellow"
 >
   PRESS ME!
 </VirtualButton>
@@ -160,49 +166,9 @@ Buttons:<br />
 <button onclick={requestFullScreen}>Fullscreen</button>
 
 <style>
+
   input {
     max-width: 80px;
   }
-  
-  /* sidenav based on https://www.w3schools.com/howto/howto_js_sidenav.asp */
-  .sidenav {
-    height: 100%; /* 100% Full-height */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
-    left: 0;
-    background-color: #111;
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
-  }
 
-  /* The navigation menu links */
-  .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-  }
-
-  /* When you mouse over the navigation links, change their color */
-  .sidenav a:hover {
-    color: #f1f1f1;
-  }
-
-  /* Position and style the close button (top right corner) */
-  .sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-  }
-
-  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-  @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-  }
 </style>

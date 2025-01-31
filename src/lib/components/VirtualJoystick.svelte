@@ -12,12 +12,12 @@
     backgroundWidth?: number,
     backgroundHeight?: number,
     color?: string,
-    background?: string,
     defaultOpacity?: number,
     activeOpacity?: number,
     border?: number,
     borderColor?: string
     position?: [x: number, y: number]
+    style?: string
   }
 
   let {
@@ -26,13 +26,13 @@
     backgroundWidth = 200,
     backgroundHeight = 200,
     color = 'rgb(106, 191, 163)', // default color for the joystick, ABISKO_GREEN
-    background = 'rgb(215, 219, 221)', // default color for the background, MOON_GREY
     defaultOpacity = 0.5,
     activeOpacity = 0.8,
     border = 1,
     borderColor = 'black',
     // position is the relative position of the pad on the stick, between -1 and 1.
-    position = $bindable<[x: number, y: number]>([0, 0])
+    position = $bindable<[x: number, y: number]>([0, 0]),
+    style = 'background-color: rgb(215, 219, 221);' // MOON_GRAY
   }: Props = $props();
 
   const radius = size/2;
@@ -182,7 +182,7 @@
 <svelte:window on:pointerup={reset} />
 
 <div id="joystick_area"
-    style:background-color={background}
+    {style}
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}
     onpointerdown={(e) => {
