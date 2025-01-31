@@ -5,10 +5,41 @@
   import type VirtualJoystickInput from "$lib/models/VirtualJoystickInput.js";
   import { virtual_joystick_inputs } from "$lib/store/virtual_joystick_inputs.js";
   import { keyboard_listener } from "$lib/store/keyboard_listener.js";
+  import { preventDefault } from "svelte/legacy";
 
+  let {
+    name = 'Virtual Joystick',
+    size = 100,
+    backgroundWidth = 200,
+    backgroundHeight = 200,
+    color = 'rgb(106, 191, 163)', // default color for the joystick, ABISKO_GREEN
+    background = 'rgb(215, 219, 221)', // default color for the background, MOON_GREY
+    defaultOpacity = 0.5,
+    activeOpacity = 0.8,
+    border = 1,
+    borderColor = 'black',
+    // position is the relative position of the pad on the stick, between -1 and 1.
+    position = $bindable<[x: number, y: number]>([0, 0])
+  }: {
+    name: string,
+    size: number,
+    backgroundWidth: number,
+    backgroundHeight: number,
+    color: string,
+    background: string,
+    defaultOpacity: number,
+    activeOpacity: number,
+    border: number,
+    borderColor: string
+    position: [x: number, y: number]
+  } = $props();
+
+  const radius = size/2;
+  let pointerActive: boolean = false;
   // TODO: get input_mapping from store/add defaults, add register function
   // match data from config file with VirtualJoysticks
   let input_mapping:VirtualJoystickInput = {
+    name,
     gamepad: -1,
     axes_x: 0,
     axes_y: 1,
@@ -16,6 +47,8 @@
     key_x_neg: 'a',
     key_y_pos: 's',
     key_y_neg: 'w',
+    deadzoneX: 0.05,
+    deadzoneY: 0.05,
     invert_x: false,
     invert_y: false
   };
@@ -24,34 +57,7 @@
   // if the user uses a touch, mouse or keyboard input device
   // we disable the gamepad
   let gamepadActive = true;
-
-  export let size = 100;
-  export let backgroundWidth = 200;
-  export let backgroundHeight = 200;
-  export let deadzoneX = 0.05;
-  export let deadzoneY = 0.05;
-  export let color = 'rgb(106, 191, 163)'; // default color for the joystick, ABISKO_GREEN
-  export let background = 'rgb(215, 219, 221)' // default color for the background, MOON_GREY
-  export let defaultOpacity: number = 0.5;
-  export let activeOpacity: number = 0.8;
-  export let border: number = 1;
-  export let borderColor: string = 'black'
-  const radius = size/2;
-  let pointerActive: boolean = false;
-  // position is the relative position of the pad on the stick, between -1 and 1.
-  export let position: [x: number, y: number] = [0, 0];
-  let opacity = defaultOpacity;
-
-  function ontouchmove(evt: TouchEvent) {
-    if (!input_mapping.gamepad || !pointerActive|| !evt.target || evt.touches.length == 0) {
-      return
-    }
-    gamepadActive = false;
-    const rect = evt.target.getBoundingClientRect();
-    const mouseX = evt.touches[0].clientX - rect.x;
-    const mouseY = evt.touches[0].clientY - rect.y;
-    setPosition(mouseX, mouseY);
-  }
+  let opacity = $state(defaultOpacity);
 
   function onpointermove(evt: MouseEvent) {
     if (!input_mapping.gamepad || !pointerActive || !evt.target) {
@@ -79,8 +85,8 @@
     // normalize corrds
     let xcoord = coords[0] / radius
     let ycoord = coords[1] / radius
-    if (Math.abs(xcoord) < deadzoneX && 
-        Math.abs(ycoord) < deadzoneY) {
+    if (Math.abs(xcoord) < input_mapping.deadzoneX && 
+        Math.abs(ycoord) < input_mapping.deadzoneY) {
       position = [0, 0];
       opacity = defaultOpacity;
       return;
@@ -116,8 +122,8 @@
       if (input_mapping.invert_y) {
         ycoord = -ycoord;
       }
-      if (Math.abs(xcoord) < deadzoneX && 
-          Math.abs(ycoord) < deadzoneY) {
+      if (Math.abs(xcoord) < input_mapping.deadzoneX && 
+          Math.abs(ycoord) < input_mapping.deadzoneY) {
         opacity = defaultOpacity;
         position = [0, 0]
         return;
@@ -178,16 +184,17 @@
     style:background-color={background}
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}
-    on:pointerdown|capture|stopPropagation|nonpassive={(e) => {
+    onpointerdown={(e) => {
+      // |capture|stopPropagation|nonpassive
+      e.stopImmediatePropagation();
       pointerActive = true;
       onpointermove(e)}}
-    on:pointerup={(e) => {
+    onpointerup={(e) => {
       gamepadActive = true;
     }}
-    on:pointermove|capture|stopPropagation={onpointermove}
-    on:touchstart|nonpassive|capture|stopPropagation|preventDefault={(e) => {}}
-    on:touchmove|nonpassive|capture|stopPropagation|preventDefault={ontouchmove}
-    on:touchend={(e) => {
+    onpointermove={onpointermove}
+    ontouchstart={() => {}}
+    ontouchend={() => {
       gamepadActive = true;
     }}
     >
@@ -218,9 +225,9 @@
 </div>
 
 <style>
-:global(html), :global(body) {
+  :global(html), :global(body) {
     touch-action: none; /* This prevents pull-to-refresh */
-}
+  }
 
   #joystick_area {
     touch-action: none;

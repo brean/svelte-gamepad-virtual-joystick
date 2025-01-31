@@ -3,11 +3,29 @@
   import { gamepad_listener } from "$lib/store/gamepad_listener.js";
   import { keyboard_listener } from "$lib/store/keyboard_listener.js";
   import { virtual_button_inputs } from "$lib/store/virtual_button_inputs.js";
-  import { onMount } from "svelte";
-  let { children, color, pressed = false } = $props();
+  import { onMount, type Snippet } from "svelte";
+
+  let {
+    children,
+    name = 'Virtual Button',
+    color = 'light-gray',
+    onpress = undefined,  // only once when the pressed-state changes
+    onhold = undefined,   // every event while the button is pressed
+    pressed = $bindable<boolean>(false)
+  }: {
+    children: Snippet,
+    name: string,
+    color: string,
+    onpress: (() => {}) | undefined,
+    onhold: (() => {}) | undefined,
+    pressed: boolean
+  } = $props();
   let gamepadActive = true;
+  // track if gamepad-button is down to prevent calling onpress multiple times
+  let gamepadDown: boolean = false
 
   let input_mapping:VirtualButtonInput = {
+    name,
     gamepad: -1,
     gamepad_buttons: [0],
     keyboard_keys: ['e', ' '],
@@ -18,6 +36,14 @@
     if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
       pressed = event.type === 'keydown';
       gamepadActive = event.type === 'keyup';
+      if (pressed) {
+        if (onhold) {
+          onhold();
+        }
+        if (onpress && !event.repeat) {
+          onpress();
+        }
+      }
     }
   }
 
@@ -31,8 +57,19 @@
       }
       const btn = gamepad.buttons[btnIdx]
       pressed = btn.pressed;
+      if (!pressed) {
+        gamepadDown = false;
+      }
+      if (pressed) {
+        if (onhold) {
+          onhold();
+        }
+        if (onpress && !gamepadDown) {
+          onpress();
+        }
+        gamepadDown = true        
+      }
     }
-    
   }
 
   onMount(() => {
@@ -44,11 +81,14 @@
 <button
     style:background-color={color}
     class={pressed ? 'button_clicked' : ''}
-    onmousedown={() => {
+    onpointerdown={() => {
       pressed = true;
       gamepadActive = false;
+      if (onpress) {
+        onpress();
+      }
     }}
-    onmouseup={() => {
+    onpointerup={() => {
       pressed = false;
       gamepadActive = true;
     }}>

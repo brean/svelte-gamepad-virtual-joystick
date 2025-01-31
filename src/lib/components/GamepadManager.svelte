@@ -5,9 +5,15 @@
 
   // if you use another external animation frame update function
   // you can call .updateGamepadValues directly.
-  export let updateUsingAnimationFrame = false;
-  export let updateUsingInterval = true;
-  export let timeout = 1000.0 / 25.0; // 25 fps = 40 ms.
+  let {
+    updateUsingAnimationFrame = false,
+    updateUsingInterval = true,
+    timeout = 1000.0 / 25.0  // 25 fps = 40 ms.
+  }: {
+    updateUsingAnimationFrame: boolean,
+    updateUsingInterval: boolean,
+    timeout: number
+  } = $props();
 
   let navigator: any;
 
@@ -27,6 +33,9 @@
     }
     // Chrome only updates the gamepad state when we call getGamepads
     for (let pad of navigator.getGamepads()) {
+      if (!pad) {
+        continue;
+      }
       for (let listener of $gamepad_listener) {
         listener(pad);
       }
@@ -49,6 +58,6 @@
 </script>
 
 <svelte:window
-  on:gamepadconnected={gamePadConnected}
-  on:gamepaddisconnected={gamePadDisconnected}
+  ongamepadconnected={gamePadConnected}
+  ongamepaddisconnected={gamePadDisconnected}
 />

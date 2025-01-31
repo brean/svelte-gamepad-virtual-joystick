@@ -9,5 +9,5 @@
 </script>
 
 <svelte:window
-    on:keydown={on_key}
-    on:keyup={on_key} />
+    onkeydown={on_key}
+    onkeyup={on_key} />
