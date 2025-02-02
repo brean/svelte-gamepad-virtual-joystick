@@ -75,36 +75,14 @@ li {
   border: 3px solid transparent;
 }
 
-li:hover {
+li.hovering {
   animation: spin 2.5s infinite linear paused;
   
   background:
     linear-gradient(
         to bottom,
-        oklch(0.1 0.2 240 / 0.95),
-        oklch(0.1 0.2 240 / 0.95)
-      )
-      padding-box, /* ends at inner border edges */
-    conic-gradient(
-        from var(--bg-angle) in oklch longer hue,
-        oklch(0.85 0.37 0) 0 0
-      )
-      border-box; /* extends to outer border edges */
-  
-  /* a clear border lets the background gradient shine through */
-  border: 3px solid transparent;
-
-  animation-play-state: running;
-}
-
-li.selected:hover {
-  animation: spin 2.5s infinite linear paused;
-  color: black;
-  background:
-    linear-gradient(
-        to bottom,
-        yellow,
-        yellow
+        black,
+        black
       )
       padding-box, /* ends at inner border edges */
     conic-gradient(
@@ -120,12 +98,20 @@ li.selected:hover {
 }
 
 li.selected {
-  background-color: yellow;
-  border-color: red;
+  color: white;
+  /* outline: 2px dashed yellow; */
+  outline: 2px dashed red;
+  outline-offset: -6px;
 }
 
 li {
   border-radius: 1rem;
   color: white;
   padding: 1rem;
+}
+
+main {
+  position: absolute;
+  transition: margin-left .5s;
+  padding: 20px;
 }
