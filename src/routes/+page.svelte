@@ -5,7 +5,6 @@
   import VirtualButton from "$lib/components/VirtualButton.svelte";
   import VirtualJoystick from "$lib/components/VirtualJoystick.svelte";
   import VirtualList from "$lib/components/VirtualList.svelte";
-  import { gamepad } from "$lib/store/gamepad.js";
   
   let position_first: [x: number, y: number] = $state([0, 0]);
   let position_second: [x: number, y: number] = $state([0, 0]);
@@ -66,8 +65,7 @@
 
 <main style:margin-left={sideNavWidth} style:min-width={'500px'}>
 <VirtualButton
-  disabled={navOpen}
-  onrelease={showNav}
+  onpress={showNav}
   input_mapping={{
     name: 'Side Nav',
     gamepad: -1,
@@ -91,26 +89,6 @@
 x: {position_first[0]}<br />
 y: {position_first[1]}
 <br />
-
-<div style:border={'2px solid red'}>
-Connected gamepads: {$gamepad.length}
-<table>
-  <tbody>
-    {#each $gamepad as gp}
-      <tr>
-        <td>Name</td>
-        <td>Buttons</td>
-        <td>Axes</td>
-      </tr>
-      <tr>
-        <td>{gp.id}</td>
-        <td>{gp.buttons.length}</td>
-        <td>{gp.axes.length}</td>
-      </tr>
-    {/each}
-  </tbody>
-</table>
-</div>
 
 <div style="position: absolute; top: 30px; right: 30px;">
   <VirtualJoystick
@@ -149,6 +127,19 @@ Connected gamepads: {$gamepad.length}
   }}
 >
   PRESS CIRCLE OR "R"!
+</VirtualButton>
+
+<VirtualButton
+  style="background-color: azure;"
+  disabled={navOpen}
+  input_mapping={{
+    name: 'azure button',
+    gamepad: -1,
+    gamepad_buttons: [3],
+    keyboard_keys: ['x']
+  }}
+>
+  PRESS TRIANGLE OR "X"!
 </VirtualButton>
 <br /><br />
 <hr />

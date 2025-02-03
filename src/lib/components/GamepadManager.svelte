@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { gamepad } from "$lib/store/gamepad.js";
   import { gamepad_listener } from "$lib/store/gamepad_listener.js";
   import { onMount } from "svelte";
 
@@ -21,11 +20,6 @@
 
   function gamePadConnected(evt: any) {
     navigator = evt.target.navigator;
-    $gamepad = [...$gamepad, evt.gamepad];
-  }
-
-  function gamePadDisconnected(evt: any) {
-    gamepad.update(items => items.filter(item => item.id != evt.gamepad.id));
   }
 
   export function updateGamepadValues() {
@@ -61,5 +55,4 @@
 
 <svelte:window
   ongamepadconnected={gamePadConnected}
-  ongamepaddisconnected={gamePadDisconnected}
 />
