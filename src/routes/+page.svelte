@@ -12,6 +12,7 @@
   let sideNavWidth = $state<string>('0');
   let navOpen = $state<boolean>(false);
   let navEnable = $state<boolean>(false);
+  let showConfig = $state<boolean>(false);
   const listItems = [
     'Main',
     'Second',
@@ -43,13 +44,20 @@
     navOpen = true;
     navEnable = false;
   }
+
+  function listItemPressed(item: string) {
+    if (item === 'Settings') {
+      showConfig = true;
+    }
+    hideNav();
+  }
 </script>
 
 <div id="sidenav" class="sidenav" style:width={sideNavWidth}>
   <button class="closebtn" onclick={toggleNav}>&times;</button>
   <VirtualList
     oncancel={hideNav}
-    onpress={toggleNav}
+    onpress={listItemPressed}
     items={listItems}
     wrap={false}
     disabled={navEnable}>
@@ -145,7 +153,7 @@ Connected gamepads: {$gamepad.length}
 <br /><br />
 <hr />
 <button onclick={requestFullScreen}>Fullscreen</button>
-<!-- TODO: Dialog menu
-<Configuration></Configuration>
--->
+
+<Configuration bind:display={showConfig}></Configuration>
+
 </main>
