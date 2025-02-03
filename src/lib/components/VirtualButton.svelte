@@ -7,38 +7,48 @@
 
   interface Props {
     children: Snippet,
+    disabled?: boolean
     name?: string,
     onpress?: (() => void),
     onhold?: (() => void),
+    onrelease?: (() => void),
     pressed?: boolean,
     style?: string,
-    cssclass?: string
+    cssclass?: string,
+    input_mapping?: VirtualButtonInput
   }
 
   let {
     children,
-    name = 'Virtual Button',
+    disabled = false,
     onpress = undefined,  // only once when the pressed-state changes
     onhold = undefined,   // every event while the button is pressed
-    pressed = $bindable<boolean>(false),
+    onrelease = undefined,
+    pressed = false,
     style = '',
-    cssclass = 'vbutton'
+    cssclass = 'vbutton',
+    input_mapping = {
+      name: '',
+      gamepad: -1,
+      gamepad_buttons: [0],
+      keyboard_keys: ['e', ' ']
+    }
   }: Props = $props();
   let gamepadActive = true;
   // track if gamepad-button is down to prevent calling onpress multiple times
   let gamepadDown: boolean = false
 
-  let input_mapping:VirtualButtonInput = {
-    name,
-    gamepad: -1,
-    gamepad_buttons: [0],
-    keyboard_keys: ['e', ' '],
-  }
   $virtual_button_inputs.push(input_mapping);
 
   function key_update(event: KeyboardEvent) {
+    if (disabled) {
+      return;
+    }
     if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
       pressed = event.type === 'keydown';
+      if (onrelease && event.type === 'keyup') {
+        onrelease()
+      }
       gamepadActive = event.type === 'keyup';
       if (pressed) {
         if (onhold) {
@@ -52,15 +62,18 @@
   }
 
   function gamepad_update(gamepad: Gamepad) {
-    if (!gamepadActive || input_mapping.gamepad !== -1 && gamepad.index !== input_mapping.gamepad) {
+    if (disabled || !gamepadActive || input_mapping.gamepad !== -1 && gamepad.index !== input_mapping.gamepad) {
       return;
     }
     for (const btnIdx of input_mapping.gamepad_buttons) {
       if (btnIdx > gamepad.buttons.length) {
         continue;
       }
-      const btn = gamepad.buttons[btnIdx]
+      const btn = gamepad.buttons[btnIdx];
       pressed = btn.pressed;
+      if (gamepadDown && pressed && onrelease) {
+        onrelease();
+      }
       if (!pressed) {
         gamepadDown = false;
       }
@@ -84,8 +97,11 @@
 
 <button
     {style}
-    class={pressed ? `${cssclass} button_clicked` : cssclass}
+    class={(pressed ? 'button_clicked ' : '') + cssclass}
     onpointerdown={() => {
+      if (disabled) {
+        return
+      }
       pressed = true;
       gamepadActive = false;
       if (onpress) {
@@ -93,8 +109,14 @@
       }
     }}
     onpointerup={() => {
+      if (disabled) {
+        return
+      }
       pressed = false;
       gamepadActive = true;
+      if (onrelease) {
+        onrelease();
+      }
     }}>
   {@render children()}
 </button>

@@ -25,20 +25,29 @@
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
+.sidenav ul {
+  padding-left: 20px;
+}
+
 /* The navigation menu links */
 .sidenav a,.sidenav li {
-  padding: 8px 8px 8px 32px;
+  padding: 8px;
   text-decoration: none;
   font-size: 25px;
   color: #818181;
   display: block;
+  max-width: 190px;
+  text-align: center;
 }
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
   position: absolute;
   top: 0;
-  right: 25px;
+  border: 0;
+  color: white;
+  background-color: transparent;
+  right: 20px;
   font-size: 36px;
   margin-left: 50px;
 }

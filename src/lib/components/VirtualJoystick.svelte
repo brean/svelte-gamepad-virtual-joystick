@@ -7,21 +7,22 @@
   import { keyboard_listener } from "$lib/store/keyboard_listener.js";
 
   interface Props {
-    name?: string,
-    size?: number,
-    backgroundWidth?: number,
-    backgroundHeight?: number,
-    color?: string,
-    defaultOpacity?: number,
-    activeOpacity?: number,
-    border?: number,
+    disabled?: boolean
+    size?: number
+    backgroundWidth?: number
+    backgroundHeight?: number
+    color?: string
+    defaultOpacity?: number
+    activeOpacity?: number
+    border?: number
     borderColor?: string
     position?: [x: number, y: number]
     style?: string
+    input_mapping?: VirtualJoystickInput
   }
 
   let {
-    name = 'Virtual Joystick',
+    disabled = false,
     size = 100,
     backgroundWidth = 200,
     backgroundHeight = 200,
@@ -32,27 +33,27 @@
     borderColor = 'black',
     // position is the relative position of the pad on the stick, between -1 and 1.
     position = $bindable<[x: number, y: number]>([0, 0]),
-    style = 'background-color: rgb(215, 219, 221);' // MOON_GRAY
+    style = 'background-color: rgb(215, 219, 221);', // MOON_GRAY
+    input_mapping = {
+      name: 'Virtual Joystick',
+      gamepad: -1,
+      axes_x: 0,
+      axes_y: 1,
+      key_x_pos: 'd',
+      key_x_neg: 'a',
+      key_y_pos: 's',
+      key_y_neg: 'w',
+      deadzoneX: 0.05,
+      deadzoneY: 0.05,
+      invert_x: false,
+      invert_y: false
+    }
   }: Props = $props();
 
   const radius = size/2;
   let pointerActive: boolean = false;
   // TODO: get input_mapping from store/add defaults, add register function
   // match data from config file with VirtualJoysticks
-  let input_mapping:VirtualJoystickInput = {
-    name,
-    gamepad: -1,
-    axes_x: 0,
-    axes_y: 1,
-    key_x_pos: 'd',
-    key_x_neg: 'a',
-    key_y_pos: 's',
-    key_y_neg: 'w',
-    deadzoneX: 0.05,
-    deadzoneY: 0.05,
-    invert_x: false,
-    invert_y: false
-  };
   $virtual_joystick_inputs.push(input_mapping);
 
   // if the user uses a touch, mouse or keyboard input device
@@ -61,7 +62,7 @@
   let opacity = $state(defaultOpacity);
 
   function onpointermove(evt: MouseEvent) {
-    if (!input_mapping.gamepad || !pointerActive || !evt.target) {
+    if (disabled || !input_mapping.gamepad || !pointerActive || !evt.target) {
       return
     }
     gamepadActive = false;
@@ -111,7 +112,7 @@
   }
 
   function gamepad_update(gamepad: Gamepad) {
-    if (pointerActive || !gamepadActive) {
+    if (disabled || pointerActive || !gamepadActive) {
       return;
     }
     if (input_mapping.gamepad === -1 || gamepad.index === input_mapping.gamepad) {
@@ -136,6 +137,9 @@
 
   function key_update(event: KeyboardEvent) {
     let down = false;
+    if (disabled) {
+      return
+    }
     if (input_mapping.key_x_pos == event.key) {
       if (event.type == 'keydown') {
         down = true;
@@ -186,16 +190,25 @@
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}
     onpointerdown={(e) => {
+      if (disabled) {
+        return
+      }
       // |capture|stopPropagation|nonpassive
       e.stopImmediatePropagation();
       pointerActive = true;
       onpointermove(e)}}
     onpointerup={(e) => {
+      if (disabled) {
+        return
+      }
       gamepadActive = true;
     }}
     onpointermove={onpointermove}
     ontouchstart={() => {}}
     ontouchend={() => {
+      if (disabled) {
+        return
+      }
       gamepadActive = true;
     }}
     >
