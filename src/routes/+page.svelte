@@ -158,8 +158,18 @@ y: {position_first[1]}
 <button onclick={requestFullScreen}>Fullscreen</button>
 <div id="nav_modal" class="modal" style:display={showConfig ? 'block' : 'none'}>
   <div class="modal-content">
-    <button onclick={() => {
-      showConfig=false}}>close</button>
+    <VirtualButton
+      input_mapping={{
+        name: 'cancel settings',
+        gamepad: -1,
+        gamepad_buttons: [1],
+        keyboard_keys: ['Escape', 'q']
+      }}
+      onpressed={() => {
+        showConfig=false
+        return true;}}>
+      cancel
+    </VirtualButton>
     <br />
     <Configuration></Configuration>
   </div>

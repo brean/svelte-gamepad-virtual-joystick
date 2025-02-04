@@ -1,11 +1,10 @@
 <script lang="ts">
   import { virtual_inputs } from "$lib/store/virtual_input.svelte.js";
 </script>
-Configuration
+<h2>Configuration</h2>
 
 Key Mapping joystick inputs (gamepad -1=all, -2&lt;=disabled)
 <br />
-{virtual_inputs.joysticks.length}
 <table>
   <tbody>
     <tr>
