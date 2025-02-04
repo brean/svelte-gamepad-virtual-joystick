@@ -84,7 +84,6 @@
       }
       if (oncancel &&
           input_mapping.keyboard_cancel_keys.indexOf(event.key) > -1) {
-        console.log('disable pressed')
         oncancel();
         // cancel is exclusive, prevent other components from accessing this button
         return true;

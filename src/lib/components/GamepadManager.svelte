@@ -53,7 +53,6 @@
         if (buttons[i] && !pad.buttons[i].pressed) {
           buttons[i] = false;
           onbuttonrelease.forEach((func) => func(pad, i));
-          // console.log("released " + pad.index + " " + i)
         }
       }
       onupdate.forEach((func) => func(pad));
