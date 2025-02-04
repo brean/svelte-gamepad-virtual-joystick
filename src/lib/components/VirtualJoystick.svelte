@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
+  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/store/gamepad_callbacks.svelte.js';
+
   import { angle, distance, clamp, findCoord } from "$lib/utils.js";
-  import { gamepad_listener } from "$lib/store/gamepad_listener.js";
   import { onMount } from "svelte";
   import type VirtualJoystickInput from "$lib/models/VirtualJoystickInput.js";
-  import { virtual_joystick_inputs } from "$lib/store/virtual_joystick_inputs.js";
-  import { keyboard_listener } from "$lib/store/keyboard_listener.js";
+  import { virtual_inputs } from "$lib/store/virtual_input.svelte.js";
 
   interface Props {
     disabled?: boolean
@@ -33,7 +34,7 @@
     borderColor = 'black',
     // position is the relative position of the pad on the stick, between -1 and 1.
     position = $bindable<[x: number, y: number]>([0, 0]),
-    style = 'background-color: rgb(215, 219, 221);', // MOON_GRAY
+    style = 'background-color: rgb(215, 219, 221);', /* MOON_GRAY */
     input_mapping = {
       name: 'Virtual Joystick',
       gamepad: -1,
@@ -50,19 +51,27 @@
     }
   }: Props = $props();
 
+  export function update(pos: [x: number, y: number]) {
+    // get position values from another external source.
+    // make sure x and y are valid in your own code.
+    // take a look at the onpointermove-function on how
+    // to clamp and validate your coordinates.
+    position = pos;
+  }
+
   const radius = size/2;
   let pointerActive: boolean = false;
-  // TODO: get input_mapping from store/add defaults, add register function
-  // match data from config file with VirtualJoysticks
-  $virtual_joystick_inputs.push(input_mapping);
-
+ 
   // if the user uses a touch, mouse or keyboard input device
   // we disable the gamepad
   let gamepadActive = true;
   let opacity = $state(defaultOpacity);
 
+  virtual_inputs.joysticks.push(input_mapping);
+  const _virtual_input = virtual_inputs.joysticks[virtual_inputs.joysticks.length - 1];
+
   function onpointermove(evt: MouseEvent) {
-    if (disabled || !input_mapping.gamepad || !pointerActive || !evt.target) {
+    if (disabled || !_virtual_input.gamepad || !pointerActive || !evt.target) {
       return
     }
     gamepadActive = false;
@@ -87,8 +96,8 @@
     // normalize corrds
     let xcoord = coords[0] / radius
     let ycoord = coords[1] / radius
-    if (Math.abs(xcoord) < input_mapping.deadzoneX && 
-        Math.abs(ycoord) < input_mapping.deadzoneY) {
+    if (Math.abs(xcoord) < _virtual_input.deadzoneX && 
+        Math.abs(ycoord) < _virtual_input.deadzoneY) {
       position = [0, 0];
       opacity = defaultOpacity;
       return;
@@ -97,90 +106,108 @@
     position = [xcoord, ycoord]
   }
 
-  export function update(pos: [x: number, y: number]) {
-    // get position values from another external source.
-    // make sure x and y are valid in your own code.
-    // take a look at the onpointermove-function on how
-    // to clamp and validate your coordinates.
-    position = pos;
-  }
-
   function reset() {
     pointerActive = false;
     opacity = defaultOpacity;
     position = [0, 0]
   }
 
-  function gamepad_update(gamepad: Gamepad) {
-    if (disabled || pointerActive || !gamepadActive) {
-      return;
-    }
-    if (input_mapping.gamepad === -1 || gamepad.index === input_mapping.gamepad) {
-      let xcoord = gamepad.axes[input_mapping.axes_x];
-      let ycoord = gamepad.axes[input_mapping.axes_y];
-      if (input_mapping.invert_x) {
-        xcoord = -xcoord;
-      }
-      if (input_mapping.invert_y) {
-        ycoord = -ycoord;
-      }
-      if (Math.abs(xcoord) < input_mapping.deadzoneX && 
-          Math.abs(ycoord) < input_mapping.deadzoneY) {
-        opacity = defaultOpacity;
-        position = [0, 0]
-        return;
-      }
-      opacity = activeOpacity;
-      position = [xcoord, ycoord];
-    }
-  }
-
-  function key_update(event: KeyboardEvent) {
-    let down = false;
+  const _custom_onhold = (event: KeyboardEvent) => {
+    // a keyboard button has been pressed
     if (disabled) {
       return
     }
-    if (input_mapping.key_x_pos == event.key) {
-      if (event.type == 'keydown') {
-        down = true;
-        position[0] = 1;
-      } else {
-        position[0] = 0;
-      }
+    let down = false;
+    if (_virtual_input.key_x_pos == event.key) {
+      position[0] = 1;
+      down = true;
     }
-    if (input_mapping.key_x_neg == event.key) {
-      if (event.type == 'keydown') {
-        down = true;
-        position[0] = -1;
-      } else {
-        position[0] = 0;
-      }
+    else if (_virtual_input.key_x_neg == event.key) {
+      position[0] = -1;
+      down = true;
     }
-    if (input_mapping.key_y_pos == event.key) {
-      if (event.type == 'keydown') {
-        down = true;
-        position[1] = 1;
-      } else {
-        position[1] = 0;
-      }
+    if (_virtual_input.key_y_pos == event.key) {
+      position[1] = 1;
+      down = true;
     }
-    if (input_mapping.key_y_neg == event.key) {
-      if (event.type == 'keydown') {
-        down = true;
-        position[1] = -1;
-      } else {
-        position[1] = 0;
-      }
+    else if (_virtual_input.key_y_neg == event.key) {
+      position[1] = -1;
+      down = true;
     }
-    gamepadActive = !down;
-    opacity = down ? activeOpacity : defaultOpacity;
+    if (!down) {
+      return
+    }
+    gamepadActive = false;
+    opacity = activeOpacity;
     position = position;
   }
 
+  const _custom_onrelease = (event: KeyboardEvent) => {
+    let down = false;
+    if (_virtual_input.key_x_pos == event.key || _virtual_input.key_x_neg == event.key) {
+      position[0] = 0;
+      down = true;
+    }
+    if (_virtual_input.key_y_pos == event.key || _virtual_input.key_y_neg == event.key) {
+      position[1] = 0;
+      down = true;
+    }
+    if (!down) {
+      return
+    }
+    gamepadActive = true;
+    opacity = defaultOpacity;
+    position = position;
+  }
+
+  function thisGamepad(gamepad: Gamepad): boolean {
+    return _virtual_input.gamepad === -1 ||
+      _virtual_input.gamepad === gamepad.index;
+  }
+
+  const _custom_onupdate = (gamepad: Gamepad) => {
+    if (disabled || !gamepadActive || !thisGamepad(gamepad)) {
+      return
+    }
+    let xcoord = gamepad.axes[_virtual_input.axes_x];
+    let ycoord = gamepad.axes[_virtual_input.axes_y];
+    if (_virtual_input.invert_x) {
+      xcoord = -xcoord;
+    }
+    if (_virtual_input.invert_y) {
+      ycoord = -ycoord;
+    }
+    if (Math.abs(xcoord) < _virtual_input.deadzoneX && 
+        Math.abs(ycoord) < _virtual_input.deadzoneY) {
+      opacity = defaultOpacity;
+      position = [0, 0]
+      return;
+    }
+    opacity = activeOpacity;
+    position = [xcoord, ycoord];
+  }
+
   onMount(() => {
-    $gamepad_listener = [...$gamepad_listener, gamepad_update];
-    $keyboard_listener = [...$keyboard_listener, key_update];
+    onkeyhold.push(_custom_onhold);
+    onkeyrelease.push(_custom_onrelease);
+    onupdate.push(_custom_onupdate);
+    return () => {
+      // cleanup on destroy
+      // keyboard
+      onkeyhold.splice(onkeyhold.indexOf(_custom_onhold), 1);
+      onkeyrelease.splice(onkeyrelease.indexOf(_custom_onrelease), 1);
+      onupdate.splice(onupdate.indexOf(_custom_onupdate), 1);
+      // unregister configuration
+      virtual_inputs.joysticks.splice(virtual_inputs.joysticks.indexOf(_virtual_input), 1);
+    }
   });
+
+  const activateGamepad = () => {
+    if (disabled) {
+        return
+      }
+      gamepadActive = true;
+  }
 </script>
 
 <svelte:window on:pointerup={reset} />
@@ -197,20 +224,12 @@
       e.stopImmediatePropagation();
       pointerActive = true;
       onpointermove(e)}}
-    onpointerup={(e) => {
-      if (disabled) {
-        return
-      }
-      gamepadActive = true;
-    }}
+    onpointerup={activateGamepad}
+    onpointerleave={activateGamepad}
     onpointermove={onpointermove}
     ontouchstart={() => {}}
-    ontouchend={() => {
-      if (disabled) {
-        return
-      }
-      gamepadActive = true;
-    }}
+    ontouchend={activateGamepad}
+    onpointerout={activateGamepad}
     >
   <div class="joystick_container"
     style:left={((backgroundWidth - size) / 2) + 'px'}

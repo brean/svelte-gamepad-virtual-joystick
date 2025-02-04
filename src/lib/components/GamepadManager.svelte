@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gamepad_listener } from "$lib/store/gamepad_listener.js";
+  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/store/gamepad_callbacks.svelte.js'
   import { onMount } from "svelte";
 
   interface Props {
@@ -16,7 +16,13 @@
     timeout = 1000.0 / 25.0  // 25 fps = 40 ms.
   }: Props = $props();
 
-  let navigator: any;
+  let buttons: {[button: string]: boolean} = {};
+
+  interface INavigator {
+    getGamepads: () => Gamepad[];
+  }
+
+  let navigator: INavigator;
 
   function gamePadConnected(evt: any) {
     navigator = evt.target.navigator;
@@ -32,9 +38,25 @@
       if (!pad) {
         continue;
       }
-      for (let listener of $gamepad_listener) {
-        listener(pad);
+      for (let i = 0; i < pad.buttons.length; i++) {
+        if (pad.buttons[i].pressed) {
+          onbuttonhold.forEach((func) => func(pad, i));
+          if (!buttons[i]) {
+            buttons[i] = true;
+            for (let cb of onbuttonpressed) {
+              if (cb(pad, i) === true) {
+                break;
+              }
+            };
+          }
+        }
+        if (buttons[i] && !pad.buttons[i].pressed) {
+          buttons[i] = false;
+          onbuttonrelease.forEach((func) => func(pad, i));
+          // console.log("released " + pad.index + " " + i)
+        }
       }
+      onupdate.forEach((func) => func(pad));
     }
   }
 

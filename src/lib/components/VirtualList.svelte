@@ -1,15 +1,14 @@
 <script lang="ts">
   import type VirtualListInput from "$lib/models/VirtualListInput.js";
-  import { gamepad_listener } from "$lib/store/gamepad_listener.js";
-  import { keyboard_listener } from "$lib/store/keyboard_listener.js";
-  import { virtual_list_inputs } from "$lib/store/virtual_list_inputs.js";
+  import { virtual_inputs } from "$lib/store/virtual_input.svelte.js";
   import { onMount } from "svelte";
-
+  import { onkeypressed, onkeyrelease } from '$lib/store/keyboard_callbacks.svelte.js'
+  import { onbuttonpressed, onbuttonrelease, onupdate } from '$lib/store/gamepad_callbacks.svelte.js';
 
   interface Props {
     items: string[]
-    onpress: (item: string, index: number) => void
-    oncancel: () => void
+    onpressed: (item: string, index: number) => void
+    oncancel?: () => void
     disabled?: boolean
     wrap?: boolean  // prev of first is last, next of last is first.
     style?: string
@@ -21,7 +20,7 @@
 
   let {
     items,
-    onpress,
+    onpressed,
     oncancel,
     disabled = false,
     wrap = true,
@@ -35,22 +34,21 @@
       gamepad_axes: [1],
       gamepad_axes_sens: 0.05, // sensitivity - at what value do we react to the axes movement?
       gamepad_buttons: [0],
-      gamepad_cancel_buttons: [1],
+      gamepad_cancel_buttons: [9],
       gamepad_prev_buttons: [12],  // up
       gamepad_next_buttons: [13],  // down
       keyboard_prev_keys: ['ArrowUp', 'w'],
       keyboard_next_keys: ['ArrowDown', 's'],
       keyboard_keys: ['e'],
-      keyboard_cancel_keys: ['Escape']
+      keyboard_cancel_keys: ['Escape', 'q']
     }
   }: Props = $props();
 
-  let btnDown = -1; // which button has been pressed - to prevent re-pressing
-  let axesDown = -1; // ...same for axes
-  let gamepadActive = true;
+  virtual_inputs.lists.push(input_mapping);
+  const _virtual_input = virtual_inputs.lists[virtual_inputs.lists.length - 1];
 
-  $virtual_list_inputs.push(input_mapping);
 
+  let axesDown = -1;
   let lstParent: HTMLElement;
 
   function classStr(index: number) {
@@ -64,83 +62,6 @@
     return clz
   }
 
-  function process_btn_press(btnIndex: number, press_cb: () => void): boolean {
-    if (btnDown == btnIndex) {
-      // button has already pressed before, ignored
-      return false;
-    }
-    press_cb();
-    btnDown = btnIndex;
-    return true;
-  }
-
-  function check_buttons(gamepad: Gamepad, buttons: number[], onpress: () => void): boolean {
-    for (const btnIdx of buttons) {
-      if (btnIdx > gamepad.buttons.length) {
-        continue;
-      }
-      if (gamepad.buttons[btnIdx].pressed) {
-        return process_btn_press(btnIdx, onpress);
-      }
-    }
-    return false
-  }
-
-  function gamepad_update(gamepad: Gamepad) {
-    if (disabled || !gamepadActive || input_mapping.gamepad !== -1 && gamepad.index !== input_mapping.gamepad) {
-      return;
-    }
-    // check if we need to reset the button/keyup-event;
-    if (btnDown > 0 && !gamepad.buttons[btnDown].pressed)  {
-      btnDown = -1;
-    }
-    if (check_buttons(
-      gamepad, input_mapping.gamepad_cancel_buttons, () => {
-        if (oncancel) {
-          oncancel();
-        }
-      })) {
-        // we return here to make sure we don't call the press-action
-        // if we call the cancel action, preventing an accept-cancel loop
-        return
-    };
-    check_buttons(
-      gamepad, input_mapping.gamepad_buttons, () => {
-        selected = hovering;
-        if (onpress) {
-          onpress(items[selected], selected);
-        }
-      })
-    check_buttons(
-      gamepad, input_mapping.gamepad_next_buttons, () => {
-        update_hovering(hovering + 1);
-      });
-    check_buttons(
-      gamepad, input_mapping.gamepad_prev_buttons, () => {
-        update_hovering(hovering - 1);
-      });
-    // check axis
-    for (const axesIdx of input_mapping.gamepad_axes) {
-      const value = gamepad.axes[axesIdx];
-      let sensitivity = input_mapping.gamepad_axes_sens;
-      if (value < -sensitivity && axesDown != axesIdx) {
-        update_hovering(hovering - 1);
-        axesDown = axesIdx;
-        btnDown = -1;
-        continue;
-      }
-      if (value > sensitivity && axesDown != axesIdx) {
-        update_hovering(hovering + 1);
-        axesDown = axesIdx;
-        btnDown = -1;
-        continue;
-      }
-      if (value < sensitivity && value > -sensitivity) {
-        axesDown = -1;
-      }
-    }
-  }
-
   function update_hovering(new_idx: number) {
     if (new_idx >= items.length) {
       new_idx = wrap ? 0 : items.length - 1;
@@ -151,43 +72,100 @@
     hovering = new_idx;
   }
 
-  function key_update(event: KeyboardEvent) {
-    if (disabled) {
-      return
-    }
-    if (input_mapping.keyboard_cancel_keys.indexOf(event.key) > -1) {
-      if (event.type === 'keyup') {
-        console.log('cancel')
+  function thisGamepad(gamepad: Gamepad): boolean {
+    return _virtual_input.gamepad === -1 ||
+      _virtual_input.gamepad === gamepad.index;
+  }
+
+  onMount(() => {
+    const _custom_onpressed = (event: KeyboardEvent) => {
+      if (disabled) {
+        return
+      }
+      if (oncancel &&
+          input_mapping.keyboard_cancel_keys.indexOf(event.key) > -1) {
+        console.log('disable pressed')
         oncancel();
-        return;
+        // cancel is exclusive, prevent other components from accessing this button
+        return true;
       }
-    }
-    if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
-      if (event.type === 'keyup') {
+      if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
         selected = hovering;
-        if (onpress) {
-          onpress(items[selected], selected);
-        }
+        onpressed(items[selected], selected);
         return;
       }
-    }
-    if (input_mapping.keyboard_next_keys.indexOf(event.key) > -1) {
-      if (event.type === 'keydown') {
+      if (input_mapping.keyboard_next_keys.indexOf(event.key) > -1) {
         update_hovering(hovering + 1);
         return;
       }
+      if (input_mapping.keyboard_prev_keys.indexOf(event.key) > -1) {
+        update_hovering(hovering - 1);
+      }
     }
-    if (input_mapping.keyboard_prev_keys.indexOf(event.key) > -1) {
-      if (event.type === 'keydown') {
+
+    const _custom_buttonpressed = (gamepad: Gamepad, button: number) => {
+      if (disabled || !thisGamepad(gamepad)) {
+        return
+      }
+      if (oncancel &&
+          input_mapping.gamepad_cancel_buttons.indexOf(button) > -1) {
+        oncancel();
+        // cancel is exclusive, prevent other components from accessing this button
+        return true;
+      }
+      if (input_mapping.gamepad_buttons.indexOf(button) > -1) {
+        selected = hovering;
+        onpressed(items[selected], selected);
+        return;
+      }
+      if (input_mapping.gamepad_next_buttons.indexOf(button) > -1) {
+        update_hovering(hovering + 1);
+        return;
+      }
+      if (input_mapping.gamepad_prev_buttons.indexOf(button) > -1) {
         update_hovering(hovering - 1);
         return;
       }
     }
-  }
 
-  onMount(() => {
-    $gamepad_listener = [...$gamepad_listener, gamepad_update];
-    $keyboard_listener = [...$keyboard_listener, key_update];
+    const _custom_gamepadupdate = (gamepad: Gamepad) => {
+      if (disabled || !thisGamepad(gamepad)) {
+        return
+      }
+      for (const axesIdx of input_mapping.gamepad_axes) {
+        const value = gamepad.axes[axesIdx];
+        let sensitivity = input_mapping.gamepad_axes_sens;
+        if (value < -sensitivity && axesDown != axesIdx) {
+          update_hovering(hovering - 1);
+          axesDown = axesIdx;
+          continue;
+        }
+        if (value > sensitivity && axesDown != axesIdx) {
+          update_hovering(hovering + 1);
+          axesDown = axesIdx;
+          continue;
+        }
+        if (value < sensitivity && value > -sensitivity) {
+          axesDown = -1;
+        }
+      }
+    }
+
+    // keyboard
+    onkeypressed.push(_custom_onpressed);
+    // gamepad
+    onbuttonpressed.push(_custom_buttonpressed);
+    onupdate.push(_custom_gamepadupdate);
+    return () => {
+      // cleanup on destroy
+      // keyboard
+      onkeypressed.splice(onkeypressed.indexOf(_custom_onpressed), 1);
+      // gamepad
+      onbuttonpressed.splice(onbuttonpressed.indexOf(_custom_buttonpressed), 1);
+      onupdate.splice(onupdate.indexOf(_custom_gamepadupdate), 1);
+      // unregister configuration
+      virtual_inputs.lists.splice(virtual_inputs.lists.indexOf(_virtual_input), 1);
+    }
   });
 </script>
 
@@ -200,8 +178,8 @@
           return
         }
         selected = index;
-        if(onpress) {
-          onpress(item, index);
+        if(onpressed) {
+          onpressed(item, index);
         }
       }}
       onpointerenter={() => {

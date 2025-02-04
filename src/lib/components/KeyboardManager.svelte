@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { onkeypress, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
+  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
 
   let keyDown: {[code: string]: boolean} = {}
 
   // press once (behaves different then "press" in Firefox which is called all the time while the button is pressed)
   let keypress = (event: KeyboardEvent) => {
-    onkeypress.forEach((cb) => {
-      cb(event);
-    })
+    for (let cb of onkeypressed) {
+      if (cb(event) === true) {
+        break;
+      }
+    };
   }
 
   // press and hold the key (repeats while the button is pressed)

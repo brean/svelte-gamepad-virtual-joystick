@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { onkeypress, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
+  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
+  import { onbuttonpressed, onbuttonrelease, onbuttonhold } from '$lib/store/gamepad_callbacks.svelte.js';
   import type VirtualButtonInput from "$lib/models/VirtualButtonInput.js";
-  import { gamepad_listener } from "$lib/store/gamepad_listener.js";
-  import { keyboard_listener } from "$lib/store/keyboard_listener.js";
-  import { virtual_button_inputs } from "$lib/store/virtual_button_inputs.js";
   import { onMount, type Snippet } from "svelte";
+  import { virtual_inputs } from '$lib/store/virtual_input.svelte.js';
 
   interface Props {
     children: Snippet,
     disabled?: boolean
-    name?: string,
-    onpress?: (() => void),
+    onpressed?: (() => void),
     onhold?: (() => void),
     onrelease?: (() => void),
     pressed?: boolean,
@@ -22,7 +20,7 @@
   let {
     children,
     disabled = false,
-    onpress = undefined,  // only once when the pressed-state changes
+    onpressed = undefined,  // only once when the pressed-state changes
     onhold = undefined,   // every event while the button is pressed
     onrelease = undefined,
     pressed = false,
@@ -35,48 +33,14 @@
       keyboard_keys: ['e', ' ']
     }
   }: Props = $props();
-  let gamepadActive = true;
-  // track if gamepad-button is down to prevent calling onpress multiple times
-  let gamepadDown: boolean = false
 
-  $virtual_button_inputs.push(input_mapping);
-
-  function gamepad_update(gamepad: Gamepad) {
-    if (disabled || !gamepadActive || input_mapping.gamepad !== -1 && gamepad.index !== input_mapping.gamepad) {
-      return;
-    }
-    for (const btnIdx of input_mapping.gamepad_buttons) {
-      if (btnIdx > gamepad.buttons.length) {
-        continue;
-      }
-      const btn = gamepad.buttons[btnIdx];
-      pressed = btn.pressed;
-      if (gamepadDown && pressed && onrelease) {
-        onrelease();
-      }
-      if (!pressed) {
-        gamepadDown = false;
-      }
-      if (pressed) {
-        if (onhold) {
-          onhold();
-        }
-        if (onpress && !gamepadDown) {
-          onpress();
-        }
-        gamepadDown = true        
-      }
-    }
-  }
-
-  const _onpress = () => {
+  const _onpressed = () => {
     if (disabled) {
       return;
     }
     pressed = true;
-    gamepadActive = false;
-    if (onpress) {
-      onpress();
+    if (onpressed) {
+      onpressed();
     }
   }
 
@@ -87,40 +51,91 @@
   }
 
   const _onrelease = () => {
-    if (disabled) {
-      return;
-    }
     pressed = false;
-    gamepadActive = true;
     if (onrelease) {
       onrelease();
     }
   }
 
   onMount(() => {
-    onkeypress.push((event: KeyboardEvent) => {
-      if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
-        _onpress();
+    virtual_inputs.buttons.push(input_mapping);
+    // for some reason we can not use input_mapping directly, I guess it gets
+    // copied when its pushed to virtual_inputs.buttons
+    const _virtual_input = virtual_inputs.buttons[virtual_inputs.buttons.length - 1];
+
+    function thisKey(event: KeyboardEvent): boolean {
+      return _virtual_input.keyboard_keys.indexOf(event.key) > -1
+    }
+
+    function thisGamepadButton(gamepad: Gamepad, button: number): boolean {
+      if (_virtual_input.gamepad !== -1 &&
+        _virtual_input.gamepad !== gamepad.index) {
+          return false
       }
-    });
-    onkeyrelease.push((event: KeyboardEvent) => {
-      if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
+      return _virtual_input.gamepad_buttons.indexOf(button) > -1;
+    }
+
+    const _custom_onpressed = (event: KeyboardEvent) => {
+      if (thisKey(event)) {
+        _onpressed();
+      }
+    }
+    const _custom_onrelease = (event: KeyboardEvent) => {
+      if (thisKey(event)) {
         _onrelease();
       }
-    });
-    onkeyhold.push((event: KeyboardEvent) => {
-      if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
+    }
+    const _custom_onhold = (event: KeyboardEvent) => {
+      if (thisKey(event)) {
         _onhold();
       }
-    });
-    $gamepad_listener = [...$gamepad_listener, gamepad_update];
+    }
+
+    const _custom_buttonpressed = (pad: Gamepad, button: number) => {
+      if (thisGamepadButton(pad, button)) {
+        _onpressed();
+      }
+    }
+
+    const _custom_buttonrelease = (pad: Gamepad, button: number) => {
+      if (thisGamepadButton(pad, button)) {
+        _onrelease();
+      }
+    }
+
+    const _custom_buttonhold = (pad: Gamepad, button: number) => {
+      if (thisGamepadButton(pad, button)) {
+        _onhold();
+      }
+    }
+    // keyboard
+    onkeypressed.push(_custom_onpressed);
+    onkeyrelease.push(_custom_onrelease);
+    onkeyhold.push(_custom_onhold);
+    // gamepad
+    onbuttonpressed.push(_custom_buttonpressed);
+    onbuttonrelease.push(_custom_buttonrelease);
+    onbuttonhold.push(_custom_buttonhold);
+    return () => {
+      // cleanup on destroy
+      // keyboard
+      onkeypressed.splice(onkeypressed.indexOf(_custom_onpressed), 1);
+      onkeyrelease.splice(onkeyrelease.indexOf(_custom_onrelease), 1);
+      onkeyhold.splice(onkeyhold.indexOf(_custom_onhold), 1);
+      // gamepad
+      onbuttonpressed.splice(onbuttonpressed.indexOf(_custom_buttonpressed), 1);
+      onbuttonrelease.splice(onbuttonrelease.indexOf(_custom_buttonrelease), 1);
+      onbuttonhold.splice(onbuttonhold.indexOf(_custom_buttonhold), 1);
+      // unregister configuration
+      virtual_inputs.buttons.splice(virtual_inputs.buttons.indexOf(_virtual_input), 1);
+    }
   });
 </script>
 
 <button
     {style}
-    class={(pressed ? 'button_clicked ' : '') + cssclass}
-    onpointerdown={_onpress}
+    class={(!disabled && pressed ? 'button_clicked ' : '') + cssclass}
+    onpointerdown={_onpressed}
     onpointerup={_onrelease}>
   {@render children()}
 </button>

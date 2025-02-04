@@ -10,7 +10,7 @@
   let position_second: [x: number, y: number] = $state([0, 0]);
   let sideNavWidth = $state<string>('0');
   let navOpen = $state<boolean>(false);
-  let navEnable = $state<boolean>(false);
+  let navClosed = $state<boolean>(true);
   let showConfig = $state<boolean>(false);
   const listItems = [
     'Main',
@@ -35,13 +35,13 @@
   function hideNav() {
     sideNavWidth = '0';
     navOpen = false;
-    navEnable = true;
+    navClosed = true;
   }
 
   function showNav() {
     sideNavWidth = '250px';
     navOpen = true;
-    navEnable = false;
+    navClosed = false;
   }
 
   function listItemPressed(item: string) {
@@ -55,17 +55,26 @@
 <div id="sidenav" class="sidenav" style:width={sideNavWidth}>
   <button class="closebtn" onclick={toggleNav}>&times;</button>
   <VirtualList
-    oncancel={hideNav}
-    onpress={listItemPressed}
+    disabled={navClosed}
+    oncancel={() => {
+      hideNav()
+      // return true to stop button from showing nav menu again
+      return true;
+    }}
+    onpressed={listItemPressed}
     items={listItems}
-    wrap={false}
-    disabled={navEnable}>
+    wrap={false}>
   </VirtualList>
 </div>
 
 <main style:margin-left={sideNavWidth} style:min-width={'500px'}>
 <VirtualButton
-  onpress={showNav}
+  onpressed={() => {
+    showNav();
+    // return true to stop button from hiding nav menu again
+    return true;
+  }}
+  disabled={navOpen}
   input_mapping={{
     name: 'Side Nav',
     gamepad: -1,
@@ -80,8 +89,9 @@
 <GamepadManager />
 <KeyboardManager />
 
+<!-- rgb(6, 23, 28); /* DARK */ -->
 <VirtualJoystick
-  style="background-color: black"
+  style="background-color: rgb(6, 23, 28);"
   size={120}
   disabled={navOpen}
   bind:position={position_first}
@@ -92,7 +102,7 @@ y: {position_first[1]}
 
 <div style="position: absolute; top: 30px; right: 30px;">
   <VirtualJoystick
-    color={"red"}
+    color={"rgb(236, 97, 159)" /* OSAKA_RED */}
     disabled={navOpen}
     bind:position={position_second}
     input_mapping={{
@@ -116,11 +126,12 @@ y: {position_first[1]}
   </div>
 </div>
 <br /><br />
+<!-- rgb(29, 58, 143); /* GUAM_BLUE */ -->
 <VirtualButton
-  style="background-color: yellow;"
+  style="background-color: rgb(29, 58, 143); color: white;"
   disabled={navOpen}
   input_mapping={{
-    name: 'yellow button',
+    name: 'blue button',
     gamepad: -1,
     gamepad_buttons: [1],
     keyboard_keys: ['r']
@@ -129,11 +140,12 @@ y: {position_first[1]}
   PRESS CIRCLE OR "R"!
 </VirtualButton>
 
+<!-- rgb(247, 167, 018); /* ERFOUD_ORANGE */ -->
 <VirtualButton
-  style="background-color: azure;"
+  style="background-color: rgb(247, 167, 018);"
   disabled={navOpen}
   input_mapping={{
-    name: 'azure button',
+    name: 'orange button',
     gamepad: -1,
     gamepad_buttons: [3],
     keyboard_keys: ['x']
@@ -144,7 +156,13 @@ y: {position_first[1]}
 <br /><br />
 <hr />
 <button onclick={requestFullScreen}>Fullscreen</button>
-
-<Configuration bind:display={showConfig}></Configuration>
+<div id="nav_modal" class="modal" style:display={showConfig ? 'block' : 'none'}>
+  <div class="modal-content">
+    <button onclick={() => {
+      showConfig=false}}>close</button>
+    <br />
+    <Configuration></Configuration>
+  </div>
+</div>
 
 </main>
