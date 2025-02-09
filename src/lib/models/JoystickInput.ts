@@ -1,5 +1,5 @@
 // Configuration and axes/button mapping for a VirtualJoystick
-export default interface VirtualJoystickInput {
+export default interface JoystickInput {
   name: string;
   gamepad: number; //-1 means we accept all gamepads, -2 means none
   axes_x: number;

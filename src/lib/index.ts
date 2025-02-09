@@ -1,21 +1,24 @@
 // Reexport your entry components here
 import GamepadManager from "./components/GamepadManager.svelte";
 import KeyboardManager from "./components/KeyboardManager.svelte";
-import VirtualJoystick from "./components/VirtualJoystick.svelte";
-import VirtualButton from "./components/VirtualButton.svelte";
+import Joystick from "./components/Joystick.svelte";
+import Button from "./components/Button.svelte";
 import ButtonBase from "./components/ButtonBase.svelte";
-import VirtualList from "./components/VirtualList.svelte";
+import ListBase from "./components/ButtonBase.svelte";
+import List from "./components/List.svelte";
 
-import type VirtualJoystickInput from "./models/VirtualJoystickInput.js";
-import type VirtualButtonInput from "./models/VirtualButtonInput.js";
-import type VirtualListInput from "./models/VirtualListInput.js";
+import type JoystickInput from "./models/JoystickInput.js";
+import type ButtonInput from "./models/ButtonInput.js";
+import type ListInput from "./models/ListInput.js";
 
 import '$lib/store/gamepad_callbacks.svelte.js'
 import '$lib/store/keyboard_callbacks.svelte.js'
-import '$lib/store/virtual_input.svelte.js'
+import '$lib/store/inputs.svelte.js'
 
 import { distance, angle, findCoord, radians, degrees, clamp } from './utils.js';
 export { 
-    GamepadManager, KeyboardManager, VirtualButton, VirtualJoystick, VirtualList, ButtonBase,
+    GamepadManager, KeyboardManager, 
+    ListBase, ButtonBase,
+    Button, Joystick, List,
     distance, angle, findCoord, radians, degrees, clamp };
-export type {VirtualButtonInput, VirtualJoystickInput, VirtualListInput}
+export type {ButtonInput as VirtualButtonInput, JoystickInput as VirtualJoystickInput, ListInput as VirtualListInput}

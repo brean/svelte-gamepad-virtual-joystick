@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type VirtualListInput from "$lib/models/VirtualListInput.js";
-  import { virtual_inputs } from "$lib/store/virtual_input.svelte.js";
+  import type ListInput from "$lib/models/ListInput.js";
+  import { inputs } from "$lib/store/inputs.svelte.js";
   import { onMount } from "svelte";
   import { onkeypressed, onkeyrelease } from '$lib/store/keyboard_callbacks.svelte.js'
   import { onbuttonpressed, onbuttonrelease, onupdate } from '$lib/store/gamepad_callbacks.svelte.js';
@@ -11,11 +11,9 @@
     oncancel?: () => void
     disabled?: boolean
     wrap?: boolean  // prev of first is last, next of last is first.
-    style?: string
-    cssclass?: string
-    hovering?: number
+    focussed?: number
     selected?: number
-    input_mapping?: VirtualListInput
+    input_mapping?: ListInput
   }
 
   let {
@@ -24,12 +22,10 @@
     oncancel,
     disabled = false,
     wrap = true,
-    style = '',
-    cssclass = 'vlist',
-    selected = 0,
-    hovering = 0,
+    selected = $bindable(0),
+    focussed = $bindable(0),
     input_mapping = {
-      name: 'Virtual List',
+      name: 'List',
       gamepad: -1,
       gamepad_axes: [1],
       gamepad_axes_sens: 0.05, // sensitivity - at what value do we react to the axes movement?
@@ -44,37 +40,24 @@
     }
   }: Props = $props();
 
-  virtual_inputs.lists.push(input_mapping);
-  const _virtual_input = virtual_inputs.lists[virtual_inputs.lists.length - 1];
-
+  inputs.lists.push(input_mapping);
+  const _inputs = inputs.lists[inputs.lists.length - 1];
 
   let axesDown = -1;
-  let lstParent: HTMLElement;
-
-  function classStr(index: number) {
-    let clz = ''
-    if (selected === index) {
-      clz += 'selected '
-    }
-    if (hovering === index) {
-      clz += 'hovering '
-    }
-    return clz
-  }
-
-  function update_hovering(new_idx: number) {
+  
+  function update_focussed(new_idx: number) {
     if (new_idx >= items.length) {
       new_idx = wrap ? 0 : items.length - 1;
     }
     if (new_idx < 0) {
       new_idx = wrap ? items.length -1 : 0;
     }
-    hovering = new_idx;
+    focussed = new_idx;
   }
 
   function thisGamepad(gamepad: Gamepad): boolean {
-    return _virtual_input.gamepad === -1 ||
-      _virtual_input.gamepad === gamepad.index;
+    return _inputs.gamepad === -1 ||
+      _inputs.gamepad === gamepad.index;
   }
 
   onMount(() => {
@@ -89,16 +72,16 @@
         return true;
       }
       if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
-        selected = hovering;
+        selected = focussed;
         onpressed(items[selected], selected);
         return;
       }
       if (input_mapping.keyboard_next_keys.indexOf(event.key) > -1) {
-        update_hovering(hovering + 1);
+        update_focussed(focussed + 1);
         return;
       }
       if (input_mapping.keyboard_prev_keys.indexOf(event.key) > -1) {
-        update_hovering(hovering - 1);
+        update_focussed(focussed - 1);
       }
     }
 
@@ -113,16 +96,16 @@
         return true;
       }
       if (input_mapping.gamepad_buttons.indexOf(button) > -1) {
-        selected = hovering;
+        selected = focussed;
         onpressed(items[selected], selected);
         return;
       }
       if (input_mapping.gamepad_next_buttons.indexOf(button) > -1) {
-        update_hovering(hovering + 1);
+        update_focussed(focussed + 1);
         return;
       }
       if (input_mapping.gamepad_prev_buttons.indexOf(button) > -1) {
-        update_hovering(hovering - 1);
+        update_focussed(focussed - 1);
         return;
       }
     }
@@ -135,12 +118,12 @@
         const value = gamepad.axes[axesIdx];
         let sensitivity = input_mapping.gamepad_axes_sens;
         if (value < -sensitivity && axesDown != axesIdx) {
-          update_hovering(hovering - 1);
+          update_focussed(focussed - 1);
           axesDown = axesIdx;
           continue;
         }
         if (value > sensitivity && axesDown != axesIdx) {
-          update_hovering(hovering + 1);
+          update_focussed(focussed + 1);
           axesDown = axesIdx;
           continue;
         }
@@ -163,30 +146,7 @@
       onbuttonpressed.splice(onbuttonpressed.indexOf(_custom_buttonpressed), 1);
       onupdate.splice(onupdate.indexOf(_custom_gamepadupdate), 1);
       // unregister configuration
-      virtual_inputs.lists.splice(virtual_inputs.lists.indexOf(_virtual_input), 1);
+      inputs.lists.splice(inputs.lists.indexOf(_inputs), 1);
     }
   });
 </script>
-
-<ul bind:this={lstParent} {style} class={cssclass}>
-  {#each items as item, index}
-    <li 
-      class={classStr(index)}
-      onpointerdown={() => {
-        if (disabled) {
-          return
-        }
-        selected = index;
-        if(onpressed) {
-          onpressed(item, index);
-        }
-      }}
-      onpointerenter={() => {
-        if (disabled) {
-          return
-        }
-        hovering = index;
-      }}
-      >{item}</li>
-  {/each}
-</ul>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { virtual_inputs } from "$lib/store/virtual_input.svelte.js";
+  import { inputs } from "$lib/store/inputs.svelte.js";
 </script>
 <h2>Configuration</h2>
 
@@ -19,20 +19,20 @@ Key Mapping joystick inputs (gamepad -1=all, -2&lt;=disabled)
       <td>Invert X</td>
       <td>Invert Y</td>
     </tr>
-    {#each virtual_inputs.joysticks as vj, idx}
+    {#each inputs.joysticks as vj, idx}
     <tr>
       <td>{vj.name}</td>
       <td>
-        <input bind:value={virtual_inputs.joysticks[idx].gamepad} type="number" />
+        <input bind:value={inputs.joysticks[idx].gamepad} type="number" />
       </td>
-      <td><input bind:value={virtual_inputs.joysticks[idx].axes_x} type="number" /></td>
-      <td><input bind:value={virtual_inputs.joysticks[idx].axes_y} type="number" /></td>
-      <td><input bind:value={virtual_inputs.joysticks[idx].key_x_pos} /></td>
-      <td><input bind:value={virtual_inputs.joysticks[idx].key_x_neg} /></td>
-      <td><input bind:value={virtual_inputs.joysticks[idx].key_y_pos} /></td>
-      <td><input bind:value={virtual_inputs.joysticks[idx].key_y_neg} /></td>
-      <td><input type="checkbox" bind:checked={virtual_inputs.joysticks[idx].invert_x} /></td>
-      <td><input type="checkbox" bind:checked={virtual_inputs.joysticks[idx].invert_y} /></td>
+      <td><input bind:value={inputs.joysticks[idx].axes_x} type="number" /></td>
+      <td><input bind:value={inputs.joysticks[idx].axes_y} type="number" /></td>
+      <td><input bind:value={inputs.joysticks[idx].key_x_pos} /></td>
+      <td><input bind:value={inputs.joysticks[idx].key_x_neg} /></td>
+      <td><input bind:value={inputs.joysticks[idx].key_y_pos} /></td>
+      <td><input bind:value={inputs.joysticks[idx].key_y_neg} /></td>
+      <td><input type="checkbox" bind:checked={inputs.joysticks[idx].invert_x} /></td>
+      <td><input type="checkbox" bind:checked={inputs.joysticks[idx].invert_y} /></td>
     </tr>
     {/each}
   </tbody>
@@ -49,7 +49,7 @@ Buttons:<br />
       <td>key</td>
       <td></td>
     </tr>
-    {#each virtual_inputs.buttons as vb}
+    {#each inputs.buttons as vb}
     <tr>
       <td>{vb.name}</td>
       <td>

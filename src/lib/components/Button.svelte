@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type VirtualButtonInput from "$lib/models/VirtualButtonInput.js";
+  import type ButtonInput from "$lib/models/ButtonInput.js";
   import { type Snippet } from "svelte";
   import ButtonBase from "./ButtonBase.svelte";
 
@@ -12,7 +12,7 @@
     pressed?: boolean,
     style?: string,
     cssclass?: string,
-    input_mapping?: VirtualButtonInput
+    input_mapping?: ButtonInput
   }
 
   let {

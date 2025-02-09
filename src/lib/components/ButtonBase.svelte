@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
   import { onbuttonpressed, onbuttonrelease, onbuttonhold } from '$lib/store/gamepad_callbacks.svelte.js';
-  import type VirtualButtonInput from "$lib/models/VirtualButtonInput.js";
+  import type ButtonInput from "$lib/models/ButtonInput.js";
   import { onMount, type Snippet } from "svelte";
-  import { virtual_inputs } from '$lib/store/virtual_input.svelte.js';
+  import { inputs } from '$lib/store/inputs.svelte.js';
 
   interface Props {
     children: Snippet,
@@ -12,7 +12,7 @@
     onhold?: (() => void),
     onrelease?: (() => void),
     pressed?: boolean,
-    input_mapping?: VirtualButtonInput
+    input_mapping?: ButtonInput
   }
 
   let {
@@ -54,21 +54,21 @@
   }
 
   onMount(() => {
-    virtual_inputs.buttons.push(input_mapping);
+    inputs.buttons.push(input_mapping);
     // for some reason we can not use input_mapping directly, I guess it gets
-    // copied when its pushed to virtual_inputs.buttons
-    const _virtual_input = virtual_inputs.buttons[virtual_inputs.buttons.length - 1];
+    // copied when its pushed to inputs.buttons
+    const _input = inputs.buttons[inputs.buttons.length - 1];
 
     function thisKey(event: KeyboardEvent): boolean {
-      return _virtual_input.keyboard_keys.indexOf(event.key) > -1
+      return _input.keyboard_keys.indexOf(event.key) > -1
     }
 
     function thisGamepadButton(gamepad: Gamepad, button: number): boolean {
-      if (_virtual_input.gamepad !== -1 &&
-        _virtual_input.gamepad !== gamepad.index) {
+      if (_input.gamepad !== -1 &&
+        _input.gamepad !== gamepad.index) {
           return false
       }
-      return _virtual_input.gamepad_buttons.indexOf(button) > -1;
+      return _input.gamepad_buttons.indexOf(button) > -1;
     }
 
     const _custom_onpressed = (event: KeyboardEvent) => {
@@ -123,7 +123,7 @@
       onbuttonrelease.splice(onbuttonrelease.indexOf(_custom_buttonrelease), 1);
       onbuttonhold.splice(onbuttonhold.indexOf(_custom_buttonhold), 1);
       // unregister configuration
-      virtual_inputs.buttons.splice(virtual_inputs.buttons.indexOf(_virtual_input), 1);
+      inputs.buttons.splice(inputs.buttons.indexOf(_input), 1);
     }
   });
 </script>

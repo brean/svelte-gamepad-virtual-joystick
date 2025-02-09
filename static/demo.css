@@ -84,7 +84,7 @@ li {
   border: 3px solid transparent;
 }
 
-li.hovering {
+li.focussed {
   animation: spin 2.5s infinite linear paused;
   
   background:

@@ -1,5 +1,5 @@
-// Configuration and axes/button mapping for a VirtualButton
-export default interface VirtualListInput {
+// Configuration and axes/button mapping for a List to focus next/previous item and select it
+export default interface ListInput {
     name: string;
     gamepad: number;
     gamepad_axes: number[];

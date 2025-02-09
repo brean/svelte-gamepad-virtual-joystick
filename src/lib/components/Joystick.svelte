@@ -4,8 +4,8 @@
 
   import { angle, distance, clamp, findCoord } from "$lib/utils.js";
   import { onMount } from "svelte";
-  import type VirtualJoystickInput from "$lib/models/VirtualJoystickInput.js";
-  import { virtual_inputs } from "$lib/store/virtual_input.svelte.js";
+  import type JoystickInput from "$lib/models/JoystickInput.js";
+  import { inputs } from "$lib/store/inputs.svelte.js";
 
   interface Props {
     disabled?: boolean
@@ -19,7 +19,7 @@
     borderColor?: string
     position?: [x: number, y: number]
     style?: string
-    input_mapping?: VirtualJoystickInput
+    input_mapping?: JoystickInput
   }
 
   let {
@@ -67,11 +67,11 @@
   let gamepadActive = true;
   let opacity = $state(defaultOpacity);
 
-  virtual_inputs.joysticks.push(input_mapping);
-  const _virtual_input = virtual_inputs.joysticks[virtual_inputs.joysticks.length - 1];
+  inputs.joysticks.push(input_mapping);
+  const _input = inputs.joysticks[inputs.joysticks.length - 1];
 
   function onpointermove(evt: MouseEvent) {
-    if (disabled || !_virtual_input.gamepad || !pointerActive || !evt.target) {
+    if (disabled || !_input.gamepad || !pointerActive || !evt.target) {
       return
     }
     gamepadActive = false;
@@ -96,8 +96,8 @@
     // normalize corrds
     let xcoord = coords[0] / radius
     let ycoord = coords[1] / radius
-    if (Math.abs(xcoord) < _virtual_input.deadzoneX && 
-        Math.abs(ycoord) < _virtual_input.deadzoneY) {
+    if (Math.abs(xcoord) < _input.deadzoneX && 
+        Math.abs(ycoord) < _input.deadzoneY) {
       position = [0, 0];
       opacity = defaultOpacity;
       return;
@@ -118,19 +118,19 @@
       return
     }
     let down = false;
-    if (_virtual_input.key_x_pos == event.key) {
+    if (_input.key_x_pos == event.key) {
       position[0] = 1;
       down = true;
     }
-    else if (_virtual_input.key_x_neg == event.key) {
+    else if (_input.key_x_neg == event.key) {
       position[0] = -1;
       down = true;
     }
-    if (_virtual_input.key_y_pos == event.key) {
+    if (_input.key_y_pos == event.key) {
       position[1] = 1;
       down = true;
     }
-    else if (_virtual_input.key_y_neg == event.key) {
+    else if (_input.key_y_neg == event.key) {
       position[1] = -1;
       down = true;
     }
@@ -144,11 +144,11 @@
 
   const _custom_onrelease = (event: KeyboardEvent) => {
     let down = false;
-    if (_virtual_input.key_x_pos == event.key || _virtual_input.key_x_neg == event.key) {
+    if (_input.key_x_pos == event.key || _input.key_x_neg == event.key) {
       position[0] = 0;
       down = true;
     }
-    if (_virtual_input.key_y_pos == event.key || _virtual_input.key_y_neg == event.key) {
+    if (_input.key_y_pos == event.key || _input.key_y_neg == event.key) {
       position[1] = 0;
       down = true;
     }
@@ -161,24 +161,24 @@
   }
 
   function thisGamepad(gamepad: Gamepad): boolean {
-    return _virtual_input.gamepad === -1 ||
-      _virtual_input.gamepad === gamepad.index;
+    return _input.gamepad === -1 ||
+      _input.gamepad === gamepad.index;
   }
 
   const _custom_onupdate = (gamepad: Gamepad) => {
     if (disabled || !gamepadActive || !thisGamepad(gamepad)) {
       return
     }
-    let xcoord = gamepad.axes[_virtual_input.axes_x];
-    let ycoord = gamepad.axes[_virtual_input.axes_y];
-    if (_virtual_input.invert_x) {
+    let xcoord = gamepad.axes[_input.axes_x];
+    let ycoord = gamepad.axes[_input.axes_y];
+    if (_input.invert_x) {
       xcoord = -xcoord;
     }
-    if (_virtual_input.invert_y) {
+    if (_input.invert_y) {
       ycoord = -ycoord;
     }
-    if (Math.abs(xcoord) < _virtual_input.deadzoneX && 
-        Math.abs(ycoord) < _virtual_input.deadzoneY) {
+    if (Math.abs(xcoord) < _input.deadzoneX && 
+        Math.abs(ycoord) < _input.deadzoneY) {
       opacity = defaultOpacity;
       position = [0, 0]
       return;
@@ -198,7 +198,7 @@
       onkeyrelease.splice(onkeyrelease.indexOf(_custom_onrelease), 1);
       onupdate.splice(onupdate.indexOf(_custom_onupdate), 1);
       // unregister configuration
-      virtual_inputs.joysticks.splice(virtual_inputs.joysticks.indexOf(_virtual_input), 1);
+      inputs.joysticks.splice(inputs.joysticks.indexOf(_input), 1);
     }
   });
 

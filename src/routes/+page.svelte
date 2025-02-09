@@ -2,9 +2,9 @@
   import Configuration from "$lib/components/Configuration.svelte";
   import GamepadManager from "$lib/components/GamepadManager.svelte";
   import KeyboardManager from "$lib/components/KeyboardManager.svelte";
-  import VirtualButton from "$lib/components/VirtualButton.svelte";
-  import VirtualJoystick from "$lib/components/VirtualJoystick.svelte";
-  import VirtualList from "$lib/components/VirtualList.svelte";
+  import Button from "$lib/components/Button.svelte";
+  import Joystick from "$lib/components/Joystick.svelte";
+  import List from "$lib/components/List.svelte";
   
   let position_first: [x: number, y: number] = $state([0, 0]);
   let position_second: [x: number, y: number] = $state([0, 0]);
@@ -54,7 +54,7 @@
 
 <div id="sidenav" class="sidenav" style:width={sideNavWidth}>
   <button class="closebtn" onclick={toggleNav}>&times;</button>
-  <VirtualList
+  <List
     disabled={navClosed}
     oncancel={() => {
       hideNav()
@@ -64,11 +64,11 @@
     onpressed={listItemPressed}
     items={listItems}
     wrap={false}>
-  </VirtualList>
+  </List>
 </div>
 
 <main style:margin-left={sideNavWidth} style:min-width={'500px'}>
-<VirtualButton
+<Button
   onpressed={() => {
     showNav();
     // return true to stop button from hiding nav menu again
@@ -83,14 +83,14 @@
   }}
 >
   Side Menu
-</VirtualButton><br />
+</Button><br />
 
 <!-- GamepadManager and KeyboardManager should be unique in your page. -->
 <GamepadManager />
 <KeyboardManager />
 
 <!-- rgb(6, 23, 28); /* DARK */ -->
-<VirtualJoystick
+<Joystick
   style="background-color: rgb(6, 23, 28);"
   size={120}
   disabled={navOpen}
@@ -101,7 +101,7 @@ y: {position_first[1]}
 <br />
 
 <div style="position: absolute; top: 30px; right: 30px;">
-  <VirtualJoystick
+  <Joystick
     color={"rgb(236, 97, 159)" /* OSAKA_RED */}
     disabled={navOpen}
     bind:position={position_second}
@@ -127,7 +127,7 @@ y: {position_first[1]}
 </div>
 <br /><br />
 <!-- rgb(29, 58, 143); /* GUAM_BLUE */ -->
-<VirtualButton
+<Button
   style="background-color: rgb(29, 58, 143); color: white;"
   disabled={navOpen}
   input_mapping={{
@@ -138,10 +138,10 @@ y: {position_first[1]}
   }}
 >
   PRESS CIRCLE OR "R"!
-</VirtualButton>
+</Button>
 
 <!-- rgb(247, 167, 018); /* ERFOUD_ORANGE */ -->
-<VirtualButton
+<Button
   style="background-color: rgb(247, 167, 018);"
   disabled={navOpen}
   input_mapping={{
@@ -152,13 +152,13 @@ y: {position_first[1]}
   }}
 >
   PRESS TRIANGLE OR "X"!
-</VirtualButton>
+</Button>
 <br /><br />
 <hr />
 <button onclick={requestFullScreen}>Fullscreen</button>
 <div id="nav_modal" class="modal" style:display={showConfig ? 'block' : 'none'}>
   <div class="modal-content">
-    <VirtualButton
+    <Button
       input_mapping={{
         name: 'cancel settings',
         gamepad: -1,
@@ -169,7 +169,7 @@ y: {position_first[1]}
         showConfig=false
         return true;}}>
       cancel
-    </VirtualButton>
+    </Button>
     <br />
     <Configuration></Configuration>
   </div>
