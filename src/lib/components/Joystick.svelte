@@ -2,7 +2,7 @@
   import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
   import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/store/gamepad_callbacks.svelte.js';
 
-  import { angle, distance, clamp, findCoord } from "$lib/utils.js";
+  import { angle, distance, clamp, findCoord, thisGamepad } from "$lib/utils.js";
   import { onMount } from "svelte";
   import type JoystickInput from "$lib/models/JoystickInput.js";
   import { inputs } from "$lib/store/inputs.svelte.js";
@@ -160,13 +160,8 @@
     position = position;
   }
 
-  function thisGamepad(gamepad: Gamepad): boolean {
-    return _input.gamepad === -1 ||
-      _input.gamepad === gamepad.index;
-  }
-
   const _custom_onupdate = (gamepad: Gamepad) => {
-    if (disabled || !gamepadActive || !thisGamepad(gamepad)) {
+    if (disabled || !gamepadActive || !thisGamepad(_input, gamepad)) {
       return
     }
     let xcoord = gamepad.axes[_input.axes_x];

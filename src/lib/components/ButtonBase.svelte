@@ -4,6 +4,7 @@
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import { onMount, type Snippet } from "svelte";
   import { inputs } from '$lib/store/inputs.svelte.js';
+  import { thisGamepad } from '$lib/utils.js';
 
   interface Props {
     children: Snippet,
@@ -64,8 +65,7 @@
     }
 
     function thisGamepadButton(gamepad: Gamepad, button: number): boolean {
-      if (_input.gamepad !== -1 &&
-        _input.gamepad !== gamepad.index) {
+      if (!thisGamepad(_input, gamepad)) {
           return false
       }
       return _input.gamepad_buttons.indexOf(button) > -1;

@@ -4,14 +4,14 @@
 
   interface Props {
     items: string[]
-    onpressed: (item: string, index: number) => void
+    onpressed?: () => void
     oncancel?: () => void
     disabled?: boolean
     wrap?: boolean  // prev of first is last, next of last is first.
     style?: string
     cssclass?: string
     focussed?: number
-    selected?: number
+    selectedIndex?: number
     input_mapping?: ListInput
   }
 
@@ -23,8 +23,8 @@
     wrap = true,
     style = '',
     cssclass = 'vlist',
-    selected = 0,
-    focussed = 0,
+    selectedIndex = $bindable(0),
+    focussed = $bindable(0),
     input_mapping = {
       name: 'List',
       gamepad: -1,
@@ -43,7 +43,7 @@
 
   function classStr(index: number) {
     let clz = ''
-    if (selected === index) {
+    if (selectedIndex === index) {
       clz += 'selected '
     }
     if (focussed === index) {
@@ -52,20 +52,28 @@
     return clz
   }
 
-  let lstParent: HTMLElement;
+  function focusItemAtIndex(new_idx: number) {
+    if (new_idx >= items.length) {
+      new_idx = wrap ? 0 : items.length - 1;
+    }
+    if (new_idx < 0) {
+      new_idx = wrap ? items.length -1 : 0;
+    }
+    focussed = new_idx;
+  }
+
 </script>
 
 <ListBase
-  {items}
+  {focusItemAtIndex}
   {onpressed}
   {oncancel}
   {disabled}
-  {wrap}
   {input_mapping}
-  bind:selected
+  bind:selectedIndex
   bind:focussed
   ></ListBase>
-<ul bind:this={lstParent} {style} class={cssclass}>
+<ul {style} class={cssclass}>
   {#each items as item, index}
     <li 
       class={classStr(index)}
@@ -73,9 +81,9 @@
         if (disabled) {
           return
         }
-        selected = index;
+        selectedIndex = index;
         if(onpressed) {
-          onpressed(item, index);
+          onpressed();
         }
       }}
       onpointerenter={() => {

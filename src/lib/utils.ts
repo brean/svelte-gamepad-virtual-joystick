@@ -1,5 +1,7 @@
 // based on https://github.com/yoannmoinet/nipplejs/blob/master/src/utils.js
 
+import type Input from "./models/Input.js";
+
 export const distance = (dx: number, dy: number): number => {
   // returns the distance to 0:0
   return Math.sqrt(dx**2 + dy**2);
@@ -24,4 +26,10 @@ export const degrees = (a: number): number => {
 
 export const clamp = (distance: number, maxDist: number) => {
   return Math.min(Math.max(-maxDist, distance), maxDist)
+}
+
+export function thisGamepad(_input: Input, gamepad: Gamepad): boolean {
+  //-1 means we accept all gamepads, -2 or lower means none,
+  //otherwise only the specified gamepad index
+  return _input.gamepad === -1 || _input.gamepad === gamepad.index;
 }

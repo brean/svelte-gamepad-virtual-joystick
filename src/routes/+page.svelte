@@ -12,6 +12,7 @@
   let navOpen = $state<boolean>(false);
   let navClosed = $state<boolean>(true);
   let showConfig = $state<boolean>(false);
+  let selectedIndex = $state(0);
   const listItems = [
     'Main',
     'Second',
@@ -44,7 +45,8 @@
     navClosed = false;
   }
 
-  function listItemPressed(item: string) {
+  function listItemPressed() {
+    const item = listItems[selectedIndex];
     if (item === 'Settings') {
       showConfig = true;
     }
@@ -62,6 +64,7 @@
       return true;
     }}
     onpressed={listItemPressed}
+    bind:selectedIndex
     items={listItems}
     wrap={false}>
   </List>
