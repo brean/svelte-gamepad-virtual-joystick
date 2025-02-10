@@ -31,13 +31,11 @@
       gamepad_axes: [1],
       gamepad_axes_sens: 0.05, // sensitivity - at what value do we react to the axes movement?
       gamepad_buttons: [0],
-      gamepad_cancel_buttons: [9],
       gamepad_prev_buttons: [12],  // up
       gamepad_next_buttons: [13],  // down
       keyboard_prev_keys: ['ArrowUp', 'w'],
       keyboard_next_keys: ['ArrowDown', 's'],
-      keyboard_keys: ['e'],
-      keyboard_cancel_keys: ['Escape', 'q']
+      keyboard_keys: ['e']
     }
   }: Props = $props();
 

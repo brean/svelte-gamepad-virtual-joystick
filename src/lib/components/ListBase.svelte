@@ -19,7 +19,6 @@
   let {
     focusItemAtIndex,
     onpressed,
-    oncancel,
     disabled = false,
     selectedIndex = $bindable(0),
     focussed = $bindable(0),
@@ -29,13 +28,11 @@
       gamepad_axes: [1],
       gamepad_axes_sens: 0.05, // sensitivity - at what value do we react to the axes movement?
       gamepad_buttons: [0],
-      gamepad_cancel_buttons: [9],
       gamepad_prev_buttons: [12],  // up
       gamepad_next_buttons: [13],  // down
       keyboard_prev_keys: ['ArrowUp', 'w'],
       keyboard_next_keys: ['ArrowDown', 's'],
-      keyboard_keys: ['e'],
-      keyboard_cancel_keys: ['Escape', 'q']
+      keyboard_keys: ['e']
     }
   }: Props = $props();
 
@@ -47,12 +44,6 @@
     const _custom_onpressed = (event: KeyboardEvent) => {
       if (disabled) {
         return
-      }
-      if (oncancel &&
-          input_mapping.keyboard_cancel_keys.indexOf(event.key) > -1) {
-        oncancel();
-        // cancel is exclusive, prevent other components from accessing this button
-        return true;
       }
       if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
         selectedIndex = focussed;
@@ -73,12 +64,6 @@
     const _custom_buttonpressed = (gamepad: Gamepad, button: number) => {
       if (disabled || !thisGamepad(_input, gamepad)) {
         return
-      }
-      if (oncancel &&
-          input_mapping.gamepad_cancel_buttons.indexOf(button) > -1) {
-        oncancel();
-        // cancel is exclusive, prevent other components from accessing this button
-        return true;
       }
       if (input_mapping.gamepad_buttons.indexOf(button) > -1) {
         selectedIndex = focussed;

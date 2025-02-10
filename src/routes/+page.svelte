@@ -73,11 +73,10 @@
 <main style:margin-left={sideNavWidth} style:min-width={'500px'}>
 <Button
   onpressed={() => {
-    showNav();
+    toggleNav();
     // return true to stop button from hiding nav menu again
     return true;
   }}
-  disabled={navOpen}
   input_mapping={{
     name: 'Side Nav',
     gamepad: -1,
