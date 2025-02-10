@@ -7,20 +7,17 @@
   import { thisGamepad } from "$lib/utils.js";
 
   interface Props {
-    focusItemAtIndex: (index: number) => void
+    changeFocus: (direction: 1 | -1) => void
     onpressed?: () => void
-    oncancel?: () => void
     disabled?: boolean
     focussed?: number
-    selectedIndex?: number
     input_mapping?: ListInput
   }
 
   let {
-    focusItemAtIndex,
+    changeFocus,
     onpressed,
     disabled = false,
-    selectedIndex = $bindable(0),
     focussed = $bindable(0),
     input_mapping = {
       name: 'List',
@@ -46,18 +43,17 @@
         return
       }
       if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
-        selectedIndex = focussed;
         if (onpressed) {
           onpressed();
         }
         return;
       }
       if (input_mapping.keyboard_next_keys.indexOf(event.key) > -1) {
-        focusItemAtIndex(focussed + 1);
+        changeFocus(1);
         return;
       }
       if (input_mapping.keyboard_prev_keys.indexOf(event.key) > -1) {
-        focusItemAtIndex(focussed - 1);
+        changeFocus(-1);
       }
     }
 
@@ -66,18 +62,17 @@
         return
       }
       if (input_mapping.gamepad_buttons.indexOf(button) > -1) {
-        selectedIndex = focussed;
         if (onpressed) {
           onpressed();
         }
         return;
       }
       if (input_mapping.gamepad_next_buttons.indexOf(button) > -1) {
-        focusItemAtIndex(focussed + 1);
+        changeFocus(1);
         return;
       }
       if (input_mapping.gamepad_prev_buttons.indexOf(button) > -1) {
-        focusItemAtIndex(focussed - 1);
+        changeFocus(-1);
         return;
       }
     }
@@ -91,12 +86,12 @@
         const value = gamepad.axes[axesIdx];
         let sensitivity = input_mapping.gamepad_axes_sens;
         if (value < -sensitivity && axesDown != axesIdx) {
-          focusItemAtIndex(focussed - 1);
+          changeFocus(-1);
           axesDown = axesIdx;
           continue;
         }
         if (value > sensitivity && axesDown != axesIdx) {
-          focusItemAtIndex(focussed + 1);
+          changeFocus(1);
           axesDown = axesIdx;
           continue;
         }

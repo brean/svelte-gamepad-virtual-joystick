@@ -5,7 +5,6 @@
   interface Props {
     items: string[]
     onpressed?: () => void
-    oncancel?: () => void
     disabled?: boolean
     wrap?: boolean  // prev of first is last, next of last is first.
     style?: string
@@ -18,7 +17,6 @@
   let {
     items,
     onpressed,
-    oncancel,
     disabled = false,
     wrap = true,
     style = '',
@@ -60,15 +58,25 @@
     focussed = new_idx;
   }
 
+  function changeFocus(direction: 1 | -1) {
+    focusItemAtIndex(focussed+direction);
+  }
+
+  function changeSelected() {
+    selectedIndex = focussed;
+    if (onpressed) {
+      onpressed();
+    }
+  }
+
+
 </script>
 
 <ListBase
-  {focusItemAtIndex}
-  {onpressed}
-  {oncancel}
+  {changeFocus}
+  onpressed={changeSelected}
   {disabled}
   {input_mapping}
-  bind:selectedIndex
   bind:focussed
   ></ListBase>
 <ul {style} class={cssclass}>
@@ -80,9 +88,7 @@
           return
         }
         selectedIndex = index;
-        if(onpressed) {
-          onpressed();
-        }
+        changeSelected()
       }}
       onpointerenter={() => {
         if (disabled) {
