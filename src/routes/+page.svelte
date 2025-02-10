@@ -58,11 +58,6 @@
   <button class="closebtn" onclick={toggleNav}>&times;</button>
   <List
     disabled={navClosed}
-    oncancel={() => {
-      hideNav()
-      // return true to stop button from showing nav menu again
-      return true;
-    }}
     onpressed={listItemPressed}
     bind:selectedIndex
     items={listItems}

@@ -10,7 +10,6 @@
     changeFocus: (direction: 1 | -1) => void
     onpressed?: () => void
     disabled?: boolean
-    focussed?: number
     input_mapping?: ListInput
   }
 
@@ -18,7 +17,6 @@
     changeFocus,
     onpressed,
     disabled = false,
-    focussed = $bindable(0),
     input_mapping = {
       name: 'List',
       gamepad: -1,

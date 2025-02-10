@@ -77,7 +77,6 @@
   onpressed={changeSelected}
   {disabled}
   {input_mapping}
-  bind:focussed
   ></ListBase>
 <ul {style} class={cssclass}>
   {#each items as item, index}
