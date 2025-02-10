@@ -1,7 +1,7 @@
+import type Input from "./Input.js";
+
 // Configuration and axes/button mapping for a VirtualJoystick
-export default interface JoystickInput {
-  name: string;
-  gamepad: number; //-1 means we accept all gamepads, -2 means none
+export default interface JoystickInput extends Input {
   axes_x: number;
   axes_y: number;
   key_x_pos: string; // KEY_UP?
