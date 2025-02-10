@@ -4,7 +4,7 @@ import KeyboardManager from "./components/KeyboardManager.svelte";
 import Joystick from "./components/Joystick.svelte";
 import Button from "./components/Button.svelte";
 import ButtonBase from "./components/ButtonBase.svelte";
-import ListBase from "./components/ButtonBase.svelte";
+import ListBase from "./components/ListBase.svelte";
 import List from "./components/List.svelte";
 
 import type Input from "./models/Input.js";
