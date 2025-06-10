@@ -30,16 +30,19 @@
 	"peerDependencies": {
 		"svelte": "^5.0.0"
 	},
+	"overrides": {
+		"cookie": "^1.0.2"
+	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.16.0",
-		"@sveltejs/package": "^2.3.9",
+		"@sveltejs/package": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"publint": "^0.3.2",
 		"sass": "^1.79.4",
 		"svelte": "^5.0.0",
-		"svelte-check": "^4.0.4",
-		"typescript": "^5.6.3",
+		"svelte-check": "^4.0.0",
+		"typescript": "^5.7.2",
 		"vite": "^6.0.0"
 	},
 	"svelte": "./dist/index.js",
