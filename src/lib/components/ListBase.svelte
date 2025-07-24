@@ -1,9 +1,9 @@
 <script lang="ts">
   import type ListInput from "$lib/models/ListInput.js";
-  import { inputs } from "$lib/store/inputs.svelte.js";
+  import { inputs } from "$lib/state/inputs.svelte.js";
   import { onMount } from "svelte";
-  import { onkeypressed, onkeyrelease } from '$lib/store/keyboard_callbacks.svelte.js'
-  import { onbuttonpressed, onbuttonrelease, onupdate } from '$lib/store/gamepad_callbacks.svelte.js';
+  import { onkeypressed, onkeyrelease } from '$lib/state/keyboard_callbacks.svelte.js'
+  import { onbuttonpressed, onbuttonrelease, onupdate } from '$lib/state/gamepad_callbacks.svelte.js';
   import { thisGamepad } from "$lib/utils.js";
 
   interface Props {

@@ -12,9 +12,9 @@ import type JoystickInput from "./models/JoystickInput.js";
 import type ButtonInput from "./models/ButtonInput.js";
 import type ListInput from "./models/ListInput.js";
 
-import '$lib/store/gamepad_callbacks.svelte.js'
-import '$lib/store/keyboard_callbacks.svelte.js'
-import '$lib/store/inputs.svelte.js'
+import '$lib/state/gamepad_callbacks.svelte.js';
+import '$lib/state/keyboard_callbacks.svelte.js';
+import '$lib/state/inputs.svelte.js';
 
 import { distance, angle, findCoord, radians, degrees, clamp } from './utils.js';
 export { 

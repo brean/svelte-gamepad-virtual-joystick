@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { inputs } from "$lib/store/inputs.svelte.js";
+  import { inputs } from "$lib/state/inputs.svelte.js";
 </script>
 <h2>Configuration</h2>
 

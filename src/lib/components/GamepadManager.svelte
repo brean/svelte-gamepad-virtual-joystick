@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/store/gamepad_callbacks.svelte.js'
+  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/state/gamepad_callbacks.svelte.js'
   import { onMount } from "svelte";
 
   interface Props {

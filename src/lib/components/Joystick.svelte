@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
-  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/store/gamepad_callbacks.svelte.js';
+  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/state/keyboard_callbacks.svelte.js'
+  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/state/gamepad_callbacks.svelte.js';
 
   import { angle, distance, clamp, findCoord, thisGamepad } from "$lib/utils.js";
   import { onMount } from "svelte";
   import type JoystickInput from "$lib/models/JoystickInput.js";
-  import { inputs } from "$lib/store/inputs.svelte.js";
+  import { inputs } from "$lib/state/inputs.svelte.js";
 
   interface Props {
     disabled?: boolean

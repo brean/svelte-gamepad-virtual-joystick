@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/store/keyboard_callbacks.svelte.js'
+  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/state/keyboard_callbacks.svelte.js'
 
   let keyDown: {[code: string]: boolean} = {}
 
