@@ -13,7 +13,7 @@ const config = {
 			fallback: 'index.html'
 		}),
 		paths: {
-			base: '/svelte-gamepad-virtual-joystic',
+			base: '/svelte-gamepad-virtual-joystick',
 			relative: true
 		}
 		
