@@ -86,7 +86,10 @@
     // center of the joystick area
     let x = (posx - (backgroundWidth / 2));
     let y = (posy - (backgroundHeight / 2));
-    
+    calcPos(x, y)
+  }
+
+  function calcPos(x:number, y:number) {
     // distance of touched point from the center
     const raw_dist = distance(x, y)
     const a = angle(x, y)
@@ -102,6 +105,8 @@
       opacity = defaultOpacity;
       return;
     }
+    xcoord = Math.abs(xcoord) < 0.000001 ? 0 : xcoord;
+    ycoord = Math.abs(ycoord) < 0.000001 ? 0 : ycoord;
     opacity = activeOpacity;
     position = [xcoord, ycoord]
   }
@@ -112,6 +117,8 @@
     position = [0, 0]
   }
 
+
+  let pos = [0, 0]
   const _custom_onhold = (event: KeyboardEvent) => {
     // a keyboard button has been pressed
     if (disabled) {
@@ -119,45 +126,43 @@
     }
     let down = false;
     if (_input.key_x_pos == event.key) {
-      position[0] = 1;
+      pos[0] = 1;
       down = true;
     }
     else if (_input.key_x_neg == event.key) {
-      position[0] = -1;
+      pos[0] = -1;
       down = true;
     }
     if (_input.key_y_pos == event.key) {
-      position[1] = 1;
+      pos[1] = 1;
       down = true;
     }
     else if (_input.key_y_neg == event.key) {
-      position[1] = -1;
+      pos[1] = -1;
       down = true;
     }
     if (!down) {
       return
     }
+    calcPos(pos[0] * radius, pos[1] * radius);
     gamepadActive = false;
-    opacity = activeOpacity;
-    position = position;
   }
 
   const _custom_onrelease = (event: KeyboardEvent) => {
     let down = false;
     if (_input.key_x_pos == event.key || _input.key_x_neg == event.key) {
-      position[0] = 0;
+      pos[0] = 0;
       down = true;
     }
     if (_input.key_y_pos == event.key || _input.key_y_neg == event.key) {
-      position[1] = 0;
+      pos[1] = 0;
       down = true;
     }
     if (!down) {
       return
     }
+    calcPos(pos[0] * radius, pos[1] * radius);
     gamepadActive = true;
-    opacity = defaultOpacity;
-    position = position;
   }
 
   const _custom_onupdate = (gamepad: Gamepad) => {
