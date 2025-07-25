@@ -56,16 +56,16 @@ Buttons:<br />
         <input bind:value={vb.gamepad} type="number" />
       </td>
       <td>
-        {#each vb.gamepad_buttons as btn, btnIdx}
-          <input bind:value={vb.gamepad_buttons[btnIdx]} type="number" /><br />
+        {#each vb.buttons as btn, btnIdx}
+          <input bind:value={vb.buttons[btnIdx]} type="number" /><br />
         {/each}
       </td><td>
         <button>+</button>
       </td>
       <td>
-        {#each vb.keyboard_keys as key, keyIdx}
+        {#each vb.keys as key, keyIdx}
           <input 
-            bind:value={vb.keyboard_keys[keyIdx]} 
+            bind:value={vb.keys[keyIdx]} 
             type="text" /><br />
         {/each}
       </td><td>

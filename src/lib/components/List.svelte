@@ -26,14 +26,14 @@
     input_mapping = {
       name: 'List',
       gamepad: -1,
-      gamepad_axes: [1],
-      gamepad_axes_sens: 0.05, // sensitivity - at what value do we react to the axes movement?
-      gamepad_buttons: [0],
-      gamepad_prev_buttons: [12],  // up
-      gamepad_next_buttons: [13],  // down
-      keyboard_prev_keys: ['ArrowUp', 'w'],
-      keyboard_next_keys: ['ArrowDown', 's'],
-      keyboard_keys: ['e']
+      axes: [1],
+      sensitivity: 0.05, // sensitivity - at what value do we react to the axes movement?
+      buttons: [0],
+      buttons_prev: [12],  // up
+      buttons_next: [13],  // down
+      keys_prev: ['ArrowUp', 'w'],
+      keys_next: ['ArrowDown', 's'],
+      keys: ['e']  // activate
     }
   }: Props = $props();
 

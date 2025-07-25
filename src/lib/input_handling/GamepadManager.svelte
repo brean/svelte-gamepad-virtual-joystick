@@ -1,4 +1,6 @@
 <script lang="ts">
+  // TODO: GamepadInputHandler class that has a 
+  //  focussed-flag that gets set when the element is in focus
   import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/state/gamepad_callbacks.svelte.js'
   import { onMount } from "svelte";
 

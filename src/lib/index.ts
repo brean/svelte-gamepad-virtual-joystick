@@ -1,6 +1,6 @@
 // Reexport your entry components here
-import GamepadManager from "./components/GamepadManager.svelte";
-import KeyboardManager from "./components/KeyboardManager.svelte";
+import GamepadManager from "./input_handling/GamepadManager.svelte";
+import KeyboardManager from "./input_handling/KeyboardManager.svelte";
 import Joystick from "./components/Joystick.svelte";
 import Button from "./components/Button.svelte";
 import ButtonBase from "./components/ButtonBase.svelte";

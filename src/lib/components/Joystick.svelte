@@ -20,6 +20,7 @@
     position?: [x: number, y: number]
     style?: string
     input_mapping?: JoystickInput
+    focussed?: boolean
   }
 
   let {
@@ -48,7 +49,8 @@
       deadzoneY: 0.05,
       invert_x: false,
       invert_y: false
-    }
+    },
+    focussed = $bindable<boolean>(false)
   }: Props = $props();
 
   export function update(pos: [x: number, y: number]) {

@@ -1,16 +1,16 @@
 <script lang="ts">
   import Configuration from "$lib/components/Configuration.svelte";
-  import GamepadManager from "$lib/components/GamepadManager.svelte";
-  import KeyboardManager from "$lib/components/KeyboardManager.svelte";
+  import GamepadManager from "$lib/input_handling/GamepadManager.svelte";
+  import KeyboardManager from "$lib/input_handling/KeyboardManager.svelte";
   import Button from "$lib/components/Button.svelte";
   import Joystick from "$lib/components/Joystick.svelte";
   import List from "$lib/components/List.svelte";
+    import Slider from "$lib/components/Slider.svelte";
   
   let position_first: [x: number, y: number] = $state([0, 0]);
   let position_second: [x: number, y: number] = $state([0, 0]);
   let sideNavWidth = $state<string>('0');
   let navOpen = $state<boolean>(false);
-  let navClosed = $state<boolean>(true);
   let showConfig = $state<boolean>(false);
   let selectedIndex = $state(0);
   const listItems = [
@@ -36,13 +36,11 @@
   function hideNav() {
     sideNavWidth = '0';
     navOpen = false;
-    navClosed = true;
   }
 
   function showNav() {
     sideNavWidth = '250px';
     navOpen = true;
-    navClosed = false;
   }
 
   function listItemPressed() {
@@ -57,7 +55,7 @@
 <div id="sidenav" class="sidenav" style:width={sideNavWidth}>
   <button class="closebtn" onclick={toggleNav}>&times;</button>
   <List
-    disabled={navClosed}
+    disabled={!navOpen}
     onpressed={listItemPressed}
     bind:selectedIndex
     items={listItems}
@@ -75,11 +73,11 @@
   input_mapping={{
     name: 'Side Nav',
     gamepad: -1,
-    gamepad_buttons: [9],  // 9 = options-key on PS4-dualshock controller
-    keyboard_keys: ['q']
+    buttons: [9],  // 9 = options-key on PS4-dualshock controller
+    keys: ['q']
   }}
 >
-  Side Menu
+  Side Menu "Q"
 </Button><br />
 
 <!-- GamepadManager and KeyboardManager should be unique in your page. -->
@@ -90,7 +88,6 @@
 <Joystick
   style="background-color: rgb(6, 23, 28);"
   size={120}
-  disabled={navOpen}
   bind:position={position_first}
 />
 x: {position_first[0]}<br />
@@ -100,7 +97,6 @@ y: {position_first[1]}
 <div style="position: absolute; top: 30px; right: 30px;">
   <Joystick
     color={"rgb(236, 97, 159)" /* OSAKA_RED */}
-    disabled={navOpen}
     bind:position={position_second}
     input_mapping={{
       name: 'second Virtual Joystick',
@@ -126,12 +122,11 @@ y: {position_first[1]}
 <!-- rgb(29, 58, 143); /* GUAM_BLUE */ -->
 <Button
   style="background-color: rgb(29, 58, 143); color: white;"
-  disabled={navOpen}
   input_mapping={{
     name: 'blue button',
     gamepad: -1,
-    gamepad_buttons: [1],
-    keyboard_keys: ['r']
+    buttons: [1],
+    keys: ['r']
   }}
 >
   PRESS CIRCLE OR "R"!
@@ -140,16 +135,20 @@ y: {position_first[1]}
 <!-- rgb(247, 167, 018); /* ERFOUD_ORANGE */ -->
 <Button
   style="background-color: rgb(247, 167, 018);"
-  disabled={navOpen}
   input_mapping={{
     name: 'orange button',
     gamepad: -1,
-    gamepad_buttons: [3],
-    keyboard_keys: ['x']
+    buttons: [3],
+    keys: ['t']
   }}
 >
-  PRESS TRIANGLE OR "X"!
+  PRESS TRIANGLE OR "T"!
 </Button>
+<br /><br />
+<hr />
+<Slider /><br />
+<Slider /><br />
+<Slider />
 <br /><br />
 <hr />
 <button onclick={requestFullScreen}>Fullscreen</button>
@@ -159,8 +158,8 @@ y: {position_first[1]}
       input_mapping={{
         name: 'cancel settings',
         gamepad: -1,
-        gamepad_buttons: [1],
-        keyboard_keys: ['Escape', 'q']
+        buttons: [1],
+        keys: ['Escape', 'q']
       }}
       onpressed={() => {
         showConfig=false

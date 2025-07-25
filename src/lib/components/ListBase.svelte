@@ -20,19 +20,20 @@
     input_mapping = {
       name: 'List',
       gamepad: -1,
-      gamepad_axes: [1],
-      gamepad_axes_sens: 0.05, // sensitivity - at what value do we react to the axes movement?
-      gamepad_buttons: [0],
-      gamepad_prev_buttons: [12],  // up
-      gamepad_next_buttons: [13],  // down
-      keyboard_prev_keys: ['ArrowUp', 'w'],
-      keyboard_next_keys: ['ArrowDown', 's'],
-      keyboard_keys: ['e']
+      axes: [1],
+      sensitivity: 0.05, // sensitivity - at what value do we react to the axes movement?
+      buttons: [0],
+      buttons_prev: [12],  // up
+      buttons_next: [13],  // down
+      keys_prev: ['ArrowUp', 'w'],
+      keys_next: ['ArrowDown', 's'],
+      keys: ['e']  // activate
     }
   }: Props = $props();
 
+  // FIXME: we need to do something nicer than this!
   inputs.lists.push(input_mapping);
-  const _input = inputs.lists[inputs.lists.length - 1];
+  const _input: ListInput = inputs.lists[inputs.lists.length - 1];
   let axesDown = -1;
   
   onMount(() => {
@@ -40,17 +41,17 @@
       if (disabled) {
         return
       }
-      if (input_mapping.keyboard_keys.indexOf(event.key) > -1) {
+      if (input_mapping.keys.indexOf(event.key) > -1) {
         if (onpressed) {
           onpressed();
         }
         return;
       }
-      if (input_mapping.keyboard_next_keys.indexOf(event.key) > -1) {
+      if (input_mapping.keys_next.indexOf(event.key) > -1) {
         changeFocus(1);
         return;
       }
-      if (input_mapping.keyboard_prev_keys.indexOf(event.key) > -1) {
+      if (input_mapping.keys_prev.indexOf(event.key) > -1) {
         changeFocus(-1);
       }
     }
@@ -59,17 +60,17 @@
       if (disabled || !thisGamepad(_input, gamepad)) {
         return
       }
-      if (input_mapping.gamepad_buttons.indexOf(button) > -1) {
+      if (input_mapping.buttons.indexOf(button) > -1) {
         if (onpressed) {
           onpressed();
         }
         return;
       }
-      if (input_mapping.gamepad_next_buttons.indexOf(button) > -1) {
+      if (input_mapping.buttons_next.indexOf(button) > -1) {
         changeFocus(1);
         return;
       }
-      if (input_mapping.gamepad_prev_buttons.indexOf(button) > -1) {
+      if (input_mapping.buttons_prev.indexOf(button) > -1) {
         changeFocus(-1);
         return;
       }
@@ -80,9 +81,9 @@
       if (disabled || !thisGamepad(_input, gamepad)) {
         return
       }
-      for (const axesIdx of input_mapping.gamepad_axes) {
+      for (const axesIdx of input_mapping.axes) {
         const value = gamepad.axes[axesIdx];
-        let sensitivity = input_mapping.gamepad_axes_sens;
+        let sensitivity = input_mapping.sensitivity;
         if (value < -sensitivity && axesDown != axesIdx) {
           changeFocus(-1);
           axesDown = axesIdx;

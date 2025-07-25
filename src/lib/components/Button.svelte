@@ -27,8 +27,8 @@
     input_mapping = {
       name: '',
       gamepad: -1,
-      gamepad_buttons: [0],
-      keyboard_keys: ['e', ' ']
+      buttons: [0],
+      keys: ['e', ' ']
     }
   }: Props = $props();
 
@@ -61,6 +61,13 @@
     {style}
     class={(!disabled && pressed ? 'button_clicked ' : '') + cssclass}
     onpointerdown={_onpressed}
+    onclick={() => {
+      _onpressed();
+      setTimeout(() => {
+        _onrelease();
+      }, 50);
+      
+    }}
     onpointerup={_onrelease}>
   {@render children()}
 </button>

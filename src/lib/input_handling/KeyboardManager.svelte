@@ -1,4 +1,6 @@
 <script lang="ts">
+  // TODO: KeyboardInputHandler class that has a 
+  //  focussed-flag that gets set when the element is in focus
   import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/state/keyboard_callbacks.svelte.js'
 
   let keyDown: {[code: string]: boolean} = {}

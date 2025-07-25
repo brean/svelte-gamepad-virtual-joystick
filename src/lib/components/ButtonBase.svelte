@@ -26,8 +26,8 @@
     input_mapping = {
       name: '',
       gamepad: -1,
-      gamepad_buttons: [0],
-      keyboard_keys: ['e', ' ']
+      buttons: [0],
+      keys: ['e', ' ']
     }
   }: Props = $props();
 
@@ -56,19 +56,17 @@
 
   onMount(() => {
     inputs.buttons.push(input_mapping);
-    // for some reason we can not use input_mapping directly, I guess it gets
-    // copied when its pushed to inputs.buttons
     const _input = inputs.buttons[inputs.buttons.length - 1];
 
     function thisKey(event: KeyboardEvent): boolean {
-      return _input.keyboard_keys.indexOf(event.key) > -1
+      return _input.keys.indexOf(event.key) > -1
     }
 
     function thisGamepadButton(gamepad: Gamepad, button: number): boolean {
       if (!thisGamepad(_input, gamepad)) {
           return false
       }
-      return _input.gamepad_buttons.indexOf(button) > -1;
+      return _input.buttons.indexOf(button) > -1;
     }
 
     const _custom_onpressed = (event: KeyboardEvent) => {
