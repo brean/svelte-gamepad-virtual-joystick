@@ -2,9 +2,8 @@
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import { onMount, type Snippet } from "svelte";
   import { inputs } from '$lib/state/inputs.svelte.js';
-  import { thisGamepad } from '$lib/utils.js';
   import KeyboardInputHandler from "$lib/input_handling/KeyboardInputHandler.js";
-    import { handler, registerComponent, unregisterComponent } from "$lib/state/handler.svelte.js";
+    import { registerComponent, unregisterComponent } from "$lib/state/handler.svelte.js";
     import GamepadInputHandler from "$lib/input_handling/GamepadInputHandler.js";
 
   interface Props {
@@ -101,7 +100,6 @@
     const gp = new ButtonGamepadInput(input_mapping);
     registerComponent(context, kbd, gp);
     inputs.buttons.push(input_mapping);
-
     return () => {
       // cleanup on destroy
       // unregister configuration
