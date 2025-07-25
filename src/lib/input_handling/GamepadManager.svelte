@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
     import type GamepadInputHandler from "./GamepadInputHandler.js";
+    import { thisGamepad } from "$lib/utils.js";
+    import { handler } from "$lib/state/handler.svelte.js";
   interface INavigator {
     getGamepads: () => Gamepad[];
   }
@@ -23,15 +25,12 @@
   let buttonDown: {[button: string]: boolean} = {};
   let navigator: INavigator;
 
-  // all gamepad input handler inside this list will receive
-  // the update event.
-  let inputHandler: GamepadInputHandler[] = [];
-
   function gamePadConnected(evt: any) {
     navigator = evt.target.navigator;
   }
 
   export function updateGamepadValues() {
+    let inputHandler: GamepadInputHandler[] = handler.gamepad[context];
     // get all values from gamepad
     if (!navigator) {
       return;
@@ -44,13 +43,15 @@
       for (let i = 0; i < pad.buttons.length; i++) {
         if (pad.buttons[i].pressed) {
           inputHandler.forEach(handler => {
-            handler.onbuttonhold(pad, i)
+            if (handler.thisGamepadButton(pad, i)) {
+              handler.onbuttonhold(pad, i);
+            }
           });
           if (!buttonDown[i]) {
             buttonDown[i] = true;
 
             for (let handler of inputHandler) {
-              if (handler.onbuttonpressed(pad, i) === true) {
+              if (handler.thisGamepadButton(pad, i) && handler.onbuttonpressed(pad, i) === true) {
                 break;
               }
             };
@@ -59,10 +60,18 @@
         if (buttonDown[i] && !pad.buttons[i].pressed) {
           buttonDown[i] = false;
           // onbuttonrelease.forEach((func) => func(pad, i));
-          inputHandler.forEach((handler) => handler.onbuttonrelease(pad, i));
+          inputHandler.forEach((handler) => {
+            if (handler.thisGamepadButton(pad, i)) {
+              handler.onbuttonrelease(pad, i)
+            }
+         });
         }
       }
-      inputHandler.forEach((handler) => handler.onupdate(pad));
+      inputHandler.forEach((handler) => {
+        if (thisGamepad(handler.input, pad)) {
+          handler.onupdate(pad)
+        }
+      });
     }
   }
 

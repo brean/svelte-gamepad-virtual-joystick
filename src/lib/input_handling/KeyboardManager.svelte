@@ -1,13 +1,15 @@
 <script lang="ts">
-    import type KeyboardInputHandler from "./KeyboardInputHandler.js";
+    import { handler } from "$lib/state/handler.svelte.js";
+  import type KeyboardInputHandler from "./KeyboardInputHandler.js";
 
   let keyDown: {[code: string]: boolean} = {}
-  let inputHandler: KeyboardInputHandler[] = [];
+  let context = 'default';
 
   // press once (behaves different then "press" in Firefox which is called all the time while the button is pressed)
   let keypress = (event: KeyboardEvent) => {
+    let inputHandler: KeyboardInputHandler[] = handler.keyboard[context];
     for (let handler of inputHandler) {
-      if (handler.onkeypressed(event) === true) {
+      if (handler.thisKey(event) && handler.onkeypressed(event) === true) {
         break;
       }
     };
@@ -18,16 +20,22 @@
     if (!keyDown[event.key]) {
       keypress(event);
     }
+    let inputHandler: KeyboardInputHandler[] = handler.keyboard[context];
     keyDown[event.key] = true;
     inputHandler.forEach((handler) => {
-      handler.onkeyhold(event);
+      if (handler.thisKey(event)) {
+        handler.onkeyhold(event);
+      }
     })
   }
 
   let release = (event: KeyboardEvent) => {
     delete keyDown[event.key];
+    let inputHandler: KeyboardInputHandler[] = handler.keyboard[context];
     inputHandler.forEach((handler) => {
-      handler.onkeyrelease(event);
+      if (handler.thisKey(event)) {
+        handler.onkeyrelease(event);
+      }
     })
   }
 

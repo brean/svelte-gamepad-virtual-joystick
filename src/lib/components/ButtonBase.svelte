@@ -4,6 +4,8 @@
   import { inputs } from '$lib/state/inputs.svelte.js';
   import { thisGamepad } from '$lib/utils.js';
   import KeyboardInputHandler from "$lib/input_handling/KeyboardInputHandler.js";
+    import { handler } from "$lib/state/handler.svelte.js";
+    import GamepadInputHandler from "$lib/input_handling/GamepadInputHandler.js";
 
   interface Props {
     children: Snippet,
@@ -13,6 +15,7 @@
     onrelease?: (() => void),
     pressed?: boolean,
     input_mapping?: ButtonInput
+    context?: string[]
   }
 
   let {
@@ -27,103 +30,100 @@
       gamepad: -1,
       buttons: [0],
       keys: ['e', ' ']
-    }
+    },
+    context = ['default']
   }: Props = $props();
 
+  const _onpressed = () => {
+    if (disabled) {
+      return;
+    }
+    pressed = true;
+    if (onpressed) {
+      onpressed();
+    }
+  }
+
+  const _onhold = () => {
+    if (!disabled && onhold) {
+      onhold();
+    }
+  }
+
+  const _onrelease = () => {
+    pressed = false;
+    if (onrelease) {
+      onrelease();
+    }
+  }
+
   class ButtonKeyboardInput extends KeyboardInputHandler {
+    thisKey(event: KeyboardEvent): boolean {
+      return (this.input as ButtonInput).keys.indexOf(event.key) > -1
+    }
+
     onkeypressed(event: KeyboardEvent): boolean {
-      if (disabled) {
-        return false;
-      }
-      pressed = true;
-      if (onpressed) {
-        onpressed();
-      }
+      _onpressed();
       return super.onkeypressed(event);
     }
 
     onkeyhold(event: KeyboardEvent): void {
-      if (!disabled && onhold) {
-        onhold();
-      }
+      _onhold();
     }
 
     onkeyrelease(event: KeyboardEvent): void {
-      pressed = false;
-      if (onrelease) {
-        onrelease();
-      }
+      _onrelease();
+    }
+  }
+
+  class ButtonGamepadInput extends GamepadInputHandler {
+    thisGamepadButton(gamepad: Gamepad, btn: number): boolean {
+      return super.thisGamepadButton(gamepad, btn) && 
+        (this.input as ButtonInput).buttons.indexOf(btn) > -1
+    }
+
+    onbuttonpressed(gamepad: Gamepad, btn: number): boolean {
+      _onpressed();
+      return super.onbuttonpressed(gamepad, btn);
+    }
+
+    onbuttonhold(gamepad: Gamepad, btn: number): void {
+      _onhold();
+    }
+
+    onbuttonrelease(gamepad: Gamepad, btn: number): void {
+      _onrelease();
     }
   }
 
   onMount(() => {
+    const btn = new ButtonKeyboardInput(input_mapping);
+    const gp = new ButtonGamepadInput(input_mapping);
+    context.forEach((ctx) => {
+      if (!handler.keyboard[ctx]) {
+        handler.keyboard[ctx] = [];
+      }
+      handler.keyboard[ctx].push(btn);
+
+      if (!handler.gamepad[ctx]) {
+        handler.gamepad[ctx] = [];
+      }
+      handler.gamepad[ctx].push(gp)
+    });
     inputs.buttons.push(input_mapping);
-    const _input = inputs.buttons[inputs.buttons.length - 1];
 
-    function thisKey(event: KeyboardEvent): boolean {
-      return _input.keys.indexOf(event.key) > -1
-    }
-
-    function thisGamepadButton(gamepad: Gamepad, button: number): boolean {
-      if (!thisGamepad(_input, gamepad)) {
-          return false
-      }
-      return _input.buttons.indexOf(button) > -1;
-    }
-
-    const _custom_onpressed = (event: KeyboardEvent) => {
-      if (thisKey(event)) {
-        _onpressed();
-      }
-    }
-    const _custom_onrelease = (event: KeyboardEvent) => {
-      if (thisKey(event)) {
-        _onrelease();
-      }
-    }
-    const _custom_onhold = (event: KeyboardEvent) => {
-      if (thisKey(event)) {
-        _onhold();
-      }
-    }
-
-    const _custom_buttonpressed = (pad: Gamepad, button: number) => {
-      if (thisGamepadButton(pad, button)) {
-        _onpressed();
-      }
-    }
-
-    const _custom_buttonrelease = (pad: Gamepad, button: number) => {
-      if (thisGamepadButton(pad, button)) {
-        _onrelease();
-      }
-    }
-
-    const _custom_buttonhold = (pad: Gamepad, button: number) => {
-      if (thisGamepadButton(pad, button)) {
-        _onhold();
-      }
-    }
-    // keyboard
-    onkeypressed.push(_custom_onpressed);
-    onkeyrelease.push(_custom_onrelease);
-    onkeyhold.push(_custom_onhold);
-    // gamepad
-    onbuttonpressed.push(_custom_buttonpressed);
-    onbuttonrelease.push(_custom_buttonrelease);
-    onbuttonhold.push(_custom_buttonhold);
     return () => {
       // cleanup on destroy
-      // keyboard
-      onkeypressed.splice(onkeypressed.indexOf(_custom_onpressed), 1);
-      onkeyrelease.splice(onkeyrelease.indexOf(_custom_onrelease), 1);
-      onkeyhold.splice(onkeyhold.indexOf(_custom_onhold), 1);
-      // gamepad
-      onbuttonpressed.splice(onbuttonpressed.indexOf(_custom_buttonpressed), 1);
-      onbuttonrelease.splice(onbuttonrelease.indexOf(_custom_buttonrelease), 1);
-      onbuttonhold.splice(onbuttonhold.indexOf(_custom_buttonhold), 1);
       // unregister configuration
-      inputs.buttons.splice(inputs.buttons.indexOf(_input), 1);
+      inputs.buttons.splice(inputs.buttons.indexOf(input_mapping), 1);
+      context.forEach((ctx) => {
+        if (handler.keyboard[ctx]) {
+          handler.keyboard[ctx].splice(handler.keyboard[ctx].indexOf(btn), 1);
+        }
+        if (handler.gamepad[ctx]) {
+          handler.gamepad[ctx].splice(handler.gamepad[ctx].indexOf(gp), 1);
+        }
+      });
     }
   });
 </script>
