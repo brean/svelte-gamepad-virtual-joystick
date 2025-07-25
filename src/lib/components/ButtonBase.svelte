@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/state/keyboard_callbacks.svelte.js'
-  import { onbuttonpressed, onbuttonrelease, onbuttonhold } from '$lib/state/gamepad_callbacks.svelte.js';
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import { onMount, type Snippet } from "svelte";
   import { inputs } from '$lib/state/inputs.svelte.js';
   import { thisGamepad } from '$lib/utils.js';
+  import KeyboardInputHandler from "$lib/input_handling/KeyboardInputHandler.js";
 
   interface Props {
     children: Snippet,
@@ -31,26 +30,29 @@
     }
   }: Props = $props();
 
-  const _onpressed = () => {
-    if (disabled) {
-      return;
+  class ButtonKeyboardInput extends KeyboardInputHandler {
+    onkeypressed(event: KeyboardEvent): boolean {
+      if (disabled) {
+        return false;
+      }
+      pressed = true;
+      if (onpressed) {
+        onpressed();
+      }
+      return super.onkeypressed(event);
     }
-    pressed = true;
-    if (onpressed) {
-      onpressed();
-    }
-  }
 
-  const _onhold = () => {
-    if (!disabled && onhold) {
-      onhold();
+    onkeyhold(event: KeyboardEvent): void {
+      if (!disabled && onhold) {
+        onhold();
+      }
     }
-  }
 
-  const _onrelease = () => {
-    pressed = false;
-    if (onrelease) {
-      onrelease();
+    onkeyrelease(event: KeyboardEvent): void {
+      pressed = false;
+      if (onrelease) {
+        onrelease();
+      }
     }
   }
 

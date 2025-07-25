@@ -1,8 +1,9 @@
 export default class KeyboardInputHandler {
-  active: boolean = true;  // only when its focussed and not disabled
+  focussed: boolean = true;
 
   // key pressed (down)
-  onkeypressed(event: KeyboardEvent) {
+  onkeypressed(event: KeyboardEvent): boolean {
+    return false;
   }
 
   // key released (up)

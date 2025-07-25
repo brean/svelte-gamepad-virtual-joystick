@@ -1,18 +1,19 @@
 export default class GamepadInputHandler {
-  active: boolean = true;  // only when its focussed and not disabled
+  focussed: boolean = true;
 
   // button pressed (down)
-  onbuttonpressed(gamepad: Gamepad, btn: number) {
+  onbuttonpressed(gamepad: Gamepad, btn: number): boolean {
+    return false;
   }
 
   // button released (up)
-  onbuttonrelease(gamepad: Gamepad, btn: number) {
+  onbuttonrelease(gamepad: Gamepad, btn: number): void {
   }
 
   // button hold down
-  onbuttonhold(gamepad: Gamepad, btn: number) {
+  onbuttonhold(gamepad: Gamepad, btn: number): void {
   }
 
-  onupdate(gamepad: Gamepad) {
+  onupdate(gamepad: Gamepad): void {
   }
 }

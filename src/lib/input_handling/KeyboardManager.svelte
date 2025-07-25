@@ -1,14 +1,13 @@
 <script lang="ts">
-  // TODO: KeyboardInputHandler class that has a 
-  //  focussed-flag that gets set when the element is in focus
-  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/state/keyboard_callbacks.svelte.js'
+    import type KeyboardInputHandler from "./KeyboardInputHandler.js";
 
   let keyDown: {[code: string]: boolean} = {}
+  let inputHandler: KeyboardInputHandler[] = [];
 
   // press once (behaves different then "press" in Firefox which is called all the time while the button is pressed)
   let keypress = (event: KeyboardEvent) => {
-    for (let cb of onkeypressed) {
-      if (cb(event) === true) {
+    for (let handler of inputHandler) {
+      if (handler.onkeypressed(event) === true) {
         break;
       }
     };
@@ -20,15 +19,15 @@
       keypress(event);
     }
     keyDown[event.key] = true;
-    onkeyhold.forEach((cb) => {
-      cb(event);
+    inputHandler.forEach((handler) => {
+      handler.onkeyhold(event);
     })
   }
 
   let release = (event: KeyboardEvent) => {
     delete keyDown[event.key];
-    onkeyrelease.forEach((cb) => {
-      cb(event);
+    inputHandler.forEach((handler) => {
+      handler.onkeyrelease(event);
     })
   }
 

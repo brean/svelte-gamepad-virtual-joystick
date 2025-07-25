@@ -1,30 +1,31 @@
 <script lang="ts">
-  // TODO: GamepadInputHandler class that has a 
-  //  focussed-flag that gets set when the element is in focus
-  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/state/gamepad_callbacks.svelte.js'
   import { onMount } from "svelte";
+    import type GamepadInputHandler from "./GamepadInputHandler.js";
+  interface INavigator {
+    getGamepads: () => Gamepad[];
+  }
 
   interface Props {
     updateUsingAnimationFrame?: boolean,
     updateUsingInterval?: boolean,
     timeout?: number
+    context?: string
   }
-
   // if you use another external animation frame update function
   // you can call .updateGamepadValues directly.
   let {
     updateUsingAnimationFrame = false,
     updateUsingInterval = true,
-    timeout = 1000.0 / 25.0  // 25 fps = 40 ms.
+    timeout = 1000.0 / 25.0,  // 25 fps = 40 ms.
+    context = 'default'  // 
   }: Props = $props();
-
-  let buttons: {[button: string]: boolean} = {};
-
-  interface INavigator {
-    getGamepads: () => Gamepad[];
-  }
-
+  // save button states to handle pressed/hold events.
+  let buttonDown: {[button: string]: boolean} = {};
   let navigator: INavigator;
+
+  // all gamepad input handler inside this list will receive
+  // the update event.
+  let inputHandler: GamepadInputHandler[] = [];
 
   function gamePadConnected(evt: any) {
     navigator = evt.target.navigator;
@@ -42,22 +43,26 @@
       }
       for (let i = 0; i < pad.buttons.length; i++) {
         if (pad.buttons[i].pressed) {
-          onbuttonhold.forEach((func) => func(pad, i));
-          if (!buttons[i]) {
-            buttons[i] = true;
-            for (let cb of onbuttonpressed) {
-              if (cb(pad, i) === true) {
+          inputHandler.forEach(handler => {
+            handler.onbuttonhold(pad, i)
+          });
+          if (!buttonDown[i]) {
+            buttonDown[i] = true;
+
+            for (let handler of inputHandler) {
+              if (handler.onbuttonpressed(pad, i) === true) {
                 break;
               }
             };
           }
         }
-        if (buttons[i] && !pad.buttons[i].pressed) {
-          buttons[i] = false;
-          onbuttonrelease.forEach((func) => func(pad, i));
+        if (buttonDown[i] && !pad.buttons[i].pressed) {
+          buttonDown[i] = false;
+          // onbuttonrelease.forEach((func) => func(pad, i));
+          inputHandler.forEach((handler) => handler.onbuttonrelease(pad, i));
         }
       }
-      onupdate.forEach((func) => func(pad));
+      inputHandler.forEach((handler) => handler.onupdate(pad));
     }
   }
 
