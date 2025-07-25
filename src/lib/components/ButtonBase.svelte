@@ -4,7 +4,7 @@
   import { inputs } from '$lib/state/inputs.svelte.js';
   import { thisGamepad } from '$lib/utils.js';
   import KeyboardInputHandler from "$lib/input_handling/KeyboardInputHandler.js";
-    import { handler } from "$lib/state/handler.svelte.js";
+    import { handler, registerComponent, unregisterComponent } from "$lib/state/handler.svelte.js";
     import GamepadInputHandler from "$lib/input_handling/GamepadInputHandler.js";
 
   interface Props {
@@ -97,33 +97,16 @@
   }
 
   onMount(() => {
-    const btn = new ButtonKeyboardInput(input_mapping);
+    const kbd = new ButtonKeyboardInput(input_mapping);
     const gp = new ButtonGamepadInput(input_mapping);
-    context.forEach((ctx) => {
-      if (!handler.keyboard[ctx]) {
-        handler.keyboard[ctx] = [];
-      }
-      handler.keyboard[ctx].push(btn);
-
-      if (!handler.gamepad[ctx]) {
-        handler.gamepad[ctx] = [];
-      }
-      handler.gamepad[ctx].push(gp)
-    });
+    registerComponent(context, kbd, gp);
     inputs.buttons.push(input_mapping);
 
     return () => {
       // cleanup on destroy
       // unregister configuration
       inputs.buttons.splice(inputs.buttons.indexOf(input_mapping), 1);
-      context.forEach((ctx) => {
-        if (handler.keyboard[ctx]) {
-          handler.keyboard[ctx].splice(handler.keyboard[ctx].indexOf(btn), 1);
-        }
-        if (handler.gamepad[ctx]) {
-          handler.gamepad[ctx].splice(handler.gamepad[ctx].indexOf(gp), 1);
-        }
-      });
+      unregisterComponent(context, kbd, gp);
     }
   });
 </script>
