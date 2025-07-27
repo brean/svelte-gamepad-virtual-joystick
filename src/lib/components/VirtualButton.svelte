@@ -4,7 +4,6 @@ press a special button to activate a custom function
 for example show all warnings
 */
   import type ButtonInput from "$lib/models/ButtonInput.js";
-  import { type Snippet } from "svelte";
   import ButtonBase from "./ButtonBase.svelte";
 
    interface Props {

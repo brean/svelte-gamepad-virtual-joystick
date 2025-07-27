@@ -264,6 +264,8 @@
 <svelte:window on:pointerup={reset} />
 
 <div id="joystick_area"
+    tabindex={0}
+    role="button"
     {style}
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}

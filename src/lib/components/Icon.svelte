@@ -30,6 +30,7 @@
     15: 'playstation_dpad_right',
     16: 'playstation_button_circle',
     'axis_left': 'playstation_stick_l',
+    'axis_right': 'playstation_stick_r',
   }
 
   // map to the original kenney file names - makes updating easier.
