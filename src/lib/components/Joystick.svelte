@@ -263,6 +263,7 @@
 
 <svelte:window on:pointerup={reset} />
 
+<!-- TOOD: require_focus? -->
 <div id="joystick_area"
     tabindex={0}
     role="button"
