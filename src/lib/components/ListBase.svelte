@@ -2,8 +2,6 @@
   import type ListInput from "$lib/models/ListInput.js";
   import { inputs } from "$lib/state/inputs.svelte.js";
   import { onMount } from "svelte";
-  import { onkeypressed, onkeyrelease } from '$lib/state/keyboard_callbacks.svelte.js'
-  import { onbuttonpressed, onbuttonrelease, onupdate } from '$lib/state/gamepad_callbacks.svelte.js';
   import { thisGamepad } from "$lib/utils.js";
 
   interface Props {
@@ -41,17 +39,17 @@
       if (disabled) {
         return
       }
-      if (input_mapping.keys.indexOf(event.key) > -1) {
+      if (input_mapping.keys.includes(event.key)) {
         if (onpressed) {
           onpressed();
         }
         return;
       }
-      if (input_mapping.keys_next.indexOf(event.key) > -1) {
+      if (input_mapping.keys_next.includes(event.key)) {
         changeFocus(1);
         return;
       }
-      if (input_mapping.keys_prev.indexOf(event.key) > -1) {
+      if (input_mapping.keys_prev.includes(event.key)) {
         changeFocus(-1);
       }
     }
@@ -60,17 +58,17 @@
       if (disabled || !thisGamepad(_input, gamepad)) {
         return
       }
-      if (input_mapping.buttons.indexOf(button) > -1) {
+      if (input_mapping.buttons.includes(button)) {
         if (onpressed) {
           onpressed();
         }
         return;
       }
-      if (input_mapping.buttons_next.indexOf(button) > -1) {
+      if (input_mapping.buttons_next.includes(button)) {
         changeFocus(1);
         return;
       }
-      if (input_mapping.buttons_prev.indexOf(button) > -1) {
+      if (input_mapping.buttons_prev.includes(button)) {
         changeFocus(-1);
         return;
       }
@@ -101,6 +99,7 @@
     }
 
     // keyboard
+    /*
     onkeypressed.push(_custom_onpressed);
     // gamepad
     onbuttonpressed.push(_custom_buttonpressed);
@@ -115,5 +114,6 @@
       // unregister configuration
       inputs.lists.splice(inputs.lists.indexOf(_input), 1);
     }
+      */
   });
 </script>

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { onkeypressed, onkeyrelease, onkeyhold } from '$lib/state/keyboard_callbacks.svelte.js'
-  import { onbuttonpressed, onbuttonrelease, onbuttonhold, onupdate } from '$lib/state/gamepad_callbacks.svelte.js';
-
   import { angle, distance, clamp, findCoord, thisGamepad } from "$lib/utils.js";
   import { onMount } from "svelte";
   import type JoystickInput from "$lib/models/JoystickInput.js";
-  import { inputs } from "$lib/state/inputs.svelte.js";
+  import InputComponent from "$lib/input_handling/InputComponent.js";
+  import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+  import Icon from "./Icon.svelte";
+  import { fade } from "svelte/transition";
 
   interface Props {
     disabled?: boolean
@@ -20,7 +20,9 @@
     position?: [x: number, y: number]
     style?: string
     input_mapping?: JoystickInput
-    focussed?: boolean
+    focussed?: boolean,
+    context?: string[],
+    invert_colors?: boolean
   }
 
   let {
@@ -38,28 +40,31 @@
     style = 'background-color: rgb(215, 219, 221);', /* MOON_GRAY */
     input_mapping = {
       name: 'Virtual Joystick',
+      // gamepad
       gamepad: -1,
       axes_x: 0,
       axes_y: 1,
-      key_x_pos: 'd',
-      key_x_neg: 'a',
-      key_y_pos: 's',
-      key_y_neg: 'w',
+      button_x_pos: [15],
+      button_x_neg: [14],
+      button_y_pos: [13],
+      button_y_neg: [12],
       deadzoneX: 0.05,
       deadzoneY: 0.05,
+      // keyboard
+      key_x_pos: ['d'],
+      key_x_neg: ['a'],
+      key_y_pos: ['s'],
+      key_y_neg: ['w'],
+
       invert_x: false,
       invert_y: false
     },
-    focussed = $bindable<boolean>(false)
+    focussed = $bindable<boolean>(false),
+    context=['default'],
+    invert_colors=true
   }: Props = $props();
 
-  export function update(pos: [x: number, y: number]) {
-    // get position values from another external source.
-    // make sure x and y are valid in your own code.
-    // take a look at the onpointermove-function on how
-    // to clamp and validate your coordinates.
-    position = pos;
-  }
+  let pos: [x: number, y: number] = [0, 0]
 
   const radius = size/2;
   let pointerActive: boolean = false;
@@ -69,11 +74,131 @@
   let gamepadActive = true;
   let opacity = $state(defaultOpacity);
 
-  inputs.joysticks.push(input_mapping);
-  const _input = inputs.joysticks[inputs.joysticks.length - 1];
+  class JoystickInputComponent extends InputComponent {
+    xPos = false;
+    xNeg = false;
+    yPos = false;
+    yNeg = false;
+
+    onrelease(): void {
+      let x = pos[0];
+      let y = pos[1];
+      if (this.xPos || this.xNeg) {
+        x = 0;
+      }
+
+      if (this.yPos || this.yNeg) {
+        y = 0;
+      }
+
+      if (x == pos[0] && y == pos[1]) {
+        return
+      }
+
+      // Proceed with calculations now that we know a valid key was pressed.
+      calcPos(x * radius, y * radius);
+      pos = [x, y];
+      gamepadActive = true;
+    }
+
+    onhold(): void {
+      let x = pos[0];
+      let y = pos[1];
+      if (this.xPos) {
+        x = 1;
+      } else if (this.xNeg) {
+        x = -1;
+      }
+
+      if (this.yPos) {
+        y = 1;
+      } else if (this.yNeg) {
+        y = -1;
+      }
+
+      if (x == pos[0] && y == pos[1]) {
+        return
+      }
+
+      // Proceed with calculations now that we know a valid key was pressed.
+      calcPos(x * radius, y * radius);
+      pos = [x, y];
+      gamepadActive = false;
+    }
+
+    // keyboard
+    updateKeys(event: KeyboardEvent) {
+      this.xPos = input_mapping.key_x_pos.includes(event.key);
+      this.xNeg = input_mapping.key_x_neg.includes(event.key);
+      this.yPos = input_mapping.key_y_pos.includes(event.key);
+      this.yNeg = input_mapping.key_y_neg.includes(event.key);
+    }
+
+    onkeyrelease(event?: KeyboardEvent): void {
+      if (disabled || !event) {
+        return
+      }
+      this.updateKeys(event)
+      super.onkeyrelease(event);
+    }
+
+    onkeyhold(event?: KeyboardEvent): void {
+      if (disabled || !event) {
+        return
+      }
+      this.updateKeys(event)
+      super.onkeyhold(event);
+    }
+
+    // gamepad
+    updateButton(idx: number) {
+      this.xPos = input_mapping.button_x_pos.includes(idx);
+      this.xNeg = input_mapping.button_x_neg.includes(idx);
+      this.yPos = input_mapping.button_y_pos.includes(idx);
+      this.yNeg = input_mapping.button_y_neg.includes(idx);
+    }
+
+    onbuttonhold(gamepad: Gamepad, btn: number): void {
+      if (disabled) {
+        return
+      }
+      this.updateButton(btn)
+      super.onbuttonhold(gamepad, btn);
+    }
+
+    onbuttonrelease(gamepad: Gamepad, btn: number): void {
+      if (disabled) {
+        return
+      }
+      this.updateButton(btn)
+      super.onbuttonrelease(gamepad, btn);
+    }
+
+    onupdate(gamepad: Gamepad): void {
+      if (disabled || !gamepadActive || !thisGamepad(input_mapping, gamepad)) {
+        return
+      }
+      let xcoord = gamepad.axes[input_mapping.axes_x];
+      let ycoord = gamepad.axes[input_mapping.axes_y];
+      if (input_mapping.invert_x) {
+        xcoord = -xcoord;
+      }
+      if (input_mapping.invert_y) {
+        ycoord = -ycoord;
+      }
+      if (Math.abs(xcoord) < input_mapping.deadzoneX && 
+          Math.abs(ycoord) < input_mapping.deadzoneY) {
+        opacity = defaultOpacity;
+        position = [0, 0]
+        return;
+      }
+      opacity = activeOpacity;
+      position = [xcoord, ycoord];
+    }
+  }
 
   function onpointermove(evt: MouseEvent) {
-    if (disabled || !_input.gamepad || !pointerActive || !evt.target) {
+    if (disabled || !input_mapping.gamepad || !pointerActive || !evt.target) {
       return
     }
     gamepadActive = false;
@@ -88,7 +213,7 @@
     // center of the joystick area
     let x = (posx - (backgroundWidth / 2));
     let y = (posy - (backgroundHeight / 2));
-    calcPos(x, y)
+    calcPos(x, y);
   }
 
   function calcPos(x:number, y:number) {
@@ -101,8 +226,8 @@
     // normalize corrds
     let xcoord = coords[0] / radius
     let ycoord = coords[1] / radius
-    if (Math.abs(xcoord) < _input.deadzoneX && 
-        Math.abs(ycoord) < _input.deadzoneY) {
+    if (Math.abs(xcoord) < input_mapping.deadzoneX && 
+        Math.abs(ycoord) < input_mapping.deadzoneY) {
       position = [0, 0];
       opacity = defaultOpacity;
       return;
@@ -114,95 +239,11 @@
   }
 
   function reset() {
+    /** reset on pointer up */
     pointerActive = false;
     opacity = defaultOpacity;
     position = [0, 0]
   }
-
-
-  let pos = [0, 0]
-  const _custom_onhold = (event: KeyboardEvent) => {
-    // a keyboard button has been pressed
-    if (disabled) {
-      return
-    }
-    let down = false;
-    if (_input.key_x_pos == event.key) {
-      pos[0] = 1;
-      down = true;
-    }
-    else if (_input.key_x_neg == event.key) {
-      pos[0] = -1;
-      down = true;
-    }
-    if (_input.key_y_pos == event.key) {
-      pos[1] = 1;
-      down = true;
-    }
-    else if (_input.key_y_neg == event.key) {
-      pos[1] = -1;
-      down = true;
-    }
-    if (!down) {
-      return
-    }
-    calcPos(pos[0] * radius, pos[1] * radius);
-    gamepadActive = false;
-  }
-
-  const _custom_onrelease = (event: KeyboardEvent) => {
-    let down = false;
-    if (_input.key_x_pos == event.key || _input.key_x_neg == event.key) {
-      pos[0] = 0;
-      down = true;
-    }
-    if (_input.key_y_pos == event.key || _input.key_y_neg == event.key) {
-      pos[1] = 0;
-      down = true;
-    }
-    if (!down) {
-      return
-    }
-    calcPos(pos[0] * radius, pos[1] * radius);
-    gamepadActive = true;
-  }
-
-  const _custom_onupdate = (gamepad: Gamepad) => {
-    if (disabled || !gamepadActive || !thisGamepad(_input, gamepad)) {
-      return
-    }
-    let xcoord = gamepad.axes[_input.axes_x];
-    let ycoord = gamepad.axes[_input.axes_y];
-    if (_input.invert_x) {
-      xcoord = -xcoord;
-    }
-    if (_input.invert_y) {
-      ycoord = -ycoord;
-    }
-    if (Math.abs(xcoord) < _input.deadzoneX && 
-        Math.abs(ycoord) < _input.deadzoneY) {
-      opacity = defaultOpacity;
-      position = [0, 0]
-      return;
-    }
-    opacity = activeOpacity;
-    position = [xcoord, ycoord];
-  }
-
-  onMount(() => {
-    onkeyhold.push(_custom_onhold);
-    onkeyrelease.push(_custom_onrelease);
-    onupdate.push(_custom_onupdate);
-    return () => {
-      // cleanup on destroy
-      // keyboard
-      onkeyhold.splice(onkeyhold.indexOf(_custom_onhold), 1);
-      onkeyrelease.splice(onkeyrelease.indexOf(_custom_onrelease), 1);
-      onupdate.splice(onupdate.indexOf(_custom_onupdate), 1);
-      // unregister configuration
-      inputs.joysticks.splice(inputs.joysticks.indexOf(_input), 1);
-    }
-  });
 
   const activateGamepad = () => {
     if (disabled) {
@@ -210,6 +251,14 @@
       }
       gamepadActive = true;
   }
+
+  onMount(() => {
+    const comp = new JoystickInputComponent(input_mapping);
+    registerComponent(context, comp);
+    return () => {
+      unregisterComponent(context, comp);
+    }
+  });
 </script>
 
 <svelte:window on:pointerup={reset} />
@@ -233,6 +282,85 @@
     ontouchend={activateGamepad}
     onpointerout={activateGamepad}
     >
+  {#if component_store.showHints}
+  <div
+    class="hints_container"
+    style:width={backgroundWidth + 'px'}
+    style:height={backgroundHeight + 'px'}
+    out:fade in:fade
+  >
+    <div class="hint">
+      {#if [0, 1].includes(input_mapping.axes_x) && [0, 1].includes(input_mapping.axes_y) }
+      <Icon 
+          type='ps4'
+          input={'axis_left'}
+          {invert_colors}></Icon>
+      {:else if [2, 3].includes(input_mapping.axes_x) && [2, 3].includes(input_mapping.axes_y) }
+      <Icon 
+          type='ps4'
+          input={'axis_right'}
+          {invert_colors}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-up">
+      {#if input_mapping.key_y_neg.length > 0 }
+        <Icon 
+          type='keyboard_mouse'
+          input={input_mapping.key_y_neg[0]}
+          {invert_colors}></Icon>
+      {/if}
+      {#if input_mapping.button_y_neg.length > 0 }
+        <Icon
+          type='ps4'
+          input={input_mapping.button_y_neg[0]}
+          {invert_colors}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-down">
+      {#if input_mapping.key_y_pos.length > 0}
+        <Icon 
+          type='keyboard_mouse'
+          input={input_mapping.key_y_pos[0]}
+          {invert_colors}></Icon>
+      {/if}
+      {#if input_mapping.button_y_pos.length > 0 }
+        <Icon
+          type='ps4'
+          input={input_mapping.button_y_pos[0]}
+          {invert_colors}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-left">
+      {#if input_mapping.key_x_neg.length > 0}
+        <Icon 
+          type='keyboard_mouse'
+          input={input_mapping.key_x_neg[0]}
+          {invert_colors}></Icon><br />
+      {/if}
+      {#if input_mapping.button_x_neg.length > 0 }
+        <Icon
+          type='ps4'
+          input={input_mapping.button_x_neg[0]}
+          {invert_colors}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-right">
+      {#if input_mapping.key_x_pos.length > 0}
+        <Icon 
+          type='keyboard_mouse'
+          input={input_mapping.key_x_pos[0]}
+          {invert_colors}></Icon><br />
+      {/if}
+      {#if input_mapping.button_x_pos.length > 0 }
+        <Icon
+          type='ps4'
+          input={input_mapping.button_x_pos[0]}
+          {invert_colors}></Icon>
+      {/if}
+    </div>
+  </div>
+  {/if}
+
   <div class="joystick_container"
     style:left={((backgroundWidth - size) / 2) + 'px'}
     style:top={((backgroundHeight - size) / 2) + 'px'}
@@ -242,6 +370,7 @@
       style:height={size + 'px'}
       style:background={color}
       style:opacity={opacity}
+      style:transition={"none"}
       style:border={border > 0 ? border + 'px solid ' + borderColor : 0}
     ></div>
     <div class="joystick_front"
@@ -249,7 +378,7 @@
       style:top={position[1] * radius + 'px'}
       style:margin-top={(radius / 2) + 'px'}
       style:margin-left={(radius / 2) + 'px'}
-      style:transition={'none'}
+      style:transition={"opacity 0.2s ease-in-out"}
       style:width={(radius) + 'px'}
       style:height={(radius) + 'px'}
       style:background={color}
@@ -257,6 +386,7 @@
       style:border={border > 0 ? border + 'px solid ' + borderColor : 0}
     ></div>
   </div>
+
 </div>
 
 <style>
@@ -289,6 +419,45 @@
     display: block;
     border-radius: 50%;
     touch-action: none;
-    
+  }
+
+  /* Hint styles */
+   .hints_container {
+    position: absolute;
+    pointer-events: none; /* Prevents this layer from capturing clicks */
+    user-select: none;   /* Prevents text selection */
+  }
+
+  .hint {
+    position: absolute;
+    color: #555;
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  /* Position each hint inside the square hints_container */
+  .hint-up {
+    top: 6px; /* Small padding from the top edge */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .hint-down {
+    bottom: 6px; /* Small padding from the bottom edge */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .hint-left {
+    left: 8px; /* Small padding from the left edge */
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .hint-right {
+    right: 8px; /* Small padding from the right edge */
+    top: 50%;
+    transform: translateY(-50%);
   }
 </style>

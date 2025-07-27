@@ -5,6 +5,8 @@ Svelte library for complex input to your app, provides Gamepad integration with 
 
 The virtual Joystick can either be used as fallback when a real gamepad is not connected but a touchscreen is present, as indicator of the gamepad state or to provide a virtual joystick to the user.
 
+Provides custom focus and context management.
+
 ## Examples
 See the [+page.svelte](https://github.com/brean/svelte-gamepad-virtual-joystick/blob/main/src/routes/%2Bpage.svelte) file for a basic demo.
 

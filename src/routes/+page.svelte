@@ -1,24 +1,115 @@
 <script lang="ts">
-  import GamepadManager from "$lib/input_handling/GamepadManager.svelte";
-  import KeyboardManager from "$lib/input_handling/KeyboardManager.svelte";
+  import InputManager from "$lib/input_handling/InputManager.svelte";
   import Button from "$lib/components/Button.svelte";
+  import Slider from "$lib/components/Slider.svelte";
+  import Joystick from "$lib/components/Joystick.svelte";
+  import { fade } from "svelte/transition";
+  import { onMount } from "svelte";
+  import VirtualButton from "$lib/components/VirtualButton.svelte";
+  import { component_store } from "$lib/state/components.svelte.js";
 
-  let position_first: [x: number, y: number] = $state([0, 0]);
+  let positionFirst: [x: number, y: number] = $state([0, 0]);
+  let mgr: InputManager;
+  let contextButtonDisabled = $state(true);
+
+  let showInfo = $state(true);
+  onMount(() => {
+    setTimeout(() => {
+      showInfo = false;
+    }, 2000);
+  });
 </script>
 
-<main>
-<Button
+<VirtualButton
+  context={['default', 'my_ctx']}
+  onpressed={() => {
+    // show all hints
+    component_store.showHints = !component_store.showHints;
+  }}
   input_mapping={{
-    name: 'Side Nav',
+    name: 'Help',
     gamepad: -1,
-    buttons: [1],
+    buttons: [8],
+    keys: ['h']
+  }}
+></VirtualButton>
+
+<div class="background">
+<main>
+  {#if showInfo}
+  <div transition:fade={{ duration: 300 }} class="help-modal">
+    <div class="help-content">
+      <p>
+        <img style="vertical-align:middle" width="50px" src="/svelte-gamepad-virtual-joystick/kenney_input_prompts/keyboard_mouse/keyboard_h.svg" alt="q-key" />
+        or 
+        <img  width="50px" style="vertical-align:middle" src="/svelte-gamepad-virtual-joystick/kenney_input_prompts/ps/playstation4_button_share.svg" alt="Select on playstation controller" />
+        toggle help.
+      </p>
+    </div>
+  </div>
+  {/if}
+
+<Button
+  onrelease={() => {
+    mgr.changeContext('my_ctx');
+    contextButtonDisabled = false;
+  }}
+  input_mapping={{
+    name: 'Main Button',
+    gamepad: -1,
+    buttons: [0],
     keys: ['e']
   }}
 >
-  press me!
+  switch to context for button2!
 </Button>
 
-<!-- GamepadManager and KeyboardManager should be unique in your page. -->
-<GamepadManager />
-<KeyboardManager />
+<Button
+  onrelease={() => {
+    mgr.changeContext('default');
+    contextButtonDisabled = true;
+  }}
+  context={['my_ctx']}
+  input_mapping={{
+    name: 'Second Button',
+    gamepad: -1,
+    buttons: [0],
+    keys: ['e'],
+  }}
+  disabled={contextButtonDisabled}
+>
+  switch back to default context!
+</Button>
+<br />
+<!-- The slider is only active when it has the focus. focus is always local inside a context -->
+<!-- 
+<p>This is a special area you can activate with the "X" button</p>
+-->
+<Slider /><br />
+<Slider /><br />
+<Slider />
+
+<Joystick bind:position={positionFirst} invert_colors={true} /><br />
+x: {positionFirst[0].toFixed(3)}<br />
+y: {positionFirst[1].toFixed(3)}
+
+<!-- The InputManager should be unique in your page. -->
+<InputManager bind:this={mgr} />
 </main>
+</div>
+<style>
+  .background {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #333;
+  }
+
+  p {
+    font-family: sans-serif;
+    color: white;
+    font-size: 20px;
+  }
+</style>

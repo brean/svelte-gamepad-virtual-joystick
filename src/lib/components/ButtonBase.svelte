@@ -1,13 +1,11 @@
 <script lang="ts">
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import { onMount, type Snippet } from "svelte";
-  import { inputs } from '$lib/state/inputs.svelte.js';
-  import KeyboardInputHandler from "$lib/input_handling/KeyboardInputHandler.js";
-    import { registerComponent, unregisterComponent } from "$lib/state/handler.svelte.js";
-    import GamepadInputHandler from "$lib/input_handling/GamepadInputHandler.js";
+  import InputComponent from "$lib/input_handling/InputComponent.js";
+  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
 
   interface Props {
-    children: Snippet,
+    children?: Snippet,
     disabled?: boolean
     onpressed?: (() => void),
     onhold?: (() => void),
@@ -33,80 +31,66 @@
     context = ['default']
   }: Props = $props();
 
-  const _onpressed = () => {
-    if (disabled) {
-      return;
-    }
-    pressed = true;
-    if (onpressed) {
-      onpressed();
-    }
-  }
-
-  const _onhold = () => {
-    if (!disabled && onhold) {
-      onhold();
-    }
-  }
-
-  const _onrelease = () => {
-    pressed = false;
-    if (onrelease) {
-      onrelease();
-    }
-  }
-
-  class ButtonKeyboardInput extends KeyboardInputHandler {
-    thisKey(event: KeyboardEvent): boolean {
-      return (this.input as ButtonInput).keys.indexOf(event.key) > -1
-    }
-
-    onkeypressed(event: KeyboardEvent): boolean {
-      _onpressed();
-      return super.onkeypressed(event);
-    }
-
-    onkeyhold(event: KeyboardEvent): void {
-      _onhold();
-    }
-
-    onkeyrelease(event: KeyboardEvent): void {
-      _onrelease();
-    }
-  }
-
-  class ButtonGamepadInput extends GamepadInputHandler {
+  class ButtonInputComponent extends InputComponent {
+    // Gamepad
     thisGamepadButton(gamepad: Gamepad, btn: number): boolean {
       return super.thisGamepadButton(gamepad, btn) && 
-        (this.input as ButtonInput).buttons.indexOf(btn) > -1
+        (this.input as ButtonInput).buttons.includes(btn)
     }
 
-    onbuttonpressed(gamepad: Gamepad, btn: number): boolean {
-      _onpressed();
-      return super.onbuttonpressed(gamepad, btn);
+    onpressed(): boolean {
+      if (disabled) {
+        return false;
+      }
+      pressed = true;
+      if (onpressed) {
+        onpressed();
+      }
+      return super.onpressed();
     }
 
-    onbuttonhold(gamepad: Gamepad, btn: number): void {
-      _onhold();
+    onhold = () => {
+      if (!disabled && onhold) {
+        onhold();
+      }
     }
 
-    onbuttonrelease(gamepad: Gamepad, btn: number): void {
-      _onrelease();
+    onrelease = () => {
+      pressed = false;
+      if (onrelease) {
+        onrelease();
+      }
+    }
+
+    onkeypressed(event?: KeyboardEvent): boolean {
+      return this.thisKey(event) && super.onkeypressed(event);
+    }
+
+    onkeyrelease(event?: KeyboardEvent) {
+      if (this.thisKey(event)) super.onkeyrelease(event);
+    }
+
+    onkeyhold(event?: KeyboardEvent) {
+      if (this.thisKey(event)) super.onkeyhold(event);
+    }
+
+    // Keyboard
+    thisKey(event?: KeyboardEvent): boolean {
+      console.log(event.key)
+      return (event && (this.input as ButtonInput).keys.includes(event.key)) || false;
     }
   }
 
   onMount(() => {
-    const kbd = new ButtonKeyboardInput(input_mapping);
-    const gp = new ButtonGamepadInput(input_mapping);
-    registerComponent(context, kbd, gp);
-    inputs.buttons.push(input_mapping);
+    const button = new ButtonInputComponent(input_mapping);
+    registerComponent(context, button);
     return () => {
       // cleanup on destroy
       // unregister configuration
-      inputs.buttons.splice(inputs.buttons.indexOf(input_mapping), 1);
-      unregisterComponent(context, kbd, gp);
+      unregisterComponent(context, button);
     }
   });
 </script>
-
-{@render children?.()}
+{#if children}
+  {@render children?.()}
+{/if}

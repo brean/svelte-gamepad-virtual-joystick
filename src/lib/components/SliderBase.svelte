@@ -1,10 +1,8 @@
 <script lang="ts">
   import type SliderInput from "$lib/models/SliderInput.js";
-  import { inputs } from "$lib/state/inputs.svelte.js";
+  import InputComponent from "$lib/input_handling/InputComponent.js";
+  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import { onMount } from "svelte";
-  import { onkeypressed, onkeyrelease } from '$lib/state/keyboard_callbacks.svelte.js'
-  import { onbuttonpressed, onbuttonrelease, onupdate } from '$lib/state/gamepad_callbacks.svelte.js';
-  import { thisGamepad } from "$lib/utils.js";
 
   interface Props {
     value: number
@@ -13,6 +11,7 @@
     disabled: boolean
     input_mapping?: SliderInput
     focussed?: boolean
+    context?: string[]
   }
 
   let {
@@ -31,12 +30,20 @@
       keys_neg: ['ArrowLeft'],
       invert: false
     },
-    focussed = $bindable<boolean>(false)
+    focussed = $bindable<boolean>(false),
+    context = ['default']
   }: Props = $props();
 
-  inputs.sliders.push(input_mapping);
-  const _input: SliderInput = inputs.sliders[inputs.lists.length - 1];
+  class SliderInputComponent extends InputComponent {
+  }
+
   onMount(() => {
-    
+    const slider = new SliderInputComponent(input_mapping);
+    registerComponent(context, slider);
+    return () => {
+      // cleanup on destroy
+      // unregister configuration
+      unregisterComponent(context, slider);
+    }
   });
 </script>

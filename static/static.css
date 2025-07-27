@@ -1,9 +1,17 @@
+:root {
+  --background-color: rgba(100, 100, 100, 0.4);
+  --font-color: rgb(197, 197, 197);
+}
+
+body {
+  color: var(--font-color);
+  font-family: sans-serif;
+}
+
 /* custom buttons */
 .vbutton {
   border: 3px solid gray;
-  border-radius: 100px;
-  width: 100px;
-  height: 100px;
+  padding: 10px 20px;
 }
 
 .vbutton.button_clicked {
@@ -13,7 +21,6 @@
 /* Side nav  */
 /* Sidenav based on https://www.w3schools.com/howto/howto_js_sidenav.asp */
 .sidenav {
-  font-family: sans-serif;
   height: 100%; /* 100% Full-height */
   position: fixed; /* Stay in place */
   z-index: 1; /* Stay on top */
@@ -146,4 +153,32 @@ main {
   margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
+}
+
+
+.help-modal-fade-out {
+  opacity: 0;
+  transition: opacity 0.2s ease-out; /* The fade-out animation */
+}
+
+.help-modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-color);
+}
+
+.help-content {
+  background-color: black;
+  margin: 15% auto; /* 15% from the top and centered horizontally */
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px; /* Responsive width */
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
