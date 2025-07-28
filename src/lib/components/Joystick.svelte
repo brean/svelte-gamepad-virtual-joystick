@@ -257,13 +257,20 @@
       unregisterComponent(context, comp);
     }
   });
+
+  let area: HTMLElement;
 </script>
 
 <svelte:window on:pointerup={reset} />
 
 <div id="joystick_area"
+    bind:this={area}
     tabindex={0}
+    onkeydown={() => {
+      /** TODO: if requires-focus only call input-component functions.*/
+    }}
     role="button"
+    onclick={() => {area.focus()}}
     {style}
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}

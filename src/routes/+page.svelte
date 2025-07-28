@@ -7,7 +7,7 @@
   import { onMount } from "svelte";
   import VirtualButton from "$lib/components/VirtualButton.svelte";
   import { component_store } from "$lib/state/components.svelte.js";
-    import Icon from "$lib/components/Icon.svelte";
+  import Icon from "$lib/components/Icon.svelte";
 
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let mgr: InputManager;
