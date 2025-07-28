@@ -7,6 +7,7 @@
   import { onMount } from "svelte";
   import VirtualButton from "$lib/components/VirtualButton.svelte";
   import { component_store } from "$lib/state/components.svelte.js";
+    import Icon from "$lib/components/Icon.svelte";
 
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let mgr: InputManager;
@@ -40,9 +41,9 @@
   <div transition:fade={{ duration: 300 }} class="help-modal">
     <div class="help-content">
       <p>
-        <img style="vertical-align:middle" width="50px" src="/svelte-gamepad-virtual-joystick/kenney_input_prompts/keyboard_mouse/keyboard_h.svg" alt="q-key" />
+        <Icon type="keyboard_mouse" input="h" color="#FFFFFF"></Icon>
         or 
-        <img  width="50px" style="vertical-align:middle" src="/svelte-gamepad-virtual-joystick/kenney_input_prompts/ps/playstation4_button_share.svg" alt="Select on playstation controller" />
+        <Icon type="ps4" input="8"  color="#FFFFFF"></Icon>
         toggle help.
       </p>
     </div>

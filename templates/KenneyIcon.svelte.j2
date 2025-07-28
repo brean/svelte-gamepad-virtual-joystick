@@ -1,0 +1,72 @@
+<script lang="ts">
+{% for key, value in keyboard.items() %}
+  import {{ value }} from "${{ svg_path }}/keyboard_mouse/{{value}}.svg?raw"
+{%- endfor %}
+{% for key, value in ps4_buttons.items() %}
+  import {{ value }} from "${{ svg_path }}/ps/{{value}}.svg?raw"
+{%- endfor %}
+
+  interface Props {
+    type: 'keyboard_mouse' | 'ps4' | 'ps5' | 'xbox' | 'steam'
+    input: string | number,
+    width?: number,
+    height?: number,
+    color?: string
+  }
+  let {
+    type,
+    input,
+    width = 40,
+    height = 40,
+    color = '#666666'
+  }: Props = $props();
+
+  const ps4_buttons = {
+  {% for key, value in ps4_buttons.items() %}
+    '{{key}}': {{value}},
+  {%- endfor %}
+  };
+  const keyboard = {
+  {% for key, value in keyboard.items() %}
+    '{{key}}': {{value}},
+  {%- endfor %}
+  };
+
+  let icon = $state<string | undefined>();
+  let base_type: string = type;
+  if (['ps4', 'ps5'].includes(type)) {
+    base_type = 'ps';
+  }
+  switch (type) {
+    case 'keyboard_mouse':
+      let inp = (input as string).toLowerCase();
+      icon = keyboard[inp];
+      break;
+    case 'ps4':
+      icon = ps4_buttons[input];
+  }
+
+</script>
+{{ '{#if icon}' }}
+<div 
+    class="svg-container"
+    style:height="{height}px"
+    style:width="{width}px">
+  {@html icon
+    .replace('<g>', `<g transform="scale(${Math.min(width/64, height/64)})">`)
+    .replace('fill="#FFFFFF"', `fill="${color}"`)
+  }
+</div>
+{{ '{/if}' }}
+
+<style>
+  .svg-container {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .svg-container svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
