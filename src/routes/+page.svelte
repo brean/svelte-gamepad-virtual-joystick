@@ -8,6 +8,7 @@
   import VirtualButton from "$lib/components/VirtualButton.svelte";
   import { component_store } from "$lib/state/components.svelte.js";
   import Icon from "$lib/components/Icon.svelte";
+  import List from "$lib/components/List.svelte";
 
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let mgr: InputManager;
@@ -90,7 +91,9 @@
 <Slider /><br />
 <Slider />
 
-<Joystick bind:position={positionFirst} invert_colors={true} /><br />
+<List items={['banana', 'orange', 'apple']}/>
+
+<Joystick bind:position={positionFirst} requiresFocus={false} /><br />
 x: {positionFirst[0].toFixed(3)}<br />
 y: {positionFirst[1].toFixed(3)}
 

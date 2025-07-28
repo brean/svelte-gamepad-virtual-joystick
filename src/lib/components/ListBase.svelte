@@ -1,14 +1,16 @@
 <script lang="ts">
   import type ListInput from "$lib/models/ListInput.js";
-  import { inputs } from "$lib/state/inputs.svelte.js";
+  import InputComponent from "$lib/input_handling/InputComponent.js";
   import { onMount } from "svelte";
   import { thisGamepad } from "$lib/utils.js";
+  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
 
   interface Props {
     changeFocus: (direction: 1 | -1) => void
-    onpressed?: () => void
+    onpressed?: () => boolean
     disabled?: boolean
     inputMapping?: ListInput
+    context?: string[]
   }
 
   let {
@@ -26,57 +28,62 @@
       keys_prev: ['ArrowUp', 'w'],
       keys_next: ['ArrowDown', 's'],
       keys: ['e']  // activate
-    }
+    },
+    context=['default']
   }: Props = $props();
 
-  // FIXME: we need to do something nicer than this!
-  inputs.lists.push(inputMapping);
-  const _input: ListInput = inputs.lists[inputs.lists.length - 1];
   let axesDown = -1;
-  
-  onMount(() => {
-    const _custom_onpressed = (event: KeyboardEvent) => {
+  class ListInputComponent extends InputComponent {
+    onpressed(): boolean {
       if (disabled) {
-        return
+        return false;
+      }
+      return onpressed ? onpressed() : false;
+    }
+
+    // --- Gamepad ---
+    onbuttonpressed(gamepad: Gamepad, btn: number): boolean {
+      if (disabled || !thisGamepad(this.input, gamepad)) {
+        return false;
+      }
+      if (this.thisGamepadButton(gamepad, btn)) {
+        if (onpressed) {
+          return onpressed();
+        }
+        return false;
+      }
+      if (inputMapping.buttons_next.includes(btn)) {
+        changeFocus(1);
+        return true;
+      }
+      if (inputMapping.buttons_prev.includes(btn)) {
+        changeFocus(-1);
+        return true;
+      }
+      return false;
+    }
+
+    // --- Keyboard ---
+    onkeypressed(event?: KeyboardEvent): boolean {
+      if (!event) {
+        return false;
       }
       if (inputMapping.keys.includes(event.key)) {
-        if (onpressed) {
-          onpressed();
-        }
-        return;
+        return super.onpressed()
       }
       if (inputMapping.keys_next.includes(event.key)) {
         changeFocus(1);
-        return;
+        return true;
       }
       if (inputMapping.keys_prev.includes(event.key)) {
         changeFocus(-1);
+        return true;
       }
+      return false;
     }
 
-    const _custom_buttonpressed = (gamepad: Gamepad, button: number) => {
-      if (disabled || !thisGamepad(_input, gamepad)) {
-        return
-      }
-      if (inputMapping.buttons.includes(button)) {
-        if (onpressed) {
-          onpressed();
-        }
-        return;
-      }
-      if (inputMapping.buttons_next.includes(button)) {
-        changeFocus(1);
-        return;
-      }
-      if (inputMapping.buttons_prev.includes(button)) {
-        changeFocus(-1);
-        return;
-      }
-    }
-
-    const _custom_gamepadupdate = (gamepad: Gamepad) => {
-      // control by axes
-      if (disabled || !thisGamepad(_input, gamepad)) {
+    onupdate(gamepad: Gamepad): void {
+      if (disabled || !thisGamepad(this.input, gamepad)) {
         return
       }
       for (const axesIdx of inputMapping.axes) {
@@ -97,23 +104,13 @@
         }
       }
     }
-
-    // keyboard
-    /*
-    onkeypressed.push(_custom_onpressed);
-    // gamepad
-    onbuttonpressed.push(_custom_buttonpressed);
-    onupdate.push(_custom_gamepadupdate);
+  }
+  
+  onMount(() => {
+    const comp = new ListInputComponent(inputMapping);
+    registerComponent(context, comp);
     return () => {
-      // cleanup on destroy
-      // keyboard
-      onkeypressed.splice(onkeypressed.indexOf(_custom_onpressed), 1);
-      // gamepad
-      onbuttonpressed.splice(onbuttonpressed.indexOf(_custom_buttonpressed), 1);
-      onupdate.splice(onupdate.indexOf(_custom_gamepadupdate), 1);
-      // unregister configuration
-      inputs.lists.splice(inputs.lists.indexOf(_input), 1);
+      unregisterComponent(context, comp);
     }
-      */
   });
 </script>
