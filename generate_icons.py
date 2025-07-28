@@ -17,6 +17,13 @@ def main():
     template_icons = templateEnv.get_template(TEMPLATE_ICONS)
     svg_path = ICONS_DIR.relative_to(BASE_PATH / 'src')
 
+    generic = {
+        0: 'button_color_a_cross',
+        1: 'button_color_b_circle',
+        2: 'button_color_x_square',
+        3: 'button_color_y_triangle',
+    }
+
     ps4_buttons = {
         0: 'playstation_button_color_cross',
         1: 'playstation_button_color_circle',
@@ -80,8 +87,9 @@ def main():
 
     with open(ICON_FILE, 'w') as fh:
         fh.write(template_icons.render({
-            'keyboard': keyboard,
+            'generic_buttons': generic,
             'ps4_buttons': ps4_buttons,
+            'keyboard': keyboard,
             'svg_path': svg_path
         }))
 

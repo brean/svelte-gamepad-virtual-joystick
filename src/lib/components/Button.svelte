@@ -96,7 +96,7 @@
           {/if}
           {#if inputMapping.buttons.length > 0 }
             <Icon
-              type='ps4'
+              type='generic'
               input={inputMapping.buttons[0]}></Icon>
           {/if}
         </div>

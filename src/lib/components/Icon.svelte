@@ -1,5 +1,10 @@
 <script lang="ts">
 
+  import button_color_a_cross from "$lib/assets/kenney_input_prompts/generic/button_color_a_cross.svg?raw"
+  import button_color_b_circle from "$lib/assets/kenney_input_prompts/generic/button_color_b_circle.svg?raw"
+  import button_color_x_square from "$lib/assets/kenney_input_prompts/generic/button_color_x_square.svg?raw"
+  import button_color_y_triangle from "$lib/assets/kenney_input_prompts/generic/button_color_y_triangle.svg?raw"
+
   import keyboard_slash_forward from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_slash_forward.svg?raw"
   import keyboard_asterisk from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_asterisk.svg?raw"
   import keyboard_comma from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_comma.svg?raw"
@@ -97,7 +102,7 @@
   import playstation_stick_r from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r.svg?raw"
 
   interface Props {
-    type: 'keyboard_mouse' | 'ps4' | 'ps5' | 'xbox' | 'steam'
+    type: 'keyboard_mouse' | 'ps4' | 'generic'
     input: string | number,
     width?: number,
     height?: number,
@@ -211,6 +216,13 @@
     'f11': keyboard_f11,
     'f12': keyboard_f12,
   };
+  const generic_buttons = {
+  
+    '0': button_color_a_cross,
+    '1': button_color_b_circle,
+    '2': button_color_x_square,
+    '3': button_color_y_triangle,
+  };
 
   let icon = $state<string | undefined>();
   let base_type: string = type;
@@ -224,6 +236,14 @@
       break;
     case 'ps4':
       icon = ps4_buttons[input];
+      break
+    case 'generic':
+      if (input in generic_buttons) {
+        icon = generic_buttons[input];
+      } else {
+        // Fallback to PS4 controller as "generic"
+        icon = ps4_buttons[input];
+      }
   }
 
 </script>

@@ -1,4 +1,7 @@
 <script lang="ts">
+{% for key, value in generic_buttons.items() %}
+  import {{ value }} from "${{ svg_path }}/generic/{{value}}.svg?raw"
+{%- endfor %}
 {% for key, value in keyboard.items() %}
   import {{ value }} from "${{ svg_path }}/keyboard_mouse/{{value}}.svg?raw"
 {%- endfor %}
@@ -7,7 +10,7 @@
 {%- endfor %}
 
   interface Props {
-    type: 'keyboard_mouse' | 'ps4' | 'ps5' | 'xbox' | 'steam'
+    type: 'keyboard_mouse' | 'ps4' | 'generic'
     input: string | number,
     width?: number,
     height?: number,
@@ -31,6 +34,11 @@
     '{{key}}': {{value}},
   {%- endfor %}
   };
+  const generic_buttons = {
+  {% for key, value in generic_buttons.items() %}
+    '{{key}}': {{value}},
+  {%- endfor %}
+  };
 
   let icon = $state<string | undefined>();
   let base_type: string = type;
@@ -44,6 +52,14 @@
       break;
     case 'ps4':
       icon = ps4_buttons[input];
+      break
+    case 'generic':
+      if (input in generic_buttons) {
+        icon = generic_buttons[input];
+      } else {
+        // Fallback to PS4 controller as "generic"
+        icon = ps4_buttons[input];
+      }
   }
 
 </script>

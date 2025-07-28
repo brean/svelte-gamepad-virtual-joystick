@@ -292,12 +292,12 @@
     <div class="hint">
       {#if [0, 1].includes(inputMapping.axes_x) && [0, 1].includes(inputMapping.axes_y) }
       <Icon 
-          type='ps4'
+          type='generic'
           input={'axis_left'}
           ></Icon>
       {:else if [2, 3].includes(inputMapping.axes_x) && [2, 3].includes(inputMapping.axes_y) }
       <Icon 
-          type='ps4'
+          type='generic'
           input={'axis_right'}></Icon>
       {/if}
     </div>
@@ -309,7 +309,7 @@
       {/if}
       {#if inputMapping.button_y_neg.length > 0 }
         <Icon
-          type='ps4'
+          type='generic'
           input={inputMapping.button_y_neg[0]}></Icon>
       {/if}
     </div>
@@ -321,7 +321,7 @@
       {/if}
       {#if inputMapping.button_y_pos.length > 0 }
         <Icon
-          type='ps4'
+          type='generic'
           input={inputMapping.button_y_pos[0]}></Icon>
       {/if}
     </div>
@@ -334,7 +334,7 @@
       {/if}
       {#if inputMapping.button_x_neg.length > 0 }
         <Icon
-          type='ps4'
+          type='generic'
           input={inputMapping.button_x_neg[0]}></Icon>
       {/if}
     </div>
@@ -347,7 +347,7 @@
       {/if}
       {#if inputMapping.button_x_pos.length > 0 }
         <Icon
-          type='ps4'
+          type='generic'
           input={inputMapping.button_x_pos[0]}></Icon>
       {/if}
     </div>
