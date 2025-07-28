@@ -8,14 +8,14 @@
     changeFocus: (direction: 1 | -1) => void
     onpressed?: () => void
     disabled?: boolean
-    input_mapping?: ListInput
+    inputMapping?: ListInput
   }
 
   let {
     changeFocus,
     onpressed,
     disabled = false,
-    input_mapping = {
+    inputMapping = {
       name: 'List',
       gamepad: -1,
       axes: [1],
@@ -30,7 +30,7 @@
   }: Props = $props();
 
   // FIXME: we need to do something nicer than this!
-  inputs.lists.push(input_mapping);
+  inputs.lists.push(inputMapping);
   const _input: ListInput = inputs.lists[inputs.lists.length - 1];
   let axesDown = -1;
   
@@ -39,17 +39,17 @@
       if (disabled) {
         return
       }
-      if (input_mapping.keys.includes(event.key)) {
+      if (inputMapping.keys.includes(event.key)) {
         if (onpressed) {
           onpressed();
         }
         return;
       }
-      if (input_mapping.keys_next.includes(event.key)) {
+      if (inputMapping.keys_next.includes(event.key)) {
         changeFocus(1);
         return;
       }
-      if (input_mapping.keys_prev.includes(event.key)) {
+      if (inputMapping.keys_prev.includes(event.key)) {
         changeFocus(-1);
       }
     }
@@ -58,17 +58,17 @@
       if (disabled || !thisGamepad(_input, gamepad)) {
         return
       }
-      if (input_mapping.buttons.includes(button)) {
+      if (inputMapping.buttons.includes(button)) {
         if (onpressed) {
           onpressed();
         }
         return;
       }
-      if (input_mapping.buttons_next.includes(button)) {
+      if (inputMapping.buttons_next.includes(button)) {
         changeFocus(1);
         return;
       }
-      if (input_mapping.buttons_prev.includes(button)) {
+      if (inputMapping.buttons_prev.includes(button)) {
         changeFocus(-1);
         return;
       }
@@ -79,9 +79,9 @@
       if (disabled || !thisGamepad(_input, gamepad)) {
         return
       }
-      for (const axesIdx of input_mapping.axes) {
+      for (const axesIdx of inputMapping.axes) {
         const value = gamepad.axes[axesIdx];
-        let sensitivity = input_mapping.sensitivity;
+        let sensitivity = inputMapping.sensitivity;
         if (value < -sensitivity && axesDown != axesIdx) {
           changeFocus(-1);
           axesDown = axesIdx;

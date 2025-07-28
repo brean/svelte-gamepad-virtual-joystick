@@ -9,6 +9,8 @@ import ListBase from "./components/ListBase.svelte";
 import List from "./components/List.svelte";
 import SliderBase from "./components/SliderBase.svelte";
 import Slider from "./components/Slider.svelte";
+import Icon from "./components/Icon.svelte";
+import VirtualButton from "./components/VirtualButton.svelte";
 
 import type Input from "./models/Input.js";
 import type JoystickInput from "./models/JoystickInput.js";
@@ -24,5 +26,6 @@ export {
     InputComponent as GamepadInputHandler,
     ButtonBase, ListBase, SliderBase, 
     Button, Joystick, List, Slider,
+    Icon, VirtualButton,
     distance, angle, findCoord, radians, degrees, clamp };
-export type {Input, ButtonInput, JoystickInput, ListInput}
+export type { Input, ButtonInput, JoystickInput, ListInput };

@@ -19,10 +19,9 @@
     borderColor?: string
     position?: [x: number, y: number]
     style?: string
-    input_mapping?: JoystickInput
-    focussed?: boolean,
-    context?: string[],
-    invert_colors?: boolean
+    inputMapping?: JoystickInput
+    context?: string[]
+    requiresFocus: boolean
   }
 
   let {
@@ -38,7 +37,7 @@
     // position is the relative position of the pad on the stick, between -1 and 1.
     position = $bindable<[x: number, y: number]>([0, 0]),
     style = 'background-color: rgb(215, 219, 221);', /* MOON_GRAY */
-    input_mapping = {
+    inputMapping = {
       name: 'Virtual Joystick',
       // gamepad
       gamepad: -1,
@@ -57,11 +56,10 @@
       key_y_neg: ['w'],
 
       invert_x: false,
-      invert_y: false
+      invert_y: false,
     },
-    focussed = $bindable<boolean>(false),
     context=['default'],
-    invert_colors=true
+    requiresFocus=false
   }: Props = $props();
 
   let pos: [x: number, y: number] = [0, 0]
@@ -128,10 +126,10 @@
 
     // keyboard
     updateKeys(event: KeyboardEvent) {
-      this.xPos = input_mapping.key_x_pos.includes(event.key);
-      this.xNeg = input_mapping.key_x_neg.includes(event.key);
-      this.yPos = input_mapping.key_y_pos.includes(event.key);
-      this.yNeg = input_mapping.key_y_neg.includes(event.key);
+      this.xPos = inputMapping.key_x_pos.includes(event.key);
+      this.xNeg = inputMapping.key_x_neg.includes(event.key);
+      this.yPos = inputMapping.key_y_pos.includes(event.key);
+      this.yNeg = inputMapping.key_y_neg.includes(event.key);
     }
 
     onkeyrelease(event?: KeyboardEvent): void {
@@ -152,10 +150,10 @@
 
     // gamepad
     updateButton(idx: number) {
-      this.xPos = input_mapping.button_x_pos.includes(idx);
-      this.xNeg = input_mapping.button_x_neg.includes(idx);
-      this.yPos = input_mapping.button_y_pos.includes(idx);
-      this.yNeg = input_mapping.button_y_neg.includes(idx);
+      this.xPos = inputMapping.button_x_pos.includes(idx);
+      this.xNeg = inputMapping.button_x_neg.includes(idx);
+      this.yPos = inputMapping.button_y_pos.includes(idx);
+      this.yNeg = inputMapping.button_y_neg.includes(idx);
     }
 
     onbuttonhold(gamepad: Gamepad, btn: number): void {
@@ -175,19 +173,19 @@
     }
 
     onupdate(gamepad: Gamepad): void {
-      if (disabled || !gamepadActive || !thisGamepad(input_mapping, gamepad)) {
+      if (disabled || !gamepadActive || !thisGamepad(inputMapping, gamepad)) {
         return
       }
-      let xcoord = gamepad.axes[input_mapping.axes_x];
-      let ycoord = gamepad.axes[input_mapping.axes_y];
-      if (input_mapping.invert_x) {
+      let xcoord = gamepad.axes[inputMapping.axes_x];
+      let ycoord = gamepad.axes[inputMapping.axes_y];
+      if (inputMapping.invert_x) {
         xcoord = -xcoord;
       }
-      if (input_mapping.invert_y) {
+      if (inputMapping.invert_y) {
         ycoord = -ycoord;
       }
-      if (Math.abs(xcoord) < input_mapping.deadzoneX && 
-          Math.abs(ycoord) < input_mapping.deadzoneY) {
+      if (Math.abs(xcoord) < inputMapping.deadzoneX && 
+          Math.abs(ycoord) < inputMapping.deadzoneY) {
         opacity = defaultOpacity;
         position = [0, 0]
         return;
@@ -198,7 +196,7 @@
   }
 
   function onpointermove(evt: MouseEvent) {
-    if (disabled || !input_mapping.gamepad || !pointerActive || !evt.target) {
+    if (disabled || !inputMapping.gamepad || !pointerActive || !evt.target) {
       return
     }
     gamepadActive = false;
@@ -226,8 +224,8 @@
     // normalize corrds
     let xcoord = coords[0] / radius
     let ycoord = coords[1] / radius
-    if (Math.abs(xcoord) < input_mapping.deadzoneX && 
-        Math.abs(ycoord) < input_mapping.deadzoneY) {
+    if (Math.abs(xcoord) < inputMapping.deadzoneX && 
+        Math.abs(ycoord) < inputMapping.deadzoneY) {
       position = [0, 0];
       opacity = defaultOpacity;
       return;
@@ -253,7 +251,7 @@
   }
 
   onMount(() => {
-    const comp = new JoystickInputComponent(input_mapping);
+    const comp = new JoystickInputComponent(inputMapping);
     registerComponent(context, comp);
     return () => {
       unregisterComponent(context, comp);
@@ -263,7 +261,6 @@
 
 <svelte:window on:pointerup={reset} />
 
-<!-- TOOD: require_focus? -->
 <div id="joystick_area"
     tabindex={0}
     role="button"
@@ -293,72 +290,65 @@
     out:fade in:fade
   >
     <div class="hint">
-      {#if [0, 1].includes(input_mapping.axes_x) && [0, 1].includes(input_mapping.axes_y) }
+      {#if [0, 1].includes(inputMapping.axes_x) && [0, 1].includes(inputMapping.axes_y) }
       <Icon 
           type='ps4'
           input={'axis_left'}
-          {invert_colors}></Icon>
-      {:else if [2, 3].includes(input_mapping.axes_x) && [2, 3].includes(input_mapping.axes_y) }
+          ></Icon>
+      {:else if [2, 3].includes(inputMapping.axes_x) && [2, 3].includes(inputMapping.axes_y) }
       <Icon 
           type='ps4'
-          input={'axis_right'}
-          {invert_colors}></Icon>
+          input={'axis_right'}></Icon>
       {/if}
     </div>
     <div class="hint hint-up">
-      {#if input_mapping.key_y_neg.length > 0 }
+      {#if inputMapping.key_y_neg.length > 0 }
         <Icon 
           type='keyboard_mouse'
-          input={input_mapping.key_y_neg[0]}
-          {invert_colors}></Icon>
+          input={inputMapping.key_y_neg[0]}></Icon>
       {/if}
-      {#if input_mapping.button_y_neg.length > 0 }
+      {#if inputMapping.button_y_neg.length > 0 }
         <Icon
           type='ps4'
-          input={input_mapping.button_y_neg[0]}
-          {invert_colors}></Icon>
+          input={inputMapping.button_y_neg[0]}></Icon>
       {/if}
     </div>
     <div class="hint hint-down">
-      {#if input_mapping.key_y_pos.length > 0}
+      {#if inputMapping.key_y_pos.length > 0}
         <Icon 
           type='keyboard_mouse'
-          input={input_mapping.key_y_pos[0]}
-          {invert_colors}></Icon>
+          input={inputMapping.key_y_pos[0]}></Icon>
       {/if}
-      {#if input_mapping.button_y_pos.length > 0 }
+      {#if inputMapping.button_y_pos.length > 0 }
         <Icon
           type='ps4'
-          input={input_mapping.button_y_pos[0]}
-          {invert_colors}></Icon>
+          input={inputMapping.button_y_pos[0]}></Icon>
       {/if}
     </div>
     <div class="hint hint-left">
-      {#if input_mapping.key_x_neg.length > 0}
+      {#if inputMapping.key_x_neg.length > 0}
         <Icon 
           type='keyboard_mouse'
-          input={input_mapping.key_x_neg[0]}
-          {invert_colors}></Icon><br />
+          input={inputMapping.key_x_neg[0]}></Icon>
+        <br />
       {/if}
-      {#if input_mapping.button_x_neg.length > 0 }
+      {#if inputMapping.button_x_neg.length > 0 }
         <Icon
           type='ps4'
-          input={input_mapping.button_x_neg[0]}
-          {invert_colors}></Icon>
+          input={inputMapping.button_x_neg[0]}></Icon>
       {/if}
     </div>
     <div class="hint hint-right">
-      {#if input_mapping.key_x_pos.length > 0}
+      {#if inputMapping.key_x_pos.length > 0}
         <Icon 
           type='keyboard_mouse'
-          input={input_mapping.key_x_pos[0]}
-          {invert_colors}></Icon><br />
+          input={inputMapping.key_x_pos[0]}></Icon>
+        <br />
       {/if}
-      {#if input_mapping.button_x_pos.length > 0 }
+      {#if inputMapping.button_x_pos.length > 0 }
         <Icon
           type='ps4'
-          input={input_mapping.button_x_pos[0]}
-          {invert_colors}></Icon>
+          input={inputMapping.button_x_pos[0]}></Icon>
       {/if}
     </div>
   </div>

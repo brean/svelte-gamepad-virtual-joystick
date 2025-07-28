@@ -1,9 +1,18 @@
 <script lang="ts">
 
+  import keyboard_slash_forward from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_slash_forward.svg?raw"
+  import keyboard_asterisk from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_asterisk.svg?raw"
+  import keyboard_comma from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_comma.svg?raw"
+  import keyboard_period from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_period.svg?raw"
+  import keyboard_colon from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_colon.svg?raw"
+  import keyboard_semicolon from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_semicolon.svg?raw"
+  import keyboard_bracket_open from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_bracket_open.svg?raw"
+  import keyboard_bracket_close from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_bracket_close.svg?raw"
   import keyboard_plus from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_plus.svg?raw"
   import keyboard_minus from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_minus.svg?raw"
   import keyboard_tilde from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_tilde.svg?raw"
   import keyboard_space_icon from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_space_icon.svg?raw"
+  import keyboard_quote from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_quote.svg?raw"
   import keyboard_backspace_icon from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_backspace_icon.svg?raw"
   import keyboard_capslock_icon from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_capslock_icon.svg?raw"
   import keyboard_tab_icon from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_tab_icon.svg?raw"
@@ -126,10 +135,19 @@
   };
   const keyboard = {
   
+    '/': keyboard_slash_forward,
+    '*': keyboard_asterisk,
+    ',': keyboard_comma,
+    '.': keyboard_period,
+    ':': keyboard_colon,
+    ';': keyboard_semicolon,
+    '[': keyboard_bracket_open,
+    ']': keyboard_bracket_close,
     '+': keyboard_plus,
     '-': keyboard_minus,
     '~': keyboard_tilde,
     ' ': keyboard_space_icon,
+    '"': keyboard_quote,
     'backspace': keyboard_backspace_icon,
     'capslock': keyboard_capslock_icon,
     'tab': keyboard_tab_icon,

@@ -7,7 +7,7 @@
     min?: number
     max?: number
     disabled?: boolean
-    input_mapping?: SliderInput
+    inputMapping?: SliderInput
     focussed?: boolean
   }
 
@@ -16,7 +16,7 @@
     min = 0,
     max = 100,
     disabled = false,
-    input_mapping = {
+    inputMapping = {
       name: 'Slider',
       gamepad: -1,
       sensitivity: 0.05,
@@ -34,7 +34,7 @@
 
 <SliderBase 
   {disabled}
-  {input_mapping}
+  {inputMapping}
   {min}
   {max}
   bind:value

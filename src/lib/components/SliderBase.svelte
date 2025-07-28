@@ -9,7 +9,7 @@
     min: number
     max: number
     disabled: boolean
-    input_mapping?: SliderInput
+    inputMapping?: SliderInput
     focussed?: boolean
     context?: string[]
   }
@@ -19,7 +19,7 @@
     min = 0,
     max = 100,
     disabled = false,
-    input_mapping = {
+    inputMapping = {
       name: 'Slider',
       gamepad: -1,
       sensitivity: 0.05,
@@ -38,7 +38,7 @@
   }
 
   onMount(() => {
-    const slider = new SliderInputComponent(input_mapping);
+    const slider = new SliderInputComponent(inputMapping);
     registerComponent(context, slider);
     return () => {
       // cleanup on destroy

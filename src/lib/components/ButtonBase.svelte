@@ -11,7 +11,7 @@
     onhold?: (() => void),
     onrelease?: (() => void),
     pressed?: boolean,
-    input_mapping?: ButtonInput
+    inputMapping?: ButtonInput
     context?: string[]
   }
 
@@ -22,7 +22,7 @@
     onhold = undefined,   // every event while the button is pressed
     onrelease = undefined,
     pressed = $bindable(false),
-    input_mapping = {
+    inputMapping = {
       name: '',
       gamepad: -1,
       buttons: [0],
@@ -82,7 +82,7 @@
   }
 
   onMount(() => {
-    const button = new ButtonInputComponent(input_mapping);
+    const button = new ButtonInputComponent(inputMapping);
     registerComponent(context, button);
     return () => {
       // cleanup on destroy

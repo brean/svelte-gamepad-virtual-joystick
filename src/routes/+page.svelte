@@ -27,7 +27,7 @@
     // show all hints
     component_store.showHints = !component_store.showHints;
   }}
-  input_mapping={{
+  inputMapping={{
     name: 'Help',
     gamepad: -1,
     buttons: [8],
@@ -55,7 +55,7 @@
     mgr.changeContext('my_ctx');
     contextButtonDisabled = false;
   }}
-  input_mapping={{
+  inputMapping={{
     name: 'Main Button',
     gamepad: -1,
     buttons: [0],
@@ -71,7 +71,7 @@
     contextButtonDisabled = true;
   }}
   context={['my_ctx']}
-  input_mapping={{
+  inputMapping={{
     name: 'Second Button',
     gamepad: -1,
     buttons: [0],

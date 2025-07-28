@@ -11,7 +11,7 @@
     cssclass?: string
     focussed?: number
     selectedIndex?: number
-    input_mapping?: ListInput
+    inputMapping?: ListInput
   }
 
   let {
@@ -23,7 +23,7 @@
     cssclass = 'vlist',
     selectedIndex = $bindable(0),
     focussed = $bindable(0),
-    input_mapping = {
+    inputMapping = {
       name: 'List',
       gamepad: -1,
       axes: [1],
@@ -38,10 +38,7 @@
   }: Props = $props();
 
   function classStr(index: number) {
-    let clz = ''
-    if (selectedIndex === index) {
-      clz += 'selected '
-    }
+    let clz = selectedIndex === index ? 'selected ' : '';
     if (focussed === index) {
       clz += 'focussed '
     }
@@ -76,7 +73,7 @@
   {changeFocus}
   onpressed={changeSelected}
   {disabled}
-  {input_mapping}
+  {inputMapping}
   ></ListBase>
 <ul {style} class={cssclass}>
   {#each items as item, index}

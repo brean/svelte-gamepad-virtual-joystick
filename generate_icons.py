@@ -40,10 +40,20 @@ def main():
     }
 
     keyboard = {
+        # '/': 'keyboard_division',
+        '/': 'keyboard_slash_forward',
+        '*': 'keyboard_asterisk',
+        ',': 'keyboard_comma',
+        '.': 'keyboard_period',
+        ':': 'keyboard_colon',
+        ';': 'keyboard_semicolon',
+        '[': 'keyboard_bracket_open',
+        ']': 'keyboard_bracket_close',
         '+': 'keyboard_plus',
         '-': 'keyboard_minus',
         '~': 'keyboard_tilde',
         ' ': 'keyboard_space_icon',
+        '"': 'keyboard_quote',
         'backspace': 'keyboard_backspace_icon',
         'capslock': 'keyboard_capslock_icon',
         'tab': 'keyboard_tab_icon',

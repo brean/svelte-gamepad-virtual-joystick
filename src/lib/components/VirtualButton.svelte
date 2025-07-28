@@ -15,7 +15,7 @@ for example show all warnings
     pressed?: boolean,
     style?: string,
     cssclass?: string,
-    input_mapping?: ButtonInput
+    inputMapping?: ButtonInput
     context?: string[]
   }
 
@@ -25,7 +25,7 @@ for example show all warnings
     onhold = undefined,   // every event while the button is pressed
     onrelease = undefined,
     pressed = false,
-    input_mapping = {
+    inputMapping = {
       name: 'Help',
       gamepad: -1,
       buttons: [8],
@@ -41,7 +41,7 @@ for example show all warnings
   {onpressed}
   {onhold}
   {onrelease}
-  {input_mapping}
+  {inputMapping}
   {context}
   bind:pressed>
 </ButtonBase>

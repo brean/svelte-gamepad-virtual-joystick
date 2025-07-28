@@ -16,9 +16,8 @@
     pressed?: boolean,
     style?: string,
     cssclass?: string,
-    input_mapping?: ButtonInput
+    inputMapping?: ButtonInput
     context?: string[]
-    invert_colors?: boolean
   }
 
   let {
@@ -31,14 +30,13 @@
     pressed = false,
     style = '',
     cssclass = 'vbutton',
-    input_mapping = {
+    inputMapping = {
       name: '',
       gamepad: -1,
       buttons: [0],
       keys: ['e', ' ']
     },
-    context = ['default'],
-    invert_colors=true
+    context = ['default']
   }: Props = $props();
 
   const _onpressed = () => {
@@ -68,7 +66,7 @@
   {onpressed}
   {onhold}
   {onrelease}
-  {input_mapping}
+  {inputMapping}
   {context}
   bind:pressed>
   <div class="button-wrapper">
@@ -91,17 +89,15 @@
     {#if component_store.showHints}
     <div class="hint-container" out:fade in:fade>
       <div class="hint hint-up">
-          {#if input_mapping.keys.length > 0 }
+          {#if inputMapping.keys.length > 0 }
             <Icon 
               type='keyboard_mouse'
-              input={input_mapping.keys[0]}
-              {invert_colors}></Icon>
+              input={inputMapping.keys[0]}></Icon>
           {/if}
-          {#if input_mapping.buttons.length > 0 }
+          {#if inputMapping.buttons.length > 0 }
             <Icon
               type='ps4'
-              input={input_mapping.buttons[0]}
-              {invert_colors}></Icon>
+              input={inputMapping.buttons[0]}></Icon>
           {/if}
         </div>
     </div>
