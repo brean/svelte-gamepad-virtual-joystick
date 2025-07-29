@@ -117,16 +117,8 @@
   }
 
   .hint-container {
-    position: absolute;
     top: 100%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    pointer-events: none; /* Allows clicks to pass through to the button */
-    background: white;
-    border-radius: 6px;
-    margin: 6px;
-    padding: 6px
   }
 
   .hint {

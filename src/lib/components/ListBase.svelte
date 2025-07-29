@@ -23,12 +23,12 @@
       gamepad: -1,
       axes: [1],
       sensitivity: 0.05, // sensitivity - at what value do we react to the axes movement?
-      buttons: [GamepadButtons.DOWN],
+      buttons: [GamepadButtons.DOWN], // activate/focus next component
       buttons_prev: [GamepadButtons.DPAD_UP],
       buttons_next: [GamepadButtons.DPAD_DOWN],
       keys_prev: ['arrowup', 'w'],
       keys_next: ['arrowdown', 's'],
-      keys: ['e', 'enter']  // activate
+      keys: ['e', 'enter']  // activate/focus next component
     },
     context=['default']
   }: Props = $props();
@@ -39,7 +39,6 @@
       if (disabled) {
         return false;
       }
-      console.log('PRESSED!')
       return onpressed ? onpressed() : true;
     }
 

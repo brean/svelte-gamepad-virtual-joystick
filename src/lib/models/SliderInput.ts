@@ -6,8 +6,10 @@ export default interface SliderInput extends Input {
   sensitivity: number;
   buttons_pos: number[];
   buttons_neg: number[];
+  buttons: number[]
   // Keyboard
   keys_pos: string[];
   keys_neg: string[];
+  keys: string[];
   invert: boolean;
 }

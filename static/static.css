@@ -198,3 +198,15 @@ main {
     outline: none; /* Remove default outline */
     animation: glow 1.5s infinite; /* Apply glow animation */
 }
+
+/* hints/help */
+.hint-container {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none; /* Allows clicks to pass through to the button */
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  margin: 6px;
+  padding: 6px;
+}
