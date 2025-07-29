@@ -13,7 +13,8 @@
     step?: number
     disabled?: boolean
     inputMapping?: SliderInput
-    focussed?: boolean
+    focussed?: boolean,
+    requiresFocus: boolean
   }
 
   let {
@@ -30,12 +31,13 @@
       buttons: [GamepadButtons.DOWN], // activate/focus next component
       buttons_neg: [GamepadButtons.L1, GamepadButtons.DPAD_LEFT],
       buttons_pos: [GamepadButtons.R1, GamepadButtons.DPAD_RIGHT],
-      keys_pos: ['arrowright'],
-      keys_neg: ['arrowleft'],
+      keys_pos: ['d'],
+      keys_neg: ['a'],
       keys: ['e', 'enter'],  // activate/focus next component
       invert: false
     },
-    focussed = $bindable<boolean>(false)
+    focussed = $bindable<boolean>(false),
+    requiresFocus = true
   }: Props = $props();
 
 </script>
@@ -46,6 +48,7 @@
   {step}
   {min}
   {max}
+  {requiresFocus}
   bind:value
   ></SliderBase>
 <div class="vslider">

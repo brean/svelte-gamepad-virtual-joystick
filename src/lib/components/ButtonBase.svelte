@@ -13,6 +13,7 @@
     pressed?: boolean,
     inputMapping?: ButtonInput
     context?: string[]
+    requiresFocus?: boolean
   }
 
   let {
@@ -28,7 +29,11 @@
       buttons: [0],
       keys: ['e', ' ']
     },
-    context = ['default']
+    context = ['default'],
+    // button is one of the few elements that can be activated globally by
+    // default while other UI-components like Slider, List or Joystick
+    // need to be focussed.
+    requiresFocus=false
   }: Props = $props();
 
   class ButtonInputComponent extends InputComponent {

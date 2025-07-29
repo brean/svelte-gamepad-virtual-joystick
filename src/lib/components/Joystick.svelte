@@ -22,7 +22,7 @@
     style?: string
     inputMapping?: JoystickInput
     context?: string[]
-    requiresFocus: boolean
+    requiresFocus?: boolean
   }
 
   let {
@@ -60,7 +60,7 @@
       invert_y: false,
     },
     context=['default'],
-    requiresFocus=false
+    requiresFocus=true
   }: Props = $props();
 
   let pos: [x: number, y: number] = [0, 0]

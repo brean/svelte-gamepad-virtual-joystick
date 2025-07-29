@@ -19,6 +19,7 @@
     cssclass?: string,
     inputMapping?: ButtonInput
     context?: string[]
+    requiresFocus?: boolean
   }
 
   let {
@@ -37,7 +38,11 @@
       buttons: [GamepadButtons.DOWN],
       keys: ['e', ' ']
     },
-    context = ['default']
+    context = ['default'],
+    // button is one of the few elements that can be activated globally by
+    // default while other UI-components like Slider, List or Joystick
+    // need to be focussed.
+    requiresFocus=false
   }: Props = $props();
 
   const _onpressed = () => {
@@ -69,6 +74,7 @@
   {onrelease}
   {inputMapping}
   {context}
+  {requiresFocus}
   bind:pressed>
   <div class="button-wrapper">
     <button

@@ -15,7 +15,8 @@
     inputMapping?: SliderInput
     focussed?: boolean
     context?: string[]
-    onpressed?: () => boolean
+    onpressed?: () => boolean,
+    requiresFocus?: boolean
   }
 
   let {
@@ -33,13 +34,14 @@
       buttons: [GamepadButtons.DOWN], // activate/focus next component
       buttons_neg: [GamepadButtons.L1, GamepadButtons.DPAD_LEFT],
       buttons_pos: [GamepadButtons.R1, GamepadButtons.DPAD_RIGHT],
-      keys_pos: ['arrowright'],
-      keys_neg: ['arrowleft'],
+      keys_pos: ['d'],
+      keys_neg: ['a'],
       keys: ['e', 'enter'],  // activate/focus next component
       invert: false
     },
     focussed = $bindable<boolean>(false),
-    context = ['default']
+    context = ['default'],
+    requiresFocus = true
   }: Props = $props();
 
   class SliderInputComponent extends InputComponent {

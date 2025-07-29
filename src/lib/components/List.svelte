@@ -16,6 +16,7 @@
     focussed?: number
     selectedIndex?: number
     inputMapping?: ListInput
+    requiresFocus: boolean
   }
 
   let {
@@ -38,7 +39,8 @@
       keys_prev: ['arrowup', 'w'],
       keys_next: ['arrowdown', 's'],
       keys: ['enter', 'r']  // activate
-    }
+    },
+    requiresFocus=true
   }: Props = $props();
 
   function classStr(index: number) {
@@ -80,6 +82,7 @@
   onpressed={changeSelected}
   {disabled}
   {inputMapping}
+  {requiresFocus}
   ></ListBase>
 <div class={cssclass} tabindex={0} role="button">
   {#if component_store.showHints}

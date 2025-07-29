@@ -44,12 +44,10 @@
   {#if showInfo}
   <div transition:fade={{ duration: 300 }} class="help-modal">
     <div class="help-content">
-      <p>
-        <Icon type="keyboard_mouse" input="h" color="#FFFFFF"></Icon>
-        or 
-        <Icon type="ps4" input="8"  color="#FFFFFF"></Icon>
-        toggle help.
-      </p>
+      <Icon type="keyboard_mouse" input="h" color="#FFFFFF"></Icon>
+      or 
+      <Icon type="ps4" input="8"  color="#FFFFFF"></Icon>
+      toggle help.
     </div>
   </div>
   {/if}

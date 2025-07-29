@@ -12,6 +12,7 @@
     disabled?: boolean
     inputMapping?: ListInput
     context?: string[]
+    requiresFocus: boolean
   }
 
   let {
@@ -30,7 +31,8 @@
       keys_next: ['arrowdown', 's'],
       keys: ['e', 'enter']  // activate/focus next component
     },
-    context=['default']
+    context=['default'],
+    requiresFocus=true
   }: Props = $props();
 
   let axesDown = -1;
