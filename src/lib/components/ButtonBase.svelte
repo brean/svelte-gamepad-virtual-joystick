@@ -76,7 +76,6 @@
 
     // Keyboard
     thisKey(event?: KeyboardEvent): boolean {
-      console.log(event.key)
       return (event && (this.input as ButtonInput).keys.includes(event.key)) || false;
     }
   }

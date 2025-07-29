@@ -5,6 +5,7 @@
   import { component_store } from "$lib/state/components.svelte.js";
   import Icon from "./Icon.svelte";
   import { fade } from "svelte/transition";
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
 
   interface Props {
     children: Snippet,
@@ -33,7 +34,7 @@
     inputMapping = {
       name: '',
       gamepad: -1,
-      buttons: [0],
+      buttons: [GamepadButtons.DOWN],
       keys: ['e', ' ']
     },
     context = ['default']

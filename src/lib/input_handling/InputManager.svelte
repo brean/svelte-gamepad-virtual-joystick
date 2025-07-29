@@ -51,6 +51,7 @@
     }
     // Chrome only updates the gamepad state when we call getGamepads
     for (let pad of navigator.getGamepads()) {
+      console.log(pad);
       if (!pad) {
         continue;
       }

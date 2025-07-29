@@ -1,6 +1,16 @@
 :root {
   --background-color: rgba(100, 100, 100, 0.4);
   --font-color: rgb(197, 197, 197);
+  --button-border-color: gray;
+  --button-clicked-border-color: red;
+  --sidenav-background-color: #111;
+  --sidenav-transition-time: 0.5s;
+  --sidenav-link-color: #818181;
+  --sidenav-hover-color: #f1f1f1;
+  --glow-color: rgb(97, 97, 223);
+  --glow-opacity: 0.8;
+  --list-hover-color: rgb(255, 242, 62);
+  --list-selected-color: red;
 }
 
 body {
@@ -10,12 +20,21 @@ body {
 
 /* custom buttons */
 .vbutton {
-  border: 3px solid gray;
+  border: 3px solid var(--button-border-color);
   padding: 10px 20px;
 }
 
 .vbutton.button_clicked {
-  border: 6px solid red;
+  border: 6px solid var(--button-clicked-border-color);
+}
+
+.vlist {
+  border-radius: 16px;
+}
+
+.vlist ul {
+  padding: 0;
+  list-style-type: none;
 }
 
 /* Side nav  */
@@ -26,10 +45,15 @@ body {
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: #111;
+  background-color: var(--sidenav-background-color);
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  transition: var(--sidenav-transition-time);
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover,.sidenav li:hover {
+  color: var(--sidenav-hover-color);
 }
 
 .sidenav ul {
@@ -41,7 +65,7 @@ body {
   padding: 8px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: var(--sidenav-link-color);
   display: block;
   max-width: 190px;
   text-align: center;
@@ -52,7 +76,6 @@ body {
   position: absolute;
   top: 0;
   border: 0;
-  color: white;
   background-color: transparent;
   right: 20px;
   font-size: 36px;
@@ -63,10 +86,6 @@ body {
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
-}
-
-ul {
-  list-style-type: none;
 }
 
 /* property for the animation of the gradient border background of the selected list item */
@@ -82,41 +101,18 @@ ul {
   }
 }
 
-/* When you mouse over the navigation links, change their color */
-.sidenav a:hover,.sidenav li:hover {
-  color: #f1f1f1;
-}
-
 li {
   border: 3px solid transparent;
 }
 
-li.focussed {
-  animation: spin 2.5s infinite linear paused;
-  
-  background:
-    linear-gradient(
-        to bottom,
-        black,
-        black
-      )
-      padding-box, /* ends at inner border edges */
-    conic-gradient(
-        from var(--bg-angle) in oklch longer hue,
-        oklch(0.85 0.37 0) 0 0
-      )
-      border-box; /* extends to outer border edges */
-  
+li.focussed {  
   /* a clear border lets the background gradient shine through */
-  border: 3px solid transparent;
-
-  animation-play-state: running;
+  border: 3px dashed var(--list-hover-color);
 }
 
 li.selected {
   color: white;
-  /* outline: 2px dashed yellow; */
-  outline: 2px dashed red;
+  outline: 2px solid var(--list-selected-color);
   outline-offset: -6px;
 }
 
@@ -127,12 +123,12 @@ li {
 }
 
 main {
-  position: absolute;
   transition: margin-left .5s;
   padding: 20px;
 }
 
-/* the modal dialog for the configuration */
+/* The modal dialog for the configuration */
+
 /* based on https://www.w3schools.com/howto/howto_css_delete_modal.asp */
 .modal {
   /* display: none; Hidden by default */
@@ -154,7 +150,6 @@ main {
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
 }
-
 
 .help-modal-fade-out {
   opacity: 0;
@@ -181,4 +176,25 @@ main {
   max-width: 400px; /* Responsive width */
   text-align: center;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+/* Handle the focus element */
+
+/* Keyframes for the glow animation on selected element */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 7px 5px var(--glow-color);
+    }
+    50% {
+        box-shadow: 0 0 12px 7px var(--glow-color);
+    }
+    100% {
+        box-shadow: 0 0 7px 5px var(--glow-color);
+    }
+}
+
+/* Apply styles to all focused elements */
+*:focus {
+    outline: none; /* Remove default outline */
+    animation: glow 1.5s infinite; /* Apply glow animation */
 }

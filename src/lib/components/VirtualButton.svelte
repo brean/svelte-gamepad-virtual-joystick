@@ -3,6 +3,7 @@
 press a special button to activate a custom function 
 for example show all warnings
 */
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import ButtonBase from "./ButtonBase.svelte";
 
@@ -28,7 +29,7 @@ for example show all warnings
     inputMapping = {
       name: 'Help',
       gamepad: -1,
-      buttons: [8],
+      buttons: [GamepadButtons.VIEW],
       keys: ['h']
     },
     context = ['default']

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import GamepadButtons from "$lib/constants/GamepadButtons.js";
     import type SliderInput from "$lib/models/SliderInput.js";
     import SliderBase from "./SliderBase.svelte";
 
@@ -21,8 +22,8 @@
       gamepad: -1,
       sensitivity: 0.05,
       axes: 0,
-      buttons_neg: [4],
-      buttons_pos: [5],
+      buttons_neg: [GamepadButtons.L1, GamepadButtons.DPAD_LEFT],
+      buttons_pos: [GamepadButtons.R1, GamepadButtons.DPAD_RIGHT],
       keys_pos: ['ArrowRight'],
       keys_neg: ['ArrowLeft'],
       invert: false

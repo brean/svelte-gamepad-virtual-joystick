@@ -1,4 +1,5 @@
 <script lang="ts">
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import { angle, distance, clamp, findCoord, thisGamepad } from "$lib/utils.js";
   import { onMount } from "svelte";
   import type JoystickInput from "$lib/models/JoystickInput.js";
@@ -43,10 +44,10 @@
       gamepad: -1,
       axes_x: 0,
       axes_y: 1,
-      button_x_pos: [15],
-      button_x_neg: [14],
-      button_y_pos: [13],
-      button_y_neg: [12],
+      button_x_pos: [GamepadButtons.DPAD_RIGHT],
+      button_x_neg: [GamepadButtons.DPAD_LEFT],
+      button_y_pos: [GamepadButtons.DPAD_DOWN],
+      button_y_neg: [GamepadButtons.DPAD_UP],
       deadzoneX: 0.05,
       deadzoneY: 0.05,
       // keyboard

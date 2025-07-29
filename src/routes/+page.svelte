@@ -9,7 +9,10 @@
   import { component_store } from "$lib/state/components.svelte.js";
   import Icon from "$lib/components/Icon.svelte";
   import List from "$lib/components/List.svelte";
+    import GamepadButtons from "$lib/constants/GamepadButtons.js";
 
+  const items = ['banana', 'orange', 'apple'];
+  let selectedItemIndex = $state(0);
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let mgr: InputManager;
   let contextButtonDisabled = $state(true);
@@ -31,7 +34,7 @@
   inputMapping={{
     name: 'Help',
     gamepad: -1,
-    buttons: [8],
+    buttons: [GamepadButtons.VIEW],
     keys: ['h']
   }}
 ></VirtualButton>
@@ -59,7 +62,7 @@
   inputMapping={{
     name: 'Main Button',
     gamepad: -1,
-    buttons: [0],
+    buttons: [GamepadButtons.RIGHT],
     keys: ['e']
   }}
 >
@@ -75,8 +78,8 @@
   inputMapping={{
     name: 'Second Button',
     gamepad: -1,
-    buttons: [0],
-    keys: ['e'],
+    buttons: [GamepadButtons.LEFT],
+    keys: ['q'],
   }}
   disabled={contextButtonDisabled}
 >
@@ -91,7 +94,9 @@
 <Slider /><br />
 <Slider />
 
-<List items={['banana', 'orange', 'apple']}/>
+<List items={items} bind:selectedIndex={selectedItemIndex}/>
+
+Selected: {items[selectedItemIndex]}
 
 <Joystick bind:position={positionFirst} requiresFocus={false} /><br />
 x: {positionFirst[0].toFixed(3)}<br />

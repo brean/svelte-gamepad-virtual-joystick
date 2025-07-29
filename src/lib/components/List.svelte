@@ -1,10 +1,11 @@
 <script lang="ts">
+    import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import type ListInput from "$lib/models/ListInput.js";
   import ListBase from "./ListBase.svelte";
 
   interface Props {
     items: string[]
-    onpressed?: () => void
+    onpressed?: () => boolean
     disabled?: boolean
     wrap?: boolean  // prev of first is last, next of last is first.
     style?: string
@@ -28,19 +29,20 @@
       gamepad: -1,
       axes: [1],
       sensitivity: 0.05, // sensitivity - at what value do we react to the axes movement?
-      buttons: [0],
-      buttons_prev: [12],  // up
-      buttons_next: [13],  // down
+      buttons: [GamepadButtons.DOWN],
+      buttons_prev: [GamepadButtons.DPAD_UP],
+      buttons_next: [GamepadButtons.DPAD_DOWN],
       keys_prev: ['ArrowUp', 'w'],
       keys_next: ['ArrowDown', 's'],
-      keys: ['e']  // activate
+      keys: ['r']  // activate
     }
   }: Props = $props();
 
   function classStr(index: number) {
-    let clz = selectedIndex === index ? 'selected ' : '';
+    let clz = 'item';
+    clz += selectedIndex === index ? ' selected' : '';
     if (focussed === index) {
-      clz += 'focussed '
+      clz += ' focussed'
     }
     return clz
   }
@@ -59,11 +61,12 @@
     focusItemAtIndex(focussed+direction);
   }
 
-  function changeSelected() {
+  function changeSelected(): boolean {
     selectedIndex = focussed;
     if (onpressed) {
-      onpressed();
+      return onpressed();
     }
+    return false;
   }
 
 
@@ -75,7 +78,8 @@
   {disabled}
   {inputMapping}
   ></ListBase>
-<ul {style} class={cssclass}>
+<div class={cssclass} tabindex={0} role="button">
+  <ul {style} >
   {#each items as item, index}
     <li 
       class={classStr(index)}
@@ -94,4 +98,5 @@
       }}
       >{item}</li>
   {/each}
-</ul>
+  </ul>
+</div>

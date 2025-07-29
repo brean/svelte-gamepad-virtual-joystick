@@ -22,9 +22,9 @@
       gamepad: -1,
       axes: [1],
       sensitivity: 0.05, // sensitivity - at what value do we react to the axes movement?
-      buttons: [0],
-      buttons_prev: [12],  // up
-      buttons_next: [13],  // down
+      buttons: [GamepadButtons.DOWN],
+      buttons_prev: [GamepadButtons.DPAD_UP],
+      buttons_next: [GamepadButtons.DPAD_DOWN],
       keys_prev: ['ArrowUp', 'w'],
       keys_next: ['ArrowDown', 's'],
       keys: ['e']  // activate

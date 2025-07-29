@@ -30,12 +30,13 @@
     navOpen = true;
   }
 
-  function listItemPressed() {
+  function listItemPressed(): boolean {
     const item = listItems[selectedIndex];
     if (item === 'Settings') {
       // TODO: show config dialog in main menu
     }
     hideNav();
+    return true;  // we consumed this event, stop propagation
   }
 </script>
 
