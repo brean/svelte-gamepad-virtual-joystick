@@ -1,7 +1,10 @@
 <script lang="ts">
     import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import type ListInput from "$lib/models/ListInput.js";
+    import { fade } from "svelte/transition";
+    import Icon from "./Icon.svelte";
   import ListBase from "./ListBase.svelte";
+    import { component_store } from "$lib/state/components.svelte.js";
 
   interface Props {
     items: string[]
@@ -32,9 +35,9 @@
       buttons: [GamepadButtons.DOWN],
       buttons_prev: [GamepadButtons.DPAD_UP],
       buttons_next: [GamepadButtons.DPAD_DOWN],
-      keys_prev: ['ArrowUp', 'w'],
-      keys_next: ['ArrowDown', 's'],
-      keys: ['r']  // activate
+      keys_prev: ['arrowup', 'w'],
+      keys_next: ['arrowdown', 's'],
+      keys: ['enter', 'r']  // activate
     }
   }: Props = $props();
 
@@ -66,7 +69,7 @@
     if (onpressed) {
       return onpressed();
     }
-    return false;
+    return true;
   }
 
 
@@ -79,6 +82,40 @@
   {inputMapping}
   ></ListBase>
 <div class={cssclass} tabindex={0} role="button">
+  {#if component_store.showHints}
+  <div class="hint-container" out:fade in:fade>
+    <div class="hint">
+      ↑
+      {#if inputMapping.keys_prev.length > 0 }
+        <Icon 
+          type='keyboard_mouse'
+          input={inputMapping.keys_prev[0]}></Icon>
+      {/if}
+      {#if inputMapping.buttons_prev.length > 0 }
+        <Icon
+          type='generic'
+          input={inputMapping.buttons_prev[0]}></Icon>
+      {/if}
+    </div>
+  </div>
+  <div class="hint-center">
+    <div class="hint-container" out:fade in:fade>
+      <div class="hint">
+        {#if inputMapping.keys.length > 0 }
+          <Icon 
+            type='keyboard_mouse'
+            input={inputMapping.keys[0]}></Icon>
+        {/if}
+        {#if inputMapping.buttons.length > 0 }
+          <Icon
+            type='generic'
+            input={inputMapping.buttons[0]}></Icon>
+        {/if}
+      </div>
+    </div>
+  </div>
+  {/if}
+
   <ul {style} >
   {#each items as item, index}
     <li 
@@ -99,4 +136,57 @@
       >{item}</li>
   {/each}
   </ul>
+
+  {#if component_store.showHints}
+    <div class="hint-container" out:fade in:fade>
+      <div class="hint">
+        ↓
+        {#if inputMapping.keys_next.length > 0 }
+          <Icon 
+            type='keyboard_mouse'
+            input={inputMapping.keys_next[0]}></Icon>
+        {/if}
+        {#if inputMapping.buttons_next.length > 0 }
+          <Icon
+            type='generic'
+            input={inputMapping.buttons_next[0]}></Icon>
+        {/if}
+      </div>
+    </div>
+  {/if}
 </div>
+
+<style>
+
+  .hint-container {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none; /* Allows clicks to pass through to the button */
+    background: white;
+    border-radius: 6px;
+    margin: 6px;
+    padding: 6px
+  }
+
+  .hint-center .hint-container {
+    top: 50%;
+  }
+
+  .hint-center {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  .vlist {
+    position: relative;
+  }
+</style>

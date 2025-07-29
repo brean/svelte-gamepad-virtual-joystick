@@ -11,7 +11,7 @@
   import List from "$lib/components/List.svelte";
     import GamepadButtons from "$lib/constants/GamepadButtons.js";
 
-  const items = ['banana', 'orange', 'apple'];
+  const items = ['banana', 'orange', 'apple', 'strawberry'];
   let selectedItemIndex = $state(0);
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let mgr: InputManager;

@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { thisGamepad } from "$lib/utils.js";
   import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+    import GamepadButtons from "$lib/constants/GamepadButtons.js";
 
   interface Props {
     changeFocus: (direction: 1 | -1) => void
@@ -25,9 +26,9 @@
       buttons: [GamepadButtons.DOWN],
       buttons_prev: [GamepadButtons.DPAD_UP],
       buttons_next: [GamepadButtons.DPAD_DOWN],
-      keys_prev: ['ArrowUp', 'w'],
-      keys_next: ['ArrowDown', 's'],
-      keys: ['e']  // activate
+      keys_prev: ['arrowup', 'w'],
+      keys_next: ['arrowdown', 's'],
+      keys: ['e', 'enter']  // activate
     },
     context=['default']
   }: Props = $props();
@@ -38,7 +39,8 @@
       if (disabled) {
         return false;
       }
-      return onpressed ? onpressed() : false;
+      console.log('PRESSED!')
+      return onpressed ? onpressed() : true;
     }
 
     // --- Gamepad ---
@@ -46,11 +48,8 @@
       if (disabled || !thisGamepad(this.input, gamepad)) {
         return false;
       }
-      if (this.thisGamepadButton(gamepad, btn)) {
-        if (onpressed) {
-          return onpressed();
-        }
-        return false;
+      if (inputMapping.buttons.includes(btn)) {
+        return this.onpressed();
       }
       if (inputMapping.buttons_next.includes(btn)) {
         changeFocus(1);
@@ -68,14 +67,15 @@
       if (!event) {
         return false;
       }
-      if (inputMapping.keys.includes(event.key)) {
-        return super.onpressed()
+      const key = event.key.toLowerCase()
+      if (inputMapping.keys.includes(key)) {
+        return this.onpressed();
       }
-      if (inputMapping.keys_next.includes(event.key)) {
+      if (inputMapping.keys_next.includes(key)) {
         changeFocus(1);
         return true;
       }
-      if (inputMapping.keys_prev.includes(event.key)) {
+      if (inputMapping.keys_prev.includes(key)) {
         changeFocus(-1);
         return true;
       }

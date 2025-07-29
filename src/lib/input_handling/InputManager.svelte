@@ -51,7 +51,6 @@
     }
     // Chrome only updates the gamepad state when we call getGamepads
     for (let pad of navigator.getGamepads()) {
-      console.log(pad);
       if (!pad) {
         continue;
       }
@@ -117,18 +116,20 @@
 
   // press and hold the key (repeats while the button is pressed)
   const keydown = (event: KeyboardEvent) => {
-    if (!keyDown[event.key]) {
+    const key = event.key.toLowerCase();
+    if (!keyDown[key]) {
       keypress(event);
     }
     let components = getComponentsByContext();
-    keyDown[event.key] = true;
+    keyDown[key] = true;
     components.forEach((comp) => {
       comp.onkeyhold(event);
     })
   }
 
   const release = (event: KeyboardEvent) => {
-    delete keyDown[event.key];
+    const key = event.key.toLowerCase();
+    delete keyDown[key];
     let components = getComponentsByContext();
     components.forEach((comp) => {
       comp.onkeyrelease(event);

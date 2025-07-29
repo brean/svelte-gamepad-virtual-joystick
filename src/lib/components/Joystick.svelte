@@ -127,10 +127,11 @@
 
     // keyboard
     updateKeys(event: KeyboardEvent) {
-      this.xPos = inputMapping.key_x_pos.includes(event.key);
-      this.xNeg = inputMapping.key_x_neg.includes(event.key);
-      this.yPos = inputMapping.key_y_pos.includes(event.key);
-      this.yNeg = inputMapping.key_y_neg.includes(event.key);
+      const key = event.key.toLowerCase()
+      this.xPos = inputMapping.key_x_pos.includes(key);
+      this.xNeg = inputMapping.key_x_neg.includes(key);
+      this.yPos = inputMapping.key_y_pos.includes(key);
+      this.yNeg = inputMapping.key_y_neg.includes(key);
     }
 
     onkeyrelease(event?: KeyboardEvent): void {

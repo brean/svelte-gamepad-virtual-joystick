@@ -76,7 +76,8 @@
 
     // Keyboard
     thisKey(event?: KeyboardEvent): boolean {
-      return (event && (this.input as ButtonInput).keys.includes(event.key)) || false;
+      return event && (this.input as ButtonInput).keys.includes(
+        event.key.toLowerCase()) || false;
     }
   }
 
