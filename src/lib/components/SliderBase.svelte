@@ -10,6 +10,7 @@
     value: number
     min: number
     max: number
+    step: number
     disabled: boolean
     inputMapping?: SliderInput
     focussed?: boolean
@@ -21,6 +22,7 @@
     value = $bindable(50),
     min = 0,
     max = 100,
+    step = 1,
     onpressed,
     disabled = false,
     inputMapping = {
@@ -54,10 +56,10 @@
         return;
       }
       if (inputMapping.buttons_pos.includes(btn)) {
-        value += 1;
+        value = Math.min(max, value+step);
       }
       if (inputMapping.buttons_neg.includes(btn)) {
-        value -= 1;
+        value = Math.max(min, value-step);
       }
     }
 
@@ -71,10 +73,10 @@
         return this.onhold();
       }
       if (inputMapping.keys_pos.includes(key)) {
-        value += 1;
+        value = Math.min(max, value+step);
       }
       if (inputMapping.keys_neg.includes(key)) {
-        value -= 1;
+        value = Math.max(min, value-step);
       }
     }
   }

@@ -10,6 +10,7 @@
     value?: number
     min?: number
     max?: number
+    step?: number
     disabled?: boolean
     inputMapping?: SliderInput
     focussed?: boolean
@@ -19,6 +20,7 @@
     value = $bindable(50),
     min = 0,
     max = 100,
+    step = 10,
     disabled = false,
     inputMapping = {
       name: 'Slider',
@@ -41,6 +43,7 @@
 <SliderBase 
   {disabled}
   {inputMapping}
+  {step}
   {min}
   {max}
   bind:value
@@ -63,7 +66,7 @@
   </div>
 {/if}
 
-  <input type="range" {min} {max} bind:value {disabled} style:width="100%;">
+  <input type="range" {min} {max} {step} bind:value {disabled} style:width="100%;">
 
 {#if component_store.showHints}
   <div class="hint-container hint-right" out:fade in:fade>
