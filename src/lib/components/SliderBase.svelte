@@ -13,7 +13,6 @@
     step: number
     disabled: boolean
     inputMapping?: SliderInput
-    focussed?: boolean
     context?: string[]
     onpressed?: () => boolean,
     requiresFocus?: boolean
@@ -39,7 +38,6 @@
       keys: ['e', 'enter'],  // activate/focus next component
       invert: false
     },
-    focussed = $bindable<boolean>(false),
     context = ['default'],
     requiresFocus = true
   }: Props = $props();

@@ -3,9 +3,11 @@ import InputComponent from "$lib/input_handling/InputComponent.js";
 // all input handler
 export const component_store = $state<{
   components: {[context: string]: InputComponent[]};
+  activeComponents: InputComponent[];
   showHints: boolean;
 }>({
   components: {},
+  activeComponents: [],
   showHints: false
 });
 

@@ -2,22 +2,12 @@ import type Input from "$lib/models/Input.js";
 import { thisGamepad } from "$lib/utils.js";
 
 export default class InputComponent {
-  focussed: boolean = true;
+  requiresFocus: boolean;
   input: Input;
 
-  constructor(input: Input) {
+  constructor(input: Input, requiresFocus: boolean = false) {
     this.input = input;
-  }
-
-  // generic
-  setFocus() {
-    // overwrite to set focussed html class
-    this.focussed = true;
-  }
-
-  blur() {
-    // overwrite to remove focussed html class
-    this.focussed = false;
+    this.requiresFocus = requiresFocus;
   }
 
   onpressed(): boolean {

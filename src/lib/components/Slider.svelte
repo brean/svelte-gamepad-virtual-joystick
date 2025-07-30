@@ -13,7 +13,6 @@
     step?: number
     disabled?: boolean
     inputMapping?: SliderInput
-    focussed?: boolean,
     requiresFocus: boolean
   }
 
@@ -36,7 +35,6 @@
       keys: ['e', 'enter'],  // activate/focus next component
       invert: false
     },
-    focussed = $bindable<boolean>(false),
     requiresFocus = true
   }: Props = $props();
 
