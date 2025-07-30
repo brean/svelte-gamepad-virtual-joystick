@@ -20,6 +20,12 @@ export const registerComponent = (
     }
     component_store.components[ctx].push(component);
   });
+  // set all components active in the beginning that do not require focus,
+  // if they are in the default context
+  // TODO: focus first element, add first focusable element to activecomponents
+  if (!component.requiresFocus && context.includes('default')) {
+    component_store.activeComponents.push(component);
+  }
 };
 
 export const unregisterComponent = (
@@ -30,5 +36,8 @@ export const unregisterComponent = (
       component_store.components[ctx].splice(component_store.components[ctx].indexOf(component), 1);
     }
   });
+  if (component_store.activeComponents.includes(component)) {
+    component_store.activeComponents.slice(component_store.activeComponents.indexOf(component));
+  }
 }
 
