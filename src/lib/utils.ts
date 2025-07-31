@@ -34,19 +34,39 @@ export function thisGamepad(_input: Input, gamepad: Gamepad): boolean {
   return _input.gamepad === -1 || _input.gamepad === gamepad.index;
 }
 
+function getNextElement(direction: 1 | -1): HTMLElement | undefined {
+  const currentElement = document.activeElement;
+  const focusableElements = Array.from(document.querySelectorAll('input, select, textarea, button, [tabindex]:not([tabindex="-1"])'));
+  if (!currentElement) {
+    return
+  }
+  let currentIndex = focusableElements.indexOf(currentElement);
+  for (let i = 1; i < focusableElements.length; i++) {
+    let index = (currentIndex + (i * direction)) % focusableElements.length;
+    if (index < 0) {
+      index = focusableElements.length -1;
+      currentIndex = index;
+    }
+    const elem = focusableElements[index] as HTMLElement;
+    if (!elem.hasAttribute('disabled')) {
+      return elem;
+    }
+  }
+  
+}
+
+export function focusPreviousElement() {
+  // Get the currently focused element
+  const previousElement = getNextElement(-1);
+  if (previousElement) {
+    previousElement.focus();
+  }
+}
+
 export function focusNextElement() {
-    // Get the currently focused element
-    const currentElement = document.activeElement;
-    const focusableElements = Array.from(document.querySelectorAll('input, select, textarea, button, [tabindex]:not([tabindex="-1"])'));
-    if (!currentElement) {
-      return
-    }
-    const currentIndex = focusableElements.indexOf(currentElement);
-    const nextIndex = (currentIndex + 1) % focusableElements.length; // Wrap around to the first element
-    const nextElement = focusableElements[nextIndex] as HTMLElement;
-    if (nextElement) {
-      nextElement.focus();
-    } else {
-      (focusableElements[0] as HTMLElement).focus();
-    }
+  // Get the currently focused element
+  const nextElement = getNextElement(1);
+  if (nextElement) {
+    nextElement.focus();
+  }
 }

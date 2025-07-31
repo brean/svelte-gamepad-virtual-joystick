@@ -66,7 +66,6 @@
           });
           if (!buttonDown[i]) {
             buttonDown[i] = true;
-            console.log('down1', i)
             for (let comp of components) {
               if (comp.thisGamepadButton(pad, i) && comp.onbuttonpressed(pad, i) === true) {
                 break;

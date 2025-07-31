@@ -62,6 +62,9 @@
     onpressed(): boolean {
       const parentPressed = super.onpressed();
       pressedClass = 'button_clicked '
+      if (focusElement) {
+        focusElement.focus();
+      }
       return parentPressed;
     }
 

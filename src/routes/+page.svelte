@@ -10,6 +10,7 @@
   import Icon from "$lib/components/Icon.svelte";
   import List from "$lib/components/List.svelte";
     import GamepadButtons from "$lib/constants/GamepadButtons.js";
+  import { focusNextElement, focusPreviousElement } from "$lib/utils.js";
 
   const items = ['banana', 'orange', 'apple', 'strawberry'];
   let selectedItemIndex = $state(0);
@@ -37,6 +38,33 @@
     gamepad: -1,
     buttons: [GamepadButtons.VIEW],
     keys: ['h']
+  }}
+></VirtualButton>
+
+<VirtualButton
+  onpressed={() => {
+    // show all hints
+    focusNextElement();
+    return true;
+  }}
+  inputMapping={{
+    name: 'Focus next',
+    gamepad: -1,
+    buttons: [GamepadButtons.TRIGGER_RIGHT],
+    keys: ['k']
+  }}
+></VirtualButton>
+<VirtualButton
+  onpressed={() => {
+    // show all hints
+    focusPreviousElement();
+    return true;
+  }}
+  inputMapping={{
+    name: 'Focus previous',
+    gamepad: -1,
+    buttons: [GamepadButtons.TRIGGER_LEFT],
+    keys: ['i']
   }}
 ></VirtualButton>
 
