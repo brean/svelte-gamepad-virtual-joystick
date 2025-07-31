@@ -4,12 +4,15 @@ press a special button to activate a custom function
 for example show all warnings
 */
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
-  import type ButtonInput from "$lib/models/ButtonInput.js";
-  import ButtonBase from "./ButtonBase.svelte";
+    import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
+    import type ButtonInput from "$lib/models/ButtonInput.js";
+    import { onMount } from "svelte";
+    import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+    import { disableScrollHandling } from "$app/navigation";
 
    interface Props {
     disabled?: boolean
-    onpressed?: (() => void),
+    onpressed?: (() => boolean),
     onhold?: (() => void),
     onrelease?: (() => void),
     onpointerout?: (() => void),
@@ -35,14 +38,18 @@ for example show all warnings
     context = ['default']
   }: Props = $props();
 
-</script>
+  onMount(() => {
+    const btnElement = new ButtonInputComponent(
+      inputMapping, undefined, false,
+      onpressed=onpressed, onhold=onhold, onrelease=onrelease
+      );
+    btnElement.disabled = disabled;
+    btnElement.pressed = pressed;
+    registerComponent(context, btnElement);
+    return () => {
+      if (!btnElement) { return };
+      unregisterComponent(context, btnElement);
+    }
+  });
 
-<ButtonBase
-  {disabled}
-  {onpressed}
-  {onhold}
-  {onrelease}
-  {inputMapping}
-  {context}
-  bind:pressed>
-</ButtonBase>
+</script>

@@ -7,6 +7,7 @@
   import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import Icon from "./Icon.svelte";
   import { fade } from "svelte/transition";
+    import JoystickInputComponent from "$lib/input_handling/JoystickInputComponent.js";
 
   interface Props {
     disabled?: boolean
@@ -63,145 +64,18 @@
     requiresFocus=true
   }: Props = $props();
 
-  let pos: [x: number, y: number] = [0, 0]
-
   const radius = size/2;
   let pointerActive: boolean = false;
  
   // if the user uses a touch, mouse or keyboard input device
   // we disable the gamepad
-  let gamepadActive = true;
   let opacity = $state(defaultOpacity);
-
-  class JoystickInputComponent extends InputComponent {
-    xPos = false;
-    xNeg = false;
-    yPos = false;
-    yNeg = false;
-
-    onrelease(): void {
-      let x = pos[0];
-      let y = pos[1];
-      if (this.xPos || this.xNeg) {
-        x = 0;
-      }
-
-      if (this.yPos || this.yNeg) {
-        y = 0;
-      }
-
-      if (x == pos[0] && y == pos[1]) {
-        return
-      }
-
-      // Proceed with calculations now that we know a valid key was pressed.
-      calcPos(x * radius, y * radius);
-      pos = [x, y];
-      gamepadActive = true;
-    }
-
-    onhold(): void {
-      let x = pos[0];
-      let y = pos[1];
-      if (this.xPos) {
-        x = 1;
-      } else if (this.xNeg) {
-        x = -1;
-      }
-
-      if (this.yPos) {
-        y = 1;
-      } else if (this.yNeg) {
-        y = -1;
-      }
-
-      if (x == pos[0] && y == pos[1]) {
-        return
-      }
-
-      // Proceed with calculations now that we know a valid key was pressed.
-      calcPos(x * radius, y * radius);
-      pos = [x, y];
-      gamepadActive = false;
-    }
-
-    // keyboard
-    updateKeys(event: KeyboardEvent) {
-      const key = event.key.toLowerCase()
-      this.xPos = inputMapping.key_x_pos.includes(key);
-      this.xNeg = inputMapping.key_x_neg.includes(key);
-      this.yPos = inputMapping.key_y_pos.includes(key);
-      this.yNeg = inputMapping.key_y_neg.includes(key);
-    }
-
-    onkeyrelease(event?: KeyboardEvent): void {
-      if (disabled || !event) {
-        return
-      }
-      this.updateKeys(event)
-      super.onkeyrelease(event);
-    }
-
-    onkeyhold(event?: KeyboardEvent): void {
-      if (disabled || !event) {
-        return
-      }
-      this.updateKeys(event)
-      super.onkeyhold(event);
-    }
-
-    // gamepad
-    updateButton(idx: number) {
-      this.xPos = inputMapping.button_x_pos.includes(idx);
-      this.xNeg = inputMapping.button_x_neg.includes(idx);
-      this.yPos = inputMapping.button_y_pos.includes(idx);
-      this.yNeg = inputMapping.button_y_neg.includes(idx);
-    }
-
-    onbuttonhold(gamepad: Gamepad, btn: number): void {
-      if (disabled) {
-        return
-      }
-      this.updateButton(btn)
-      super.onbuttonhold(gamepad, btn);
-    }
-
-    onbuttonrelease(gamepad: Gamepad, btn: number): void {
-      if (disabled) {
-        return
-      }
-      this.updateButton(btn)
-      super.onbuttonrelease(gamepad, btn);
-    }
-
-    onupdate(gamepad: Gamepad): void {
-      if (disabled || !gamepadActive || !thisGamepad(inputMapping, gamepad)) {
-        return
-      }
-      let xcoord = gamepad.axes[inputMapping.axes_x];
-      let ycoord = gamepad.axes[inputMapping.axes_y];
-      if (inputMapping.invert_x) {
-        xcoord = -xcoord;
-      }
-      if (inputMapping.invert_y) {
-        ycoord = -ycoord;
-      }
-      if (Math.abs(xcoord) < inputMapping.deadzoneX && 
-          Math.abs(ycoord) < inputMapping.deadzoneY) {
-        opacity = defaultOpacity;
-        position = [0, 0]
-        return;
-      }
-      opacity = activeOpacity;
-      position = [xcoord, ycoord];
-    }
-  }
 
   function onpointermove(evt: MouseEvent) {
     if (disabled || !inputMapping.gamepad || !pointerActive || !evt.target) {
       return
     }
-    gamepadActive = false;
+    if (comp) comp.gamepadActive = false;
     const rect = (evt.target as any).getBoundingClientRect();
     const mouseX = evt.x - rect.x;
     const mouseY = evt.y - rect.y;
@@ -245,22 +119,27 @@
     position = [0, 0]
   }
 
-  const activateGamepad = () => {
-    if (disabled) {
-        return
-      }
-      gamepadActive = true;
+  function updatePositionFromGamepad(active: boolean, pos: [x: number, y: number]) {
+    opacity = active ? activeOpacity : defaultOpacity;
+    position = pos;
   }
 
+  let area: HTMLElement;
+  let comp: JoystickInputComponent | undefined;
+
   onMount(() => {
-    const comp = new JoystickInputComponent(inputMapping);
+    comp = new JoystickInputComponent(
+      inputMapping, area, requiresFocus);
+    comp.radius = radius;
+    comp.calcPos = calcPos;
+    comp.updatePosition = updatePositionFromGamepad;    
     registerComponent(context, comp);
     return () => {
+      if (!comp) return;
       unregisterComponent(context, comp);
     }
   });
 
-  let area: HTMLElement;
 </script>
 
 <svelte:window on:pointerup={reset} />
@@ -284,12 +163,12 @@
       e.stopImmediatePropagation();
       pointerActive = true;
       onpointermove(e)}}
-    onpointerup={activateGamepad}
-    onpointerleave={activateGamepad}
+    onpointerup={() => {comp?.activateGamepad()}}
+    onpointerleave={() => {comp?.activateGamepad()}}
     onpointermove={onpointermove}
     ontouchstart={() => {}}
-    ontouchend={activateGamepad}
-    onpointerout={activateGamepad}
+    ontouchend={() => {comp?.activateGamepad()}}
+    onpointerout={() => {comp?.activateGamepad()}}
     >
   {#if component_store.showHints}
   <div

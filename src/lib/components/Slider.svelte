@@ -1,10 +1,11 @@
 <script lang="ts">
     import GamepadButtons from "$lib/constants/GamepadButtons.js";
     import type SliderInput from "$lib/models/SliderInput.js";
-    import { component_store } from "$lib/state/components.svelte.js";
+    import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
     import { fade } from "svelte/transition";
-    import SliderBase from "./SliderBase.svelte";
     import Icon from "./Icon.svelte";
+    import { onMount } from "svelte";
+    import SliderInputComponent from "$lib/input_handling/SliderInputComponent.js";
 
   interface Props {
     value?: number
@@ -13,9 +14,9 @@
     step?: number
     disabled?: boolean
     inputMapping?: SliderInput
-    requiresFocus: boolean
+    context?: string[]
+    requiresFocus?: boolean
   }
-
   let {
     value = $bindable(50),
     min = 0,
@@ -35,20 +36,27 @@
       keys: ['e', 'enter'],  // activate/focus next component
       invert: false
     },
+    context=['default'],
     requiresFocus = true
   }: Props = $props();
 
+  let focusElement: HTMLElement;
+
+  onMount(() => {
+    const slid = new SliderInputComponent(
+      inputMapping, focusElement, requiresFocus);
+    slid.setValue = (_value: number) => { value = _value; };
+    slid.getValue = () => {return value;};
+    slid.max = max;
+    slid.min = min;
+    slid.step = step;
+    registerComponent(context, slid);
+    return () => {
+      unregisterComponent(context, slid);
+    }
+  })
 </script>
 
-<SliderBase 
-  {disabled}
-  {inputMapping}
-  {step}
-  {min}
-  {max}
-  {requiresFocus}
-  bind:value
-  ></SliderBase>
 <div class="vslider">
 {#if component_store.showHints}
   <div class="hint-container hint-left" out:fade in:fade>
@@ -67,7 +75,10 @@
   </div>
 {/if}
 
-  <input type="range" {min} {max} {step} bind:value {disabled} style:width="100%;">
+  <input
+    bind:this={focusElement}
+    type="range"
+    {min} {max} {step} bind:value {disabled} style:width="100%;">
 
 {#if component_store.showHints}
   <div class="hint-container hint-right" out:fade in:fade>

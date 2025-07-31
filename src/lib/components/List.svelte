@@ -1,10 +1,11 @@
 <script lang="ts">
     import GamepadButtons from "$lib/constants/GamepadButtons.js";
-  import type ListInput from "$lib/models/ListInput.js";
+    import type ListInput from "$lib/models/ListInput.js";
     import { fade } from "svelte/transition";
     import Icon from "./Icon.svelte";
-  import ListBase from "./ListBase.svelte";
-    import { component_store } from "$lib/state/components.svelte.js";
+      import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+    import { onMount } from "svelte";
+    import ListInputComponent from "$lib/input_handling/ListInputComponent.js";
 
   interface Props {
     items: string[]
@@ -16,12 +17,13 @@
     focussed?: number
     selectedIndex?: number
     inputMapping?: ListInput
-    requiresFocus: boolean
+    context?: string[]
+    requiresFocus?: boolean
   }
 
   let {
     items,
-    onpressed,
+    onpressed = undefined,
     disabled = false,
     wrap = true,
     style = '',
@@ -40,6 +42,7 @@
       keys_next: ['arrowdown', 's'],
       keys: ['enter', 'r']  // activate
     },
+    context=['default'],
     requiresFocus=true
   }: Props = $props();
 
@@ -62,10 +65,6 @@
     focussed = new_idx;
   }
 
-  function changeFocus(direction: 1 | -1) {
-    focusItemAtIndex(focussed+direction);
-  }
-
   function changeSelected(): boolean {
     selectedIndex = focussed;
     if (onpressed) {
@@ -74,17 +73,25 @@
     return true;
   }
 
+  let focusElement: HTMLElement;
+
+  onMount(() => {
+    const lst = new ListInputComponent(
+      inputMapping, focusElement, requiresFocus,
+      changeSelected);
+
+    lst.changeFocus = (direction: 1 | -1) => {
+      focusItemAtIndex(focussed+direction);
+    };
+    registerComponent(context, lst);
+    return () => {
+      unregisterComponent(context, lst);
+    }
+  });
 
 </script>
 
-<ListBase
-  {changeFocus}
-  onpressed={changeSelected}
-  {disabled}
-  {inputMapping}
-  {requiresFocus}
-  ></ListBase>
-<div class={cssclass} tabindex={0} role="button">
+<div class={cssclass} tabindex={0} role="button" bind:this={focusElement}>
   {#if component_store.showHints}
   <div class="hint-container" out:fade in:fade>
     <div class="hint">
@@ -127,7 +134,7 @@
         if (disabled) {
           return
         }
-        selectedIndex = index;
+        focussed = index;
         changeSelected()
       }}
       onpointerenter={() => {

@@ -42,7 +42,10 @@
 <div class="background">
 <main>
   {#if showInfo}
-  <div transition:fade={{ duration: 300 }} class="help-modal">
+  <div
+    style:pointer-events="none"
+    transition:fade={{ duration: 300 }}
+    class="help-modal">
     <div class="help-content">
       <Icon type="keyboard_mouse" input="h" color="#FFFFFF"></Icon>
       or 
@@ -96,7 +99,7 @@
 
 Selected: {items[selectedItemIndex]}
 
-<Joystick bind:position={positionFirst} requiresFocus={false} /><br />
+<Joystick bind:position={positionFirst} /><br />
 x: {positionFirst[0].toFixed(3)}<br />
 y: {positionFirst[1].toFixed(3)}
 
@@ -114,7 +117,7 @@ y: {positionFirst[1].toFixed(3)}
     background-color: #333;
   }
 
-  p {
+  .help-modal {
     font-family: sans-serif;
     color: white;
     font-size: 20px;

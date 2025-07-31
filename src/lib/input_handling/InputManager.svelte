@@ -8,7 +8,6 @@
   }
 
   interface Props {
-    focusIndex?: number
     context?: string
     updateUsingAnimationFrame?: boolean,
     updateUsingInterval?: boolean,
@@ -17,7 +16,6 @@
   // if you use another external animation frame update function
   // you can call .updateGamepadValues directly.
   let {
-    focusIndex = 0,
     context: initialContext = 'default',
     updateUsingAnimationFrame = false,
     updateUsingInterval = true,

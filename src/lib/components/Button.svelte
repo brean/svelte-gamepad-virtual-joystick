@@ -1,8 +1,8 @@
 <script lang="ts">
   import type ButtonInput from "$lib/models/ButtonInput.js";
-  import { type Snippet } from "svelte";
-  import ButtonBase from "./ButtonBase.svelte";
-  import { component_store } from "$lib/state/components.svelte.js";
+  import { onMount, type Snippet } from "svelte";
+  import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
+  import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import Icon from "./Icon.svelte";
   import { fade } from "svelte/transition";
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
@@ -10,11 +10,10 @@
   interface Props {
     children: Snippet,
     disabled?: boolean
-    onpressed?: (() => void),
+    onpressed?: (() => boolean),
     onhold?: (() => void),
     onrelease?: (() => void),
     onpointerout?: (() => void),
-    pressed?: boolean,
     style?: string,
     cssclass?: string,
     inputMapping?: ButtonInput
@@ -29,7 +28,6 @@
     onhold = undefined,   // every event while the button is pressed
     onrelease = undefined,
     onpointerout = undefined,
-    pressed = false,
     style = '',
     cssclass = 'vbutton',
     inputMapping = {
@@ -45,72 +43,81 @@
     requiresFocus=false
   }: Props = $props();
 
-  const _onpressed = () => {
-    pressed = true;
-    if (onpressed) {
-      onpressed();
+  let pressedClass = $state<string>('');
+  let focusElement: HTMLElement;
+  let btnElement = $state<PlainButtonInputElement>();
+
+  onMount(() => {
+    btnElement = new PlainButtonInputElement(
+      inputMapping, focusElement, requiresFocus,
+      onpressed, onhold, onrelease);
+    registerComponent(context, btnElement);
+    return () => {
+      if (!btnElement) { return };
+      unregisterComponent(context, btnElement);
+    }
+  });
+
+  class PlainButtonInputElement extends ButtonInputComponent {
+    onpressed(): boolean {
+      const parentPressed = super.onpressed();
+      pressedClass = 'button_clicked '
+      return parentPressed;
+    }
+
+    onrelease(): void {
+      pressedClass = ''
+      super.onrelease();
     }
   }
 
-  const _onrelease = () => {
-    pressed = false;
-    if (onrelease) {
-      onrelease();
-    }
-  }
-
+  
   const _onpointerout = () => {
-    pressed = false;
+    if (btnElement) {
+      btnElement.pressed = false;
+    }
     if (onpointerout) {
       onpointerout();
     }
   }
 </script>
 
-<ButtonBase
-  {disabled}
-  {onpressed}
-  {onhold}
-  {onrelease}
-  {inputMapping}
-  {context}
-  {requiresFocus}
-  bind:pressed>
-  <div class="button-wrapper">
-    <button
-        {style}
-        class={(!disabled && pressed ? 'button_clicked ' : '') + cssclass}
-        onpointerdown={_onpressed}
-        onclick={() => {
-          _onpressed();
-          setTimeout(() => {
-            _onrelease();
-          }, 50);
-        }}
-        {disabled}
-        onpointerup={_onrelease}
-        onpointerout={_onpointerout}>
-      {@render children()}
-    </button>
+<div class="button-wrapper">
+  <button
+      bind:this={focusElement}
+      {style}
+      class={pressedClass + cssclass}
+      onpointerdown={btnElement?.onpressed}
+      onclick={() => {
+        btnElement?.onpressed();
+        setTimeout(() => {
+          btnElement?.onrelease();
+        }, 50);
+      }}
+      {disabled}
+      onpointerup={btnElement?.onrelease}
+      onpointerout={_onpointerout}>
+    {@render children()}
+  </button>
 
-    {#if component_store.showHints}
-    <div class="hint-container" out:fade in:fade>
-      <div class="hint hint-up">
-          {#if inputMapping.keys.length > 0 }
-            <Icon 
-              type='keyboard_mouse'
-              input={inputMapping.keys[0]}></Icon>
-          {/if}
-          {#if inputMapping.buttons.length > 0 }
-            <Icon
-              type='generic'
-              input={inputMapping.buttons[0]}></Icon>
-          {/if}
-        </div>
-    </div>
-    {/if}
+  {#if component_store.showHints}
+  <div class="hint-container" out:fade in:fade>
+    <div class="hint hint-up">
+        {#if inputMapping.keys.length > 0 }
+          <Icon 
+            type='keyboard_mouse'
+            input={inputMapping.keys[0]}></Icon>
+        {/if}
+        {#if inputMapping.buttons.length > 0 }
+          <Icon
+            type='generic'
+            input={inputMapping.buttons[0]}></Icon>
+        {/if}
+      </div>
   </div>
-</ButtonBase>
+  {/if}
+</div>
+
 <style>
   .button-wrapper {
     position: relative;
