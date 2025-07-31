@@ -18,6 +18,15 @@ export const registerComponent = (
     if (!component_store.components[ctx]) {
       component_store.components[ctx] = [];
     }
+    if (component.focusElement) {
+      component.focusElement.addEventListener('focus', () => {
+        component_store.activeComponents.push(component);
+      })
+      component.focusElement.addEventListener('blur', () => {
+        component_store.activeComponents.splice(
+          component_store.activeComponents.indexOf(component), 1);
+      })
+    }
     component_store.components[ctx].push(component);
   });
   // set all components active in the beginning that do not require focus,

@@ -42,7 +42,7 @@
   }
 
   const updateGamepadValues = () => {
-    let components = getComponentsByContext();
+    let components = component_store.activeComponents;
     // get all values from gamepad
     if (!navigator) {
       return;
@@ -104,7 +104,7 @@
   // --- Keyboard ---
   // press once (behaves different then "press" in Firefox which is called all the time while the button is pressed)
   const keypress = (event: KeyboardEvent) => {
-    let components = getComponentsByContext();
+    let components = component_store.activeComponents;
     for (let comp of components) {
       if (comp.onkeypressed(event) === true) {
         break;
@@ -118,7 +118,7 @@
     if (!keyDown[key]) {
       keypress(event);
     }
-    let components = getComponentsByContext();
+    let components = component_store.activeComponents;
     keyDown[key] = true;
     components.forEach((comp) => {
       comp.onkeyhold(event);
@@ -128,7 +128,7 @@
   const release = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
     delete keyDown[key];
-    let components = getComponentsByContext();
+    let components = component_store.activeComponents;
     components.forEach((comp) => {
       comp.onkeyrelease(event);
     })
