@@ -11,14 +11,16 @@
   import List from "$lib/components/List.svelte";
     import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import { focusNextElement, focusPreviousElement } from "$lib/utils.js";
+  import SideNav from "../demo/SideNav.svelte";
 
   const items = ['banana', 'orange', 'apple', 'strawberry'];
   let selectedItemIndex = $state(0);
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let mgr: InputManager;
   let contextButtonDisabled = $state(true);
-
+  let navOpen: boolean = $state(false);
   let showInfo = $state(true);
+
   onMount(() => {
     setTimeout(() => {
       showInfo = false;
@@ -68,8 +70,10 @@
   }}
 ></VirtualButton>
 
+<SideNav bind:open={navOpen} />
+
 <div class="background">
-<main>
+<main style:margin-left={navOpen ? '250px' : 0}>
   {#if showInfo}
   <div
     style:pointer-events="none"
@@ -114,6 +118,20 @@
   disabled={contextButtonDisabled}
 >
   switch back to default context!
+</Button>
+<br />
+<Button
+  onrelease={() => {
+    navOpen = true;
+  }}
+  inputMapping={{
+    name: 'side nav',
+    gamepad: -1,
+    buttons: [GamepadButtons.UP],
+    keys: ['t'],
+  }}
+>
+  side nav
 </Button>
 <br />
 <!-- The slider is only active when it has the focus. focus is always local inside a context -->

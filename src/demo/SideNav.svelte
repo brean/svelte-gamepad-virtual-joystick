@@ -8,42 +8,30 @@
     'Settings',
     'Fifth',
   ];
-  let navOpen = $state<boolean>(false);
-  let sideNavWidth = $state<string>('0');
+
+  interface Props {
+    open: boolean
+  }
+  let {
+    open = $bindable(false)
+  }: Props = $props();
+
   let selectedIndex = $state(0);
-
-  function toggleNav() {
-    if (navOpen) {
-      hideNav();
-    } else {
-      showNav();
-    }
-  }
-
-  function hideNav() {
-    sideNavWidth = '0';
-    navOpen = false;
-  }
-
-  function showNav() {
-    sideNavWidth = '250px';
-    navOpen = true;
-  }
 
   function listItemPressed(): boolean {
     const item = listItems[selectedIndex];
     if (item === 'Settings') {
       // TODO: show config dialog in main menu
     }
-    hideNav();
+    open = false;
     return true;  // we consumed this event, stop propagation
   }
 </script>
 
-<div id="sidenav" class="sidenav" style:width={sideNavWidth}>
-  <button class="closebtn" onclick={toggleNav}>&times;</button>
+<div id="sidenav" class="sidenav" style:width={open ? '250px' : '0'}>
+  <button class="closebtn" onclick={() => {open = false;}}>&times;</button>
   <List
-    disabled={!navOpen}
+    disabled={!open}
     onpressed={listItemPressed}
     bind:selectedIndex
     items={listItems}
