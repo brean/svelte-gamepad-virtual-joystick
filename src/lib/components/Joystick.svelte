@@ -61,7 +61,7 @@
       invert_y: false,
     },
     context=['default'],
-    requiresFocus=true
+    requiresFocus=false
   }: Props = $props();
 
   const radius = size/2;

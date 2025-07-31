@@ -8,7 +8,6 @@
   }
 
   interface Props {
-    context?: string
     updateUsingAnimationFrame?: boolean,
     updateUsingInterval?: boolean,
     timeout?: number
@@ -16,19 +15,18 @@
   // if you use another external animation frame update function
   // you can call .updateGamepadValues directly.
   let {
-    context: initialContext = 'default',
     updateUsingAnimationFrame = false,
     updateUsingInterval = true,
     timeout = 1000.0 / 25.0,  // 25 fps = 40 ms.
   }: Props = $props();
-  let context = $state(initialContext);
 
   const changeContext = (newContext: string) => {
-    context = newContext;
-  }
-
-  const getComponentsByContext = (): InputComponent[] => {
-    return component_store.components[context];
+    component_store.activeComponents.forEach((inp) => {
+      if (inp.focusElement) {
+        inp.focusElement.blur();
+      }
+    })
+    component_store.context = newContext;
   }
 
   let buttonDown: {[button: string]: boolean} = {};

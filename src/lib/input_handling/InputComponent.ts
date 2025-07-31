@@ -69,13 +69,13 @@ export default class InputComponent {
   }
 
   // --- Keyboard ---
-  thisKey(event: KeyboardEvent): boolean {
+  thisKey(event?: KeyboardEvent): boolean {
     return false;
   }
 
   // key pressed (down)
   onkeypressed(event?: KeyboardEvent): boolean {
-    return this.onpressed();;
+    return this.onpressed();
   }
 
   // key released (up)

@@ -5,10 +5,12 @@ export const component_store = $state<{
   components: {[context: string]: InputComponent[]};
   activeComponents: InputComponent[];
   showHints: boolean;
+  context: string;
 }>({
   components: {},
   activeComponents: [],
-  showHints: false
+  showHints: false,
+  context: 'default'
 });
 
 export const registerComponent = (
@@ -18,15 +20,6 @@ export const registerComponent = (
     if (!component_store.components[ctx]) {
       component_store.components[ctx] = [];
     }
-    if (component.focusElement) {
-      component.focusElement.addEventListener('focus', () => {
-        component_store.activeComponents.push(component);
-      })
-      component.focusElement.addEventListener('blur', () => {
-        component_store.activeComponents.splice(
-          component_store.activeComponents.indexOf(component), 1);
-      })
-    }
     component_store.components[ctx].push(component);
   });
   // set all components active in the beginning that do not require focus,
@@ -35,6 +28,19 @@ export const registerComponent = (
   if (!component.requiresFocus && context.includes('default')) {
     component_store.activeComponents.push(component);
   }
+
+  if (component.focusElement && component.requiresFocus) {
+    component.focusElement.addEventListener('focus', () => {
+      if (context.includes(component_store.context)) {
+        component_store.activeComponents.push(component);
+      }
+    })
+    component.focusElement.addEventListener('blur', () => {
+      component_store.activeComponents.splice(
+        component_store.activeComponents.indexOf(component), 1);
+    })
+  }
+
 };
 
 export const unregisterComponent = (

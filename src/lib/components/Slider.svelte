@@ -6,8 +6,10 @@
     import Icon from "./Icon.svelte";
     import { onMount } from "svelte";
     import SliderInputComponent from "$lib/input_handling/SliderInputComponent.js";
+    import { focusNextElement } from "$lib/utils.js";
 
   interface Props {
+    onpressed?: (() => boolean),
     value?: number
     min?: number
     max?: number
@@ -19,6 +21,7 @@
   }
   let {
     value = $bindable(50),
+    onpressed = undefined,
     min = 0,
     max = 100,
     step = 10,
@@ -42,9 +45,15 @@
 
   let focusElement: HTMLElement;
 
+  function _onpressed(): boolean {
+    focusNextElement();
+    return onpressed ? onpressed() : false;
+  }
+
   onMount(() => {
     const slid = new SliderInputComponent(
-      inputMapping, focusElement, requiresFocus);
+      inputMapping, focusElement, requiresFocus, 
+      _onpressed);
     slid.setValue = (_value: number) => { value = _value; };
     slid.getValue = () => {return value;};
     slid.max = max;

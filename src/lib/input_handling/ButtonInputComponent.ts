@@ -30,6 +30,12 @@ export default class ButtonInputComponent extends InputComponent {
     super.onrelease();
   }
 
+  // Keyboard
+  thisKey(event?: KeyboardEvent): boolean {
+    return event && (this.input as ButtonInput).keys.includes(
+      event.key.toLowerCase()) || false;
+  }
+
   onkeypressed(event?: KeyboardEvent): boolean {
     return this.thisKey(event) && super.onkeypressed(event);
   }
@@ -42,9 +48,4 @@ export default class ButtonInputComponent extends InputComponent {
     if (this.thisKey(event)) super.onkeyhold(event);
   }
 
-  // Keyboard
-  thisKey(event?: KeyboardEvent): boolean {
-    return event && (this.input as ButtonInput).keys.includes(
-      event.key.toLowerCase()) || false;
-  }
 }

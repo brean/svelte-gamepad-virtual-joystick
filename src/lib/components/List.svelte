@@ -6,6 +6,7 @@
       import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
     import { onMount } from "svelte";
     import ListInputComponent from "$lib/input_handling/ListInputComponent.js";
+    import { focusNextElement } from "$lib/utils.js";
 
   interface Props {
     items: string[]
@@ -70,6 +71,7 @@
     if (onpressed) {
       return onpressed();
     }
+    focusNextElement();
     return true;
   }
 

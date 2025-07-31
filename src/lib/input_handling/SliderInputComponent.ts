@@ -12,6 +12,13 @@ export default class SliderInputComponent extends InputComponent {
   step: number = 1;
 
   // --- Gamepad ---
+  thisGamepadButton(
+      gamepad: Gamepad,
+      btn: number): boolean {
+    return super.thisGamepadButton(gamepad, btn) && 
+      (this.input as SliderInput).buttons.includes(btn)
+  }
+
   onbuttonhold(gamepad: Gamepad, btn: number) {
     if (this.disabled || !thisGamepad(this.input, gamepad)) {
       return;
@@ -26,6 +33,15 @@ export default class SliderInputComponent extends InputComponent {
   }
 
   // --- Keyboard ---
+  thisKey(event?: KeyboardEvent): boolean {
+    return event && (this.input as SliderInput).keys.includes(
+      event.key.toLowerCase()) || false;
+  }
+
+  onkeypressed(event?: KeyboardEvent): boolean {
+    return this.thisKey(event) && super.onkeypressed(event);
+  }
+
   onkeyhold(event?: KeyboardEvent): void {
     if (!event) {
       return;
@@ -42,4 +58,5 @@ export default class SliderInputComponent extends InputComponent {
       this.setValue(Math.max(this.min, this.getValue()-this.step));
     }
   }
+
 }
