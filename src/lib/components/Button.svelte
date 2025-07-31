@@ -100,7 +100,7 @@
     {@render children()}
   </button>
 
-  {#if component_store.showHints}
+  {#if component_store.showHints && context.includes(component_store.context)}
   <div class="hint-container" out:fade in:fade>
     <div class="hint hint-up">
         {#if inputMapping.keys.length > 0 }

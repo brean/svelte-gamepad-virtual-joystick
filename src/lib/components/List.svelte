@@ -94,7 +94,7 @@
 </script>
 
 <div class={cssclass} tabindex={0} role="button" bind:this={focusElement}>
-  {#if component_store.showHints}
+  {#if component_store.showHints && context.includes(component_store.context)}
   <div class="hint-container" out:fade in:fade>
     <div class="hint">
       ↑
@@ -149,7 +149,7 @@
   {/each}
   </ul>
 
-  {#if component_store.showHints}
+  {#if component_store.showHints && context.includes(component_store.context)}
     <div class="hint-container" out:fade in:fade>
       <div class="hint">
         ↓

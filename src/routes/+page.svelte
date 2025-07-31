@@ -30,6 +30,7 @@
   onpressed={() => {
     // show all hints
     component_store.showHints = !component_store.showHints;
+    return true;
   }}
   inputMapping={{
     name: 'Help',
@@ -107,6 +108,7 @@ y: {positionFirst[1].toFixed(3)}
 <InputManager bind:this={mgr} />
 </main>
 </div>
+
 <style>
   .background {
     position: fixed;

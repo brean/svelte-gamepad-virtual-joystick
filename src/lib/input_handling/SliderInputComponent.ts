@@ -12,24 +12,23 @@ export default class SliderInputComponent extends InputComponent {
   step: number = 1;
 
   // --- Gamepad ---
-  thisGamepadButton(
-      gamepad: Gamepad,
-      btn: number): boolean {
-    return super.thisGamepadButton(gamepad, btn) && 
-      (this.input as SliderInput).buttons.includes(btn)
-  }
-
-  onbuttonhold(gamepad: Gamepad, btn: number) {
+  onbuttonpressed(gamepad: Gamepad, btn: number) {
     if (this.disabled || !thisGamepad(this.input, gamepad)) {
-      return;
+      return false;
     }
     const inputMapping = this.input as SliderInput;
     if (inputMapping.buttons_pos.includes(btn)) {
       this.setValue(Math.min(this.max, this.getValue()+this.step));
+      return true;
     }
     if (inputMapping.buttons_neg.includes(btn)) {
       this.setValue(Math.max(this.min, this.getValue()-this.step));
+      return true;
     }
+    if (inputMapping.buttons.includes(btn)) {
+      return super.onbuttonpressed(gamepad, btn);
+    }
+    return false;
   }
 
   // --- Keyboard ---

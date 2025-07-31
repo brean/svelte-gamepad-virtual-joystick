@@ -170,7 +170,7 @@
     ontouchend={() => {comp?.activateGamepad()}}
     onpointerout={() => {comp?.activateGamepad()}}
     >
-  {#if component_store.showHints}
+  {#if component_store.showHints && context.includes(component_store.context)}
   <div
     class="hints_container"
     style:width={backgroundWidth + 'px'}

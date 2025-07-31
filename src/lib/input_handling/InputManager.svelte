@@ -26,6 +26,13 @@
         inp.focusElement.blur();
       }
     })
+    component_store.activeComponents = [];
+    const components = component_store.components[newContext];
+    components.forEach((component) => {
+      if (!component.requiresFocus || component.focusElement === document.activeElement) {
+        component_store.activeComponents.push(component);
+      } 
+    })
     component_store.context = newContext;
   }
 
@@ -59,7 +66,7 @@
           });
           if (!buttonDown[i]) {
             buttonDown[i] = true;
-
+            console.log('down1', i)
             for (let comp of components) {
               if (comp.thisGamepadButton(pad, i) && comp.onbuttonpressed(pad, i) === true) {
                 break;
