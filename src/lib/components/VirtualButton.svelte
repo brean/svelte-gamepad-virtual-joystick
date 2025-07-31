@@ -41,7 +41,7 @@ for example show all warnings
   onMount(() => {
     const btnElement = new ButtonInputComponent(
       inputMapping, undefined, false,
-      onpressed=onpressed, onhold=onhold, onrelease=onrelease
+      onpressed, onhold, onrelease
       );
     btnElement.disabled = disabled;
     btnElement.pressed = pressed;
