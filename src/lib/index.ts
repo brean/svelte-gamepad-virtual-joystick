@@ -23,7 +23,7 @@ import VirtualButton from "./components/VirtualButton.svelte";
 import Icon from "./components/Icon.svelte";
 
 // states
-import { component_state } from '$lib/state/components.svelte.js';
+import { component_state, registerComponent, unregisterComponent } from '$lib/state/components.svelte.js';
 
 // utils
 import { 
@@ -49,7 +49,8 @@ export {
     Button, Joystick, List, Slider, VirtualButton,
     // Icon
     Icon, 
-    component_state,
+    // state management
+    component_state, registerComponent, unregisterComponent,
     // utils
     distance, angle, findCoord, radians, degrees, clamp,
     focusNextElement, focusPreviousElement };

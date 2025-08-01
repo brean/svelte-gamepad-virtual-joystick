@@ -1,3 +1,8 @@
+# 1.0.0-rc3
+## API-changes
+ - update exports, include (un)registerComponent
+
+
 # 1.0.0-rc2
 ## API-changes
  - update exports, include component-state
