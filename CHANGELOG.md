@@ -1,4 +1,8 @@
-# 1.0.0
+# 1.0.0-rc2
+## API-changes
+ - update exports, include component-state
+
+# 1.0.0-rc1
 ## API-changes
  - One InputManager instead of KeyboardManager and GamepadManager
 

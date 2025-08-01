@@ -2,7 +2,7 @@
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import { onMount, type Snippet } from "svelte";
   import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
-  import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import Icon from "./Icon.svelte";
   import { fade } from "svelte/transition";
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
@@ -103,7 +103,7 @@
     {@render children()}
   </button>
 
-  {#if component_store.showHints && context.includes(component_store.context)}
+  {#if component_state.showHints && context.includes(component_state.context)}
   <div class="hint-container" out:fade in:fade>
     <div class="hint hint-up">
         {#if inputMapping.keys.length > 0 }

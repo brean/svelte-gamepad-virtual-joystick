@@ -3,7 +3,7 @@
     import type ListInput from "$lib/models/ListInput.js";
     import { fade } from "svelte/transition";
     import Icon from "./Icon.svelte";
-      import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+      import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
     import { onMount } from "svelte";
     import ListInputComponent from "$lib/input_handling/ListInputComponent.js";
     import { focusNextElement } from "$lib/utils.js";
@@ -94,7 +94,7 @@
 </script>
 
 <div class={cssclass} tabindex={0} role="button" bind:this={focusElement}>
-  {#if component_store.showHints && context.includes(component_store.context)}
+  {#if component_state.showHints && context.includes(component_state.context)}
   <div class="hint-container" out:fade in:fade>
     <div class="hint">
       ↑
@@ -149,7 +149,7 @@
   {/each}
   </ul>
 
-  {#if component_store.showHints && context.includes(component_store.context)}
+  {#if component_state.showHints && context.includes(component_state.context)}
     <div class="hint-container" out:fade in:fade>
       <div class="hint">
         ↓

@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
     import type InputComponent from "./InputComponent.js";
     import { thisGamepad } from "$lib/utils.js";
-    import { component_store } from "$lib/state/components.svelte.js";
+    import { component_state } from "$lib/state/components.svelte.js";
   interface INavigator {
     getGamepads: () => Gamepad[];
   }
@@ -21,19 +21,19 @@
   }: Props = $props();
 
   const changeContext = (newContext: string) => {
-    component_store.activeComponents.forEach((inp) => {
+    component_state.activeComponents.forEach((inp) => {
       if (inp.focusElement) {
         inp.focusElement.blur();
       }
     })
-    component_store.activeComponents = [];
-    const components = component_store.components[newContext];
+    component_state.activeComponents = [];
+    const components = component_state.components[newContext];
     components.forEach((component) => {
       if (!component.requiresFocus || component.focusElement === document.activeElement) {
-        component_store.activeComponents.push(component);
+        component_state.activeComponents.push(component);
       } 
     })
-    component_store.context = newContext;
+    component_state.context = newContext;
   }
 
   let buttonDown: {[button: string]: boolean} = {};
@@ -47,7 +47,7 @@
   }
 
   const updateGamepadValues = () => {
-    let components = component_store.activeComponents;
+    let components = component_state.activeComponents;
     // get all values from gamepad
     if (!navigator) {
       return;
@@ -108,7 +108,7 @@
   // --- Keyboard ---
   // press once (behaves different then "press" in Firefox which is called all the time while the button is pressed)
   const keypress = (event: KeyboardEvent) => {
-    let components = component_store.activeComponents;
+    let components = component_state.activeComponents;
     for (let comp of components) {
       if (comp.onkeypressed(event) === true) {
         break;
@@ -122,7 +122,7 @@
     if (!keyDown[key]) {
       keypress(event);
     }
-    let components = component_store.activeComponents;
+    let components = component_state.activeComponents;
     keyDown[key] = true;
     components.forEach((comp) => {
       comp.onkeyhold(event);
@@ -132,7 +132,7 @@
   const release = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
     delete keyDown[key];
-    let components = component_store.activeComponents;
+    let components = component_state.activeComponents;
     components.forEach((comp) => {
       comp.onkeyrelease(event);
     })

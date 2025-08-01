@@ -1,7 +1,7 @@
 <script lang="ts">
     import GamepadButtons from "$lib/constants/GamepadButtons.js";
     import type SliderInput from "$lib/models/SliderInput.js";
-    import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+    import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
     import { fade } from "svelte/transition";
     import Icon from "./Icon.svelte";
     import { onMount } from "svelte";
@@ -67,7 +67,7 @@
 </script>
 
 <div class="vslider">
-{#if component_store.showHints && context.includes(component_store.context)}
+{#if component_state.showHints && context.includes(component_state.context)}
   <div class="hint-container hint-left" out:fade in:fade>
     <div class="hint">
       {#if inputMapping.keys_neg.length > 0 }
@@ -89,7 +89,7 @@
     type="range"
     {min} {max} {step} bind:value {disabled} style:width="100%;">
 
-{#if component_store.showHints && context.includes(component_store.context)}
+{#if component_state.showHints && context.includes(component_state.context)}
   <div class="hint-container hint-right" out:fade in:fade>
     <div class="hint">
       {#if inputMapping.keys_pos.length > 0 }

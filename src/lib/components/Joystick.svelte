@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import type JoystickInput from "$lib/models/JoystickInput.js";
   import InputComponent from "$lib/input_handling/InputComponent.js";
-  import { component_store, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import Icon from "./Icon.svelte";
   import { fade } from "svelte/transition";
     import JoystickInputComponent from "$lib/input_handling/JoystickInputComponent.js";
@@ -170,7 +170,7 @@
     ontouchend={() => {comp?.activateGamepad()}}
     onpointerout={() => {comp?.activateGamepad()}}
     >
-  {#if component_store.showHints && context.includes(component_store.context)}
+  {#if component_state.showHints && context.includes(component_state.context)}
   <div
     class="hints_container"
     style:width={backgroundWidth + 'px'}
