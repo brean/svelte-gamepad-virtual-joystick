@@ -24,8 +24,8 @@ import '$lib/state/inputs.svelte.js';
 
 import { distance, angle, findCoord, radians, degrees, clamp } from './utils.js';
 export { 
-    InputManager as GamepadManager, 
-    InputComponent as GamepadInputHandler,
+    InputManager, 
+    InputComponent,
     Button, Joystick, List, Slider,
     Icon, VirtualButton,
     ButtonInputComponent, ListInputComponent, SliderInputComponent,

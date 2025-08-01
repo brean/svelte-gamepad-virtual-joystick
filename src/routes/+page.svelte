@@ -9,7 +9,7 @@
   import { component_store } from "$lib/state/components.svelte.js";
   import Icon from "$lib/components/Icon.svelte";
   import List from "$lib/components/List.svelte";
-    import GamepadButtons from "$lib/constants/GamepadButtons.js";
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import { focusNextElement, focusPreviousElement } from "$lib/utils.js";
   import SideNav from "../demo/SideNav.svelte";
 
