@@ -1,17 +1,21 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
+  import { onMount } from "svelte";
+
   import InputManager from "$lib/input_handling/InputManager.svelte";
 
   import Button from "$lib/components/Button.svelte";
+  import VirtualButton from "$lib/components/VirtualButton.svelte";
+  import List from "$lib/components/List.svelte";
   import Slider from "$lib/components/Slider.svelte";
   import Joystick from "$lib/components/Joystick.svelte";
-  import { fade } from "svelte/transition";
-  import { onMount } from "svelte";
-  import VirtualButton from "$lib/components/VirtualButton.svelte";
-  import { component_state } from "$lib/state/components.svelte.js";
+  
   import Icon from "$lib/components/Icon.svelte";
-  import List from "$lib/components/List.svelte";
+
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
+  import { component_state } from "$lib/state/components.svelte.js";
   import { focusNextElement, focusPreviousElement } from "$lib/utils.js";
+
   import SideNav from "../demo/SideNav.svelte";
 
   const items = ['banana', 'orange', 'apple', 'strawberry'];

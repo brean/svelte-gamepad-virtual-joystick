@@ -1,12 +1,15 @@
 <script lang="ts">
-    import GamepadButtons from "$lib/constants/GamepadButtons.js";
-    import type ListInput from "$lib/models/ListInput.js";
-    import { fade } from "svelte/transition";
-    import Icon from "./Icon.svelte";
-    import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
-    import { onMount } from "svelte";
-    import ListInputComponent from "$lib/input_handling/ListInputComponent.js";
-    import { focusNextElement } from "$lib/utils.js";
+  import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
+
+  import type ListInput from "$lib/models/ListInput.js";
+
+  import Icon from "./Icon.svelte";
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
+
+  import ListInputComponent from "$lib/input_handling/ListInputComponent.js"; 
+  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+  import { focusNextElement } from "$lib/utils.js";
 
   interface Props {
     items: string[]
