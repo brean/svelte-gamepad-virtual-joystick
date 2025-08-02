@@ -1,3 +1,7 @@
+# 1.0.1
+## Bugfix
+- expose new Hint
+
 # 1.0.0
 ## Cleanup
 - Hints as own component

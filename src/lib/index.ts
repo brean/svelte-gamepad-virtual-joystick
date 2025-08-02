@@ -20,6 +20,7 @@ import List from "./components/List.svelte";
 import Slider from "./components/Slider.svelte";
 import VirtualButton from "./components/VirtualButton.svelte";
 
+import Hint from "./components/Hint.svelte";
 import Icon from "./components/Icon.svelte";
 
 // states
@@ -47,8 +48,8 @@ export {
     ListInputComponent, SliderInputComponent,
     // implemented components using basic HTML elements
     Button, Joystick, List, Slider, VirtualButton,
-    // Icon
-    Icon, 
+    // Icon and Hint
+    Icon, Hint,
     // state management
     component_state, registerComponent, unregisterComponent,
     // utils
