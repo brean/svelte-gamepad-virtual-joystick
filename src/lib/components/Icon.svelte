@@ -232,17 +232,17 @@
   switch (type) {
     case 'keyboard_mouse':
       let inp = (input as string).toLowerCase();
-      icon = keyboard[inp];
+      icon = keyboard[inp as keyof typeof keyboard];
       break;
     case 'ps4':
-      icon = ps4_buttons[input];
+      icon = ps4_buttons[input as keyof typeof ps4_buttons];
       break
     case 'generic':
       if (input in generic_buttons) {
-        icon = generic_buttons[input];
+        icon = generic_buttons[input as keyof typeof generic_buttons];
       } else {
         // Fallback to PS4 controller as "generic"
-        icon = ps4_buttons[input];
+        icon = ps4_buttons[input as keyof typeof ps4_buttons];
       }
   }
 
