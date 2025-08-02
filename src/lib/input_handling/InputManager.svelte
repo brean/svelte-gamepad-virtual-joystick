@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-    import type InputComponent from "./InputComponent.js";
-    import { thisGamepad } from "$lib/utils.js";
-    import { component_state } from "$lib/state/components.svelte.js";
+  import { thisGamepad } from "$lib/utils.js";
+  import { component_state } from "$lib/state/components.svelte.js";
   interface INavigator {
     getGamepads: () => Gamepad[];
   }

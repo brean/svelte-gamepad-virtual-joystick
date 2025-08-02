@@ -65,9 +65,7 @@ export default class SliderInputComponent extends InputComponent {
   onkeyhold(event: KeyboardEvent): void {
     const inputMapping = this.input as SliderInput;
     const key = event.key.toLowerCase()
-    if (inputMapping.keys.includes(key)) {
-      return this.onhold();
-    }
+    super.onkeyhold(event)
     if (inputMapping.keys_pos.includes(key)) {
       this.setValue(Math.min(this.max, this.getValue()+this.step));
     }

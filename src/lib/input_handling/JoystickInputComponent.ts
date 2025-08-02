@@ -86,6 +86,10 @@ export default class JoystickInputComponent extends InputComponent {
     this.yNeg = inputMapping.key_y_neg.includes(key);
   }
 
+  thisKey(event: KeyboardEvent): boolean {
+    return this.xPos || this.xNeg || this.yPos || this.yNeg;
+  }
+
   onkeyrelease(event: KeyboardEvent): void {
     if (this.disabled) {
       return

@@ -1,3 +1,7 @@
+# 1.0.0-rc5
+## Bugfix
+- Fix where gamepad ignores keyboard presses (ignored by thisKey)
+
 # 1.0.0-rc4
 ## API-changes
  - consumePress-flag that determines if button should consume events and stop forwarding to other components (default behavior is false)
