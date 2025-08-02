@@ -1,7 +1,7 @@
 import type Input from "./Input.js";
 
 // Configuration and axes/button mapping for a List to focus next/previous item and select it
-export default interface ListInput extends Input {
+export default interface PrevNextInput extends Input {
   // Gamepad  
   axes: number[];
   sensitivity: number; // axes sensitivity

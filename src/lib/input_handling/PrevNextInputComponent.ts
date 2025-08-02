@@ -1,9 +1,9 @@
 import type { Input } from "$lib/index.js";
-import type ListInput from "$lib/models/ListInput.js";
+import type PrevNextInput from "$lib/models/PrevNextInput.js";
 import { thisGamepad } from "$lib/utils.js";
 import InputComponent from "./InputComponent.js";
 
-export default class ListInputComponent extends InputComponent {
+export default class PrevNextInputComponent extends InputComponent {
   axesDown = -1;
   changeFocus: (direction: 1 | -1) => void;
 
@@ -28,7 +28,7 @@ export default class ListInputComponent extends InputComponent {
     if (this.disabled || !thisGamepad(this.input, gamepad)) {
       return false;
     }
-    const inputMapping = this.input as ListInput;
+    const inputMapping = this.input as PrevNextInput;
     if (inputMapping.buttons.includes(btn)) {
       return this.onpressed();
     }
@@ -47,7 +47,7 @@ export default class ListInputComponent extends InputComponent {
     if (this.disabled) {
       return false;
     }
-    const inputMapping = this.input as ListInput;
+    const inputMapping = this.input as PrevNextInput;
     const key = event.key.toLowerCase()
     if (inputMapping.keys.includes(key)) {
       return this.onpressed();
@@ -65,7 +65,7 @@ export default class ListInputComponent extends InputComponent {
     if (this.disabled || !thisGamepad(this.input, gamepad)) {
       return
     }
-    const inputMapping = this.input as ListInput;
+    const inputMapping = this.input as PrevNextInput;
     for (const axesIdx of inputMapping.axes) {
       const value = gamepad.axes[axesIdx];
       let sensitivity = inputMapping.sensitivity;

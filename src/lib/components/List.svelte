@@ -1,13 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fade } from "svelte/transition";
 
-  import type ListInput from "$lib/models/ListInput.js";
+  import type PrevNextInput from "$lib/models/PrevNextInput.js";
 
-  import Icon from "./Icon.svelte";
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
 
-  import ListInputComponent from "$lib/input_handling/ListInputComponent.js"; 
+  import PrevNextInputComponent from "$lib/input_handling/PrevNextInputComponent.js"; 
   import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import { focusNextElement } from "$lib/utils.js";
   import Hint from "./Hint.svelte";
@@ -21,7 +19,7 @@
     cssclass?: string
     focussed?: number
     selectedIndex?: number
-    inputMapping?: ListInput
+    inputMapping?: PrevNextInput
     context?: string[]
     requiresFocus?: boolean
   }
@@ -85,7 +83,7 @@
   }
 
   onMount(() => {
-    const lst = new ListInputComponent(
+    const lst = new PrevNextInputComponent(
       inputMapping, 
       (direction: 1 | -1) => {focusItemAtIndex(focussed+direction);},
       element, requiresFocus, changeSelected);

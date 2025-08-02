@@ -10,7 +10,7 @@ import InputComponent from "./input_handling/InputComponent.js";
 // Input Components
 import ButtonInputComponent from "./input_handling/ButtonInputComponent.js"
 import JoystickInputComponent from "./input_handling/JoystickInputComponent.js";
-import ListInputComponent from "./input_handling/ListInputComponent.js"
+import PrevNextInputComponent from "./input_handling/PrevNextInputComponent.js"
 import SliderInputComponent from "./input_handling/SliderInputComponent.js"
 
 // Implemented components using basic HTML elements
@@ -35,7 +35,7 @@ import {
 import type Input from "./models/Input.js";
 import type ButtonInput from "./models/ButtonInput.js";
 import type JoystickInput from "./models/JoystickInput.js";
-import type ListInput from "./models/ListInput.js";
+import type PrevNextInput from "./models/PrevNextInput.js";
 import type SliderInput from "./models/SliderInput.js";
 
 export { 
@@ -45,7 +45,7 @@ export {
     InputManager, InputComponent,
     // Input Components (typescript classes)
     ButtonInputComponent, JoystickInputComponent, 
-    ListInputComponent, SliderInputComponent,
+    PrevNextInputComponent, SliderInputComponent,
     // implemented components using basic HTML elements
     Button, Joystick, List, Slider, VirtualButton,
     // Icon and Hint
@@ -56,4 +56,4 @@ export {
     distance, angle, findCoord, radians, degrees, clamp,
     focusNextElement, focusPreviousElement };
 // models
-export type { Input, ButtonInput, JoystickInput, ListInput, SliderInput };
+export type { Input, ButtonInput, JoystickInput, PrevNextInput, SliderInput };

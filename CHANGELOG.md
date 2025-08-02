@@ -1,3 +1,7 @@
+# 1.0.2
+## API-changes
+- unify List and Tabbar to have a previous/next-Input for both
+
 # 1.0.1
 ## Bugfix
 - expose new Hint
