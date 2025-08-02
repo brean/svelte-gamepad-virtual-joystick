@@ -11,7 +11,7 @@ export default class SliderInputComponent extends InputComponent {
   max: number;
   step: number;
 
-    constructor(
+  constructor(
       input: Input,
       setValue: (value: number) => void,
       getValue: () => number,
@@ -20,9 +20,9 @@ export default class SliderInputComponent extends InputComponent {
       step: number,
       focusElement?: HTMLElement,
       requiresFocus: boolean = false,
-      onpressed: (() => boolean) | undefined = undefined,
-      onhold: (() => void) | undefined = undefined,
-      onrelease: (() => void) | undefined = undefined,
+      onpressed?: () => void,
+      onhold?: () => void,
+      onrelease?: () => void,
       consumePress: boolean = false) {
     super(
       input, focusElement, requiresFocus,
