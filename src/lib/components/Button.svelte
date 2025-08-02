@@ -19,7 +19,7 @@
     inputMapping?: ButtonInput
     context?: string[]
     requiresFocus?: boolean
-    consumePress: boolean
+    consumePress?: boolean
   }
 
   let {
