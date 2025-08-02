@@ -1,3 +1,7 @@
+# 1.0.0
+## Cleanup
+- Hints as own component
+
 # 1.0.0-rc5
 ## Bugfix
 - Fix where gamepad ignores keyboard presses (ignored by thisKey)

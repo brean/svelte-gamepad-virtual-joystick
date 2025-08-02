@@ -10,6 +10,7 @@
   import ListInputComponent from "$lib/input_handling/ListInputComponent.js"; 
   import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import { focusNextElement } from "$lib/utils.js";
+  import Hint from "./Hint.svelte";
 
   interface Props {
     items: string[]
@@ -98,37 +99,20 @@
 
 <div class={cssclass} tabindex={0} role="button" bind:this={element}>
   {#if component_state.showHints && context.includes(component_state.context)}
-  <div class="hint-container" out:fade in:fade>
-    <div class="hint">
-      ↑
-      {#if inputMapping.keys_prev.length > 0 }
-        <Icon 
-          type='keyboard_mouse'
-          input={inputMapping.keys_prev[0]}></Icon>
-      {/if}
-      {#if inputMapping.buttons_prev.length > 0 }
-        <Icon
-          type='generic'
-          input={inputMapping.buttons_prev[0]}></Icon>
-      {/if}
-    </div>
-  </div>
-  <div class="hint-center">
-    <div class="hint-container" out:fade in:fade>
-      <div class="hint">
-        {#if inputMapping.keys.length > 0 }
-          <Icon 
-            type='keyboard_mouse'
-            input={inputMapping.keys[0]}></Icon>
-        {/if}
-        {#if inputMapping.buttons.length > 0 }
-          <Icon
-            type='generic'
-            input={inputMapping.buttons[0]}></Icon>
-        {/if}
-      </div>
-    </div>
-  </div>
+
+    <Hint 
+      text="↑" {context}
+      keys={inputMapping.keys_prev}
+      buttons={inputMapping.buttons_prev}
+      style={'left: 50%;'}
+      />
+
+    <Hint 
+      {context}
+      keys={inputMapping.keys}
+      buttons={inputMapping.buttons}
+      style={'left: 50%; top: 50%'}
+      />
   {/if}
 
   <ul {style} >
@@ -152,34 +136,15 @@
   {/each}
   </ul>
 
-  {#if component_state.showHints && context.includes(component_state.context)}
-    <div class="hint-container" out:fade in:fade>
-      <div class="hint">
-        ↓
-        {#if inputMapping.keys_next.length > 0 }
-          <Icon 
-            type='keyboard_mouse'
-            input={inputMapping.keys_next[0]}></Icon>
-        {/if}
-        {#if inputMapping.buttons_next.length > 0 }
-          <Icon
-            type='generic'
-            input={inputMapping.buttons_next[0]}></Icon>
-        {/if}
-      </div>
-    </div>
-  {/if}
+  <Hint 
+    text="↓" {context}
+    keys={inputMapping.keys_next}
+    buttons={inputMapping.buttons_next}
+    style={'left: 50%;'}
+    />
 </div>
 
 <style>
-  .hint-container {
-    left: 50%;
-  }
-
-  .hint-center .hint-container {
-    top: 50%;
-  }
-
   .hint-center {
     position: absolute;
     top: 0;

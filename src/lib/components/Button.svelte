@@ -1,12 +1,11 @@
 <script lang="ts">
   import { onMount, type Snippet } from "svelte";
-  import { fade } from "svelte/transition";
 
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
-  import Icon from "./Icon.svelte";
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
-  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+  import Hint from "./Hint.svelte";
 
   interface Props {
     children: Snippet,
@@ -100,22 +99,13 @@
     {@render children()}
   </button>
 
-  {#if component_state.showHints && context.includes(component_state.context)}
-  <div class="hint-container" out:fade in:fade>
-    <div class="hint hint-up">
-        {#if inputMapping.keys.length > 0 }
-          <Icon 
-            type='keyboard_mouse'
-            input={inputMapping.keys[0]}></Icon>
-        {/if}
-        {#if inputMapping.buttons.length > 0 }
-          <Icon
-            type='generic'
-            input={inputMapping.buttons[0]}></Icon>
-        {/if}
-      </div>
-  </div>
-  {/if}
+
+  <Hint
+      {context}
+      keys={inputMapping.keys}
+      buttons={inputMapping.buttons}
+      style={'left: 50%;'}
+      />
 </div>
 
 <style>
@@ -129,12 +119,4 @@
     z-index: 2;
   }
 
-  .hint-container {
-    top: 100%;
-    left: 50%;
-  }
-
-  .hint {
-    top: 20px;
-  }
 </style>

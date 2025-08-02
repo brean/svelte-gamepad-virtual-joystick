@@ -27,6 +27,13 @@
   let navOpen: boolean = $state(false);
   let showInfo = $state(true);
 
+  const hintMapping = {
+    name: 'Hint',
+    gamepad: -1,
+    buttons: [GamepadButtons.VIEW],
+    keys: ['h']
+  }
+
   onMount(() => {
     setTimeout(() => {
       showInfo = false;
@@ -40,17 +47,11 @@
     // show all hints
     component_state.showHints = !component_state.showHints;
   }}
-  inputMapping={{
-    name: 'Help',
-    gamepad: -1,
-    buttons: [GamepadButtons.VIEW],
-    keys: ['h']
-  }}
+  inputMapping={hintMapping}
 ></VirtualButton>
 
 <VirtualButton
   onpressed={() => {
-    // show all hints
     focusNextElement();
   }}
   inputMapping={{
@@ -62,7 +63,6 @@
 ></VirtualButton>
 <VirtualButton
   onpressed={() => {
-    // show all hints
     focusPreviousElement();
   }}
   inputMapping={{
@@ -83,9 +83,15 @@
     transition:fade={{ duration: 300 }}
     class="help-modal">
     <div class="help-content">
-      <Icon type="keyboard_mouse" input="h" color="#FFFFFF"></Icon>
+      <Icon 
+        type="keyboard_mouse" 
+        input={hintMapping.keys[0]}
+        color="#FFFFFF"></Icon>
       or 
-      <Icon type="ps4" input="8"  color="#FFFFFF"></Icon>
+      <Icon
+        type="ps4"
+        input={hintMapping.buttons[0]}
+        color="#FFFFFF"></Icon>
       toggle help.
     </div>
   </div>

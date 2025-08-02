@@ -7,6 +7,7 @@
     import { onMount } from "svelte";
     import SliderInputComponent from "$lib/input_handling/SliderInputComponent.js";
     import { focusNextElement } from "$lib/utils.js";
+  import Hint from "./Hint.svelte";
 
   interface Props {
     onpressed?: () => void,
@@ -69,44 +70,24 @@
 </script>
 
 <div class="vslider">
-{#if component_state.showHints && context.includes(component_state.context)}
-  <div class="hint-container hint-left" out:fade in:fade>
-    <div class="hint">
-      {#if inputMapping.keys_neg.length > 0 }
-        <Icon
-          type='keyboard_mouse'
-          input={inputMapping.keys_neg[0]}></Icon>
-      {/if}
-      {#if inputMapping.buttons_neg.length > 0 }
-        <Icon
-          type='generic'
-          input={inputMapping.buttons_neg[0]}></Icon>
-      {/if}
-    </div>
-  </div>
-{/if}
+  <Hint
+    text="" {context}
+    keys={inputMapping.keys_neg}
+    buttons={inputMapping.buttons_neg}
+    style={"position: absolute; top: 60px;"}
+    />
 
   <input
     bind:this={element}
     type="range"
     {min} {max} {step} bind:value {disabled} style:width="100%;">
 
-{#if component_state.showHints && context.includes(component_state.context)}
-  <div class="hint-container hint-right" out:fade in:fade>
-    <div class="hint">
-      {#if inputMapping.keys_pos.length > 0 }
-        <Icon
-          type='keyboard_mouse'
-          input={inputMapping.keys_pos[0]}></Icon>
-      {/if}
-      {#if inputMapping.buttons_pos.length > 0 }
-        <Icon
-          type='generic'
-          input={inputMapping.buttons_pos[0]}></Icon>
-      {/if}
-    </div>
-  </div>
-{/if}
+  <Hint
+    text="" {context}
+    keys={inputMapping.keys_pos}
+    buttons={inputMapping.buttons_pos}
+    style={"position: absolute; top: 60px; right: -70px;"}
+    />
 </div>
 <style>
 
@@ -114,17 +95,6 @@
     position: relative;
     padding: 20px;
     width: 200px;
-  }
-
-  .vslider .hint-container.hint-left {
-    position: absolute;
-    top: 90%;
-  }
-
-  .vslider .hint-container.hint-right {
-    right: -80px;
-    position: absolute;
-    top: 90%;
   }
 
 </style>
