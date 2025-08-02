@@ -206,6 +206,7 @@ main {
 /* hints/help */
 .hint-container {
   position: absolute;
+  min-width: 90px;
   transform: translate(-50%, -50%);
   z-index: 1;
   pointer-events: none; /* Allows clicks to pass through to the button */
