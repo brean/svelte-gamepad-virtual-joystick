@@ -43,7 +43,11 @@
     requiresFocus = true
   }: Props = $props();
 
-  let focusElement: HTMLElement;
+  let element: HTMLElement;
+
+  export function getElement(): HTMLElement {
+    return element;
+  }
 
   function _onpressed() {
     focusNextElement();
@@ -56,7 +60,7 @@
       (_value: number) => { value = _value; },
       () => {return value;},
       min, max, step,
-      focusElement, requiresFocus,  _onpressed);
+      element, requiresFocus,  _onpressed);
     registerComponent(context, slid);
     return () => {
       unregisterComponent(context, slid);
@@ -83,7 +87,7 @@
 {/if}
 
   <input
-    bind:this={focusElement}
+    bind:this={element}
     type="range"
     {min} {max} {step} bind:value {disabled} style:width="100%;">
 

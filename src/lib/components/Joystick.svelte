@@ -68,10 +68,13 @@
 
   const radius = size/2;
   let pointerActive: boolean = false;
- 
-  // if the user uses a touch, mouse or keyboard input device
-  // we disable the gamepad
+  let element: HTMLElement;
+  let comp: JoystickInputComponent | undefined;
   let opacity = $state(defaultOpacity);
+
+  export function getElement(): HTMLElement {
+    return element;
+  }
 
   function onpointermove(evt: MouseEvent) {
     if (disabled || !inputMapping.gamepad || !pointerActive || !evt.target) {
@@ -128,14 +131,11 @@
     position = pos;
   }
 
-  let area: HTMLElement;
-  let comp: JoystickInputComponent | undefined;
-
   onMount(() => {
     comp = new JoystickInputComponent(
       inputMapping, 
       radius, calcPos, updatePositionFromGamepad,
-      area, requiresFocus);
+      element, requiresFocus);
     registerComponent(context, comp);
     return () => {
       if (!comp) return;
@@ -148,11 +148,11 @@
 <svelte:window on:pointerup={reset} />
 
 <div id="joystick_area"
-    bind:this={area}
+    bind:this={element}
     tabindex={0}
     role="button"
-    onkeydown={() => {area.focus()}}
-    onclick={() => {area.focus()}}
+    onkeydown={() => {element.focus()}}
+    onclick={() => {element.focus()}}
     {style}
     style:width={backgroundWidth + 'px'}
     style:height={backgroundHeight + 'px'}

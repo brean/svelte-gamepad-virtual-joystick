@@ -17,6 +17,7 @@
     onpointerout?: () => void,
     style?: string,
     cssclass?: string,
+    cssclassWrapper?: string,
     inputMapping?: ButtonInput
     context?: string[]
     requiresFocus?: boolean
@@ -32,6 +33,7 @@
     onpointerout = undefined,
     style = '',
     cssclass = 'vbutton',
+    cssclassWrapper = 'button-wrapper',
     inputMapping = {
       name: '',
       gamepad: -1,
@@ -47,12 +49,16 @@
   }: Props = $props();
 
   let pressedClass = $state<string>('');
-  let focusElement: HTMLElement;
+  let element: HTMLElement;
   let btnElement = $state<PlainButtonInputElement>();
+
+  export function getElement(): HTMLElement {
+    return element;
+  }
 
   onMount(() => {
     btnElement = new PlainButtonInputElement(
-      inputMapping, focusElement, requiresFocus,
+      inputMapping, element, requiresFocus,
       onpressed, onhold, onrelease,
       consumePress);
     registerComponent(context, btnElement);
@@ -76,9 +82,9 @@
 
 </script>
 
-<div class="button-wrapper">
+<div class={cssclassWrapper}>
   <button
-      bind:this={focusElement}
+      bind:this={element}
       {style}
       class={pressedClass + cssclass}
       onpointerdown={btnElement?.onpressed}

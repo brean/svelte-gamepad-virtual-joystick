@@ -77,13 +77,17 @@
     focusNextElement();
   }
 
-  let focusElement: HTMLElement;
+  let element: HTMLElement;
+
+  export function getElement(): HTMLElement {
+    return element;
+  }
 
   onMount(() => {
     const lst = new ListInputComponent(
       inputMapping, 
       (direction: 1 | -1) => {focusItemAtIndex(focussed+direction);},
-      focusElement, requiresFocus, changeSelected);
+      element, requiresFocus, changeSelected);
     registerComponent(context, lst);
     return () => {
       unregisterComponent(context, lst);
@@ -92,7 +96,7 @@
 
 </script>
 
-<div class={cssclass} tabindex={0} role="button" bind:this={focusElement}>
+<div class={cssclass} tabindex={0} role="button" bind:this={element}>
   {#if component_state.showHints && context.includes(component_state.context)}
   <div class="hint-container" out:fade in:fade>
     <div class="hint">

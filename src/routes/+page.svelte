@@ -22,6 +22,7 @@
   let selectedItemIndex = $state(0);
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let mgr: InputManager;
+  let sideNav: SideNav;
   let contextButtonDisabled = $state(true);
   let navOpen: boolean = $state(false);
   let showInfo = $state(true);
@@ -72,7 +73,7 @@
   }}
 ></VirtualButton>
 
-<SideNav bind:open={navOpen} />
+<SideNav bind:open={navOpen} bind:this={sideNav} />
 
 <div class="background">
 <main style:margin-left={navOpen ? '250px' : 0}>
@@ -125,8 +126,9 @@
 </Button>
 <br />
 <Button
-  onrelease={() => {
+  onpressed={() => {
     navOpen = true;
+    sideNav.getListElement().focus();
   }}
   inputMapping={{
     name: 'side nav',

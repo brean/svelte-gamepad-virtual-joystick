@@ -3,6 +3,10 @@
  - consumePress-flag that determines if button should consume events and stop forwarding to other components (default behavior is false)
  - onclick-callback is void instead of boolean (onclick can not interfere bubbling behavior of press events anymore)
 
+## Bugfixes
+ - Activate Joystick directly
+ - Focus on list to select sth. in side-nav in demo
+
 # 1.0.0-rc3
 ## API-changes
  - update exports, include (un)registerComponent
