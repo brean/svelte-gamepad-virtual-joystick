@@ -10,7 +10,7 @@
 
   interface Props {
     items: string[]
-    onpressed?: () => boolean
+    onpressed?: () => void
     disabled?: boolean
     wrap?: boolean  // prev of first is last, next of last is first.
     style?: string
@@ -66,25 +66,21 @@
     focussed = new_idx;
   }
 
-  function changeSelected(): boolean {
+  function changeSelected(): void {
     selectedIndex = focussed;
     if (onpressed) {
-      return onpressed();
+      onpressed();
     }
     focusNextElement();
-    return true;
   }
 
   let focusElement: HTMLElement;
 
   onMount(() => {
     const lst = new ListInputComponent(
-      inputMapping, focusElement, requiresFocus,
-      changeSelected);
-
-    lst.changeFocus = (direction: 1 | -1) => {
-      focusItemAtIndex(focussed+direction);
-    };
+      inputMapping, 
+      (direction: 1 | -1) => {focusItemAtIndex(focussed+direction);},
+      focusElement, requiresFocus, changeSelected);
     registerComponent(context, lst);
     return () => {
       unregisterComponent(context, lst);

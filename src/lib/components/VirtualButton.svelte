@@ -8,15 +8,12 @@ for example show all warnings
     import type ButtonInput from "$lib/models/ButtonInput.js";
     import { onMount } from "svelte";
     import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
-    import { disableScrollHandling } from "$app/navigation";
 
    interface Props {
     disabled?: boolean
-    onpressed?: (() => boolean),
-    onhold?: (() => void),
-    onrelease?: (() => void),
-    onpointerout?: (() => void),
-    pressed?: boolean,
+    onpressed?: () => void,
+    onhold?: () => void,
+    onrelease?: () => void,
     style?: string,
     cssclass?: string,
     inputMapping?: ButtonInput
@@ -28,7 +25,6 @@ for example show all warnings
     onpressed = undefined,  // only once when the pressed-state changes
     onhold = undefined,   // every event while the button is pressed
     onrelease = undefined,
-    pressed = false,
     inputMapping = {
       name: 'Help',
       gamepad: -1,
@@ -44,7 +40,6 @@ for example show all warnings
       onpressed, onhold, onrelease
       );
     btnElement.disabled = disabled;
-    btnElement.pressed = pressed;
     registerComponent(context, btnElement);
     return () => {
       if (!btnElement) { return };

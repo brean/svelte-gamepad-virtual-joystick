@@ -38,9 +38,8 @@ export const registerComponent = (
     component.focusElement.addEventListener('blur', () => {
       component_state.activeComponents.splice(
         component_state.activeComponents.indexOf(component), 1);
-    })
+    });
   }
-
 };
 
 export const unregisterComponent = (

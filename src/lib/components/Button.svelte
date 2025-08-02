@@ -10,15 +10,16 @@
   interface Props {
     children: Snippet,
     disabled?: boolean
-    onpressed?: (() => boolean),
-    onhold?: (() => void),
-    onrelease?: (() => void),
-    onpointerout?: (() => void),
+    onpressed?: () => void,
+    onhold?: () => void,
+    onrelease?: () => void,
+    onpointerout?: () => void,
     style?: string,
     cssclass?: string,
     inputMapping?: ButtonInput
     context?: string[]
     requiresFocus?: boolean
+    consumePress: boolean
   }
 
   let {
@@ -40,7 +41,8 @@
     // button is one of the few elements that can be activated globally by
     // default while other UI-components like Slider, List or Joystick
     // need to be focussed.
-    requiresFocus=false
+    requiresFocus=false,
+    consumePress=false
   }: Props = $props();
 
   let pressedClass = $state<string>('');
@@ -50,7 +52,8 @@
   onMount(() => {
     btnElement = new PlainButtonInputElement(
       inputMapping, focusElement, requiresFocus,
-      onpressed, onhold, onrelease);
+      onpressed, onhold, onrelease,
+      consumePress);
     registerComponent(context, btnElement);
     return () => {
       if (!btnElement) { return };
@@ -60,12 +63,8 @@
 
   class PlainButtonInputElement extends ButtonInputComponent {
     onpressed(): boolean {
-      const parentPressed = super.onpressed();
       pressedClass = 'button_clicked '
-      if (focusElement) {
-        focusElement.focus();
-      }
-      return parentPressed;
+      return super.onpressed();
     }
 
     onrelease(): void {
@@ -74,15 +73,6 @@
     }
   }
 
-  
-  const _onpointerout = () => {
-    if (btnElement) {
-      btnElement.pressed = false;
-    }
-    if (onpointerout) {
-      onpointerout();
-    }
-  }
 </script>
 
 <div class="button-wrapper">
@@ -99,7 +89,7 @@
       }}
       {disabled}
       onpointerup={btnElement?.onrelease}
-      onpointerout={_onpointerout}>
+      onpointerout={onpointerout}>
     {@render children()}
   </button>
 

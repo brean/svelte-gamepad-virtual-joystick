@@ -147,10 +147,8 @@
 <div id="joystick_area"
     bind:this={area}
     tabindex={0}
-    onkeydown={() => {
-      /** TODO: if requires-focus only call input-component functions.*/
-    }}
     role="button"
+    onkeydown={() => {area.focus()}}
     onclick={() => {area.focus()}}
     {style}
     style:width={backgroundWidth + 'px'}

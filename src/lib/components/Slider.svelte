@@ -9,7 +9,7 @@
     import { focusNextElement } from "$lib/utils.js";
 
   interface Props {
-    onpressed?: (() => boolean),
+    onpressed?: () => void,
     value?: number
     min?: number
     max?: number
@@ -45,20 +45,18 @@
 
   let focusElement: HTMLElement;
 
-  function _onpressed(): boolean {
+  function _onpressed() {
     focusNextElement();
-    return onpressed ? onpressed() : false;
+    if (onpressed) onpressed();
   }
 
   onMount(() => {
     const slid = new SliderInputComponent(
-      inputMapping, focusElement, requiresFocus, 
-      _onpressed);
-    slid.setValue = (_value: number) => { value = _value; };
-    slid.getValue = () => {return value;};
-    slid.max = max;
-    slid.min = min;
-    slid.step = step;
+      inputMapping,
+      (_value: number) => { value = _value; },
+      () => {return value;},
+      min, max, step,
+      focusElement, requiresFocus,  _onpressed);
     registerComponent(context, slid);
     return () => {
       unregisterComponent(context, slid);

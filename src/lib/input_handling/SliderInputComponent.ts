@@ -1,15 +1,41 @@
+import type { Input } from "$lib/index.js";
 import type SliderInput from "$lib/models/SliderInput.js";
 import { thisGamepad } from "$lib/utils.js";
 import InputComponent from "./InputComponent.js";
 
 
 export default class SliderInputComponent extends InputComponent {
-  setValue = (value: number) => {};
-  getValue = () => {return 0};
+  setValue: (value: number) => void;
+  getValue: () => number;
+  min: number;
+  max: number;
+  step: number;
 
-  max: number = 0;
-  min: number = 0;
-  step: number = 1;
+    constructor(
+      input: Input,
+      setValue: (value: number) => void,
+      getValue: () => number,
+      min: number,
+      max: number,
+      step: number,
+      focusElement?: HTMLElement,
+      requiresFocus: boolean = false,
+      onpressed: (() => boolean) | undefined = undefined,
+      onhold: (() => void) | undefined = undefined,
+      onrelease: (() => void) | undefined = undefined,
+      consumePress: boolean = false) {
+    super(
+      input, focusElement, requiresFocus,
+      onpressed, onhold, onrelease,
+      consumePress);
+    this.setValue = setValue;
+    this.getValue = getValue;
+    this.min = min;
+    this.max = max;
+    this.step = step;
+  }
+
+
 
   // --- Gamepad ---
   onbuttonpressed(gamepad: Gamepad, btn: number) {
@@ -17,34 +43,26 @@ export default class SliderInputComponent extends InputComponent {
       return false;
     }
     const inputMapping = this.input as SliderInput;
-    if (inputMapping.buttons_pos.includes(btn)) {
-      this.setValue(Math.min(this.max, this.getValue()+this.step));
-      return true;
-    }
-    if (inputMapping.buttons_neg.includes(btn)) {
-      this.setValue(Math.max(this.min, this.getValue()-this.step));
-      return true;
-    }
     if (inputMapping.buttons.includes(btn)) {
       return super.onbuttonpressed(gamepad, btn);
     }
+    if (inputMapping.buttons_pos.includes(btn)) {
+      this.setValue(Math.min(this.max, this.getValue()+this.step));
+    }
+    if (inputMapping.buttons_neg.includes(btn)) {
+      this.setValue(Math.max(this.min, this.getValue()-this.step));
+    }
+    // we do not consume this button press
     return false;
   }
 
   // --- Keyboard ---
-  thisKey(event?: KeyboardEvent): boolean {
-    return event && (this.input as SliderInput).keys.includes(
+  thisKey(event: KeyboardEvent): boolean {
+    return (this.input as SliderInput).keys.includes(
       event.key.toLowerCase()) || false;
   }
 
-  onkeypressed(event?: KeyboardEvent): boolean {
-    return this.thisKey(event) && super.onkeypressed(event);
-  }
-
-  onkeyhold(event?: KeyboardEvent): void {
-    if (!event) {
-      return;
-    }
+  onkeyhold(event: KeyboardEvent): void {
     const inputMapping = this.input as SliderInput;
     const key = event.key.toLowerCase()
     if (inputMapping.keys.includes(key)) {

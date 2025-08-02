@@ -1,18 +1,26 @@
+import type { Input } from "$lib/index.js";
 import type ListInput from "$lib/models/ListInput.js";
 import { thisGamepad } from "$lib/utils.js";
 import InputComponent from "./InputComponent.js";
 
 export default class ListInputComponent extends InputComponent {
   axesDown = -1;
+  changeFocus: (direction: 1 | -1) => void;
 
-  changeFocus = (direction: 1 | -1) => {};
-
-  onpressed(): boolean {
-    if (this.disabled) {
-      return false;
-    }
-    // execute callback
-    return super.onpressed();
+  constructor(
+      input: Input,
+      changeFocus: (direction: 1 | -1) => void,
+      focusElement?: HTMLElement,
+      requiresFocus: boolean = false,
+      onpressed?: () => void,
+      onhold?: () => void,
+      onrelease?: () => void,
+      consumePress: boolean = false) {
+    super(
+      input, focusElement, requiresFocus,
+      onpressed, onhold, onrelease,
+      consumePress);
+    this.changeFocus = changeFocus;
   }
 
   // --- Gamepad ---
@@ -26,18 +34,17 @@ export default class ListInputComponent extends InputComponent {
     }
     if (inputMapping.buttons_next.includes(btn)) {
       this.changeFocus(1);
-      return true;
     }
     if (inputMapping.buttons_prev.includes(btn)) {
       this.changeFocus(-1);
-      return true;
     }
+    // we only consume the pressed-button, not the prev/next buttons
     return false;
   }
 
   // --- Keyboard ---
-  onkeypressed(event?: KeyboardEvent): boolean {
-    if (!event) {
+  onkeypressed(event: KeyboardEvent): boolean {
+    if (this.disabled) {
       return false;
     }
     const inputMapping = this.input as ListInput;
@@ -47,11 +54,9 @@ export default class ListInputComponent extends InputComponent {
     }
     if (inputMapping.keys_next.includes(key)) {
       this.changeFocus(1);
-      return true;
     }
     if (inputMapping.keys_prev.includes(key)) {
       this.changeFocus(-1);
-      return true;
     }
     return false;
   }

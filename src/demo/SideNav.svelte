@@ -18,13 +18,12 @@
 
   let selectedIndex = $state(0);
 
-  function listItemPressed(): boolean {
+  function listItemPressed(): void {
     const item = listItems[selectedIndex];
     if (item === 'Settings') {
       // TODO: show config dialog in main menu
     }
     open = false;
-    return true;  // we consumed this event, stop propagation
   }
 </script>
 

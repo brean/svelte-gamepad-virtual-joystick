@@ -34,7 +34,6 @@
   onpressed={() => {
     // show all hints
     component_state.showHints = !component_state.showHints;
-    return true;
   }}
   inputMapping={{
     name: 'Help',
@@ -48,7 +47,6 @@
   onpressed={() => {
     // show all hints
     focusNextElement();
-    return true;
   }}
   inputMapping={{
     name: 'Focus next',
@@ -61,7 +59,6 @@
   onpressed={() => {
     // show all hints
     focusPreviousElement();
-    return true;
   }}
   inputMapping={{
     name: 'Focus previous',
@@ -91,6 +88,7 @@
 
 <Button
   onrelease={() => {
+    if (!mgr) return
     mgr.changeContext('my_ctx');
     contextButtonDisabled = false;
   }}
@@ -106,6 +104,7 @@
 
 <Button
   onrelease={() => {
+    if (!mgr) return
     mgr.changeContext('default');
     contextButtonDisabled = true;
   }}
