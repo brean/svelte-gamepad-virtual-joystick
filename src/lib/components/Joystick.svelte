@@ -77,11 +77,13 @@
     if (disabled || !inputMapping.gamepad || !pointerActive || !evt.target) {
       return
     }
-    if (comp) comp.gamepadActive = false;
     const rect = (evt.target as any).getBoundingClientRect();
     const mouseX = evt.x - rect.x;
     const mouseY = evt.y - rect.y;
-    setPosition(mouseX, mouseY);
+    if (comp) {
+      comp.gamepadActive = false;
+      setPosition(mouseX, mouseY);
+    }
   }
 
   function setPosition(posx: number, posy: number) {
@@ -131,10 +133,9 @@
 
   onMount(() => {
     comp = new JoystickInputComponent(
-      inputMapping, area, requiresFocus);
-    comp.radius = radius;
-    comp.calcPos = calcPos;
-    comp.updatePosition = updatePositionFromGamepad;    
+      inputMapping, 
+      radius, calcPos, updatePositionFromGamepad,
+      area, requiresFocus);
     registerComponent(context, comp);
     return () => {
       if (!comp) return;

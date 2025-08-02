@@ -1,3 +1,4 @@
+import type { Input } from "$lib/index.js";
 import type JoystickInput from "$lib/models/JoystickInput.js";
 import { thisGamepad } from "$lib/utils.js";
 import InputComponent from "./InputComponent.js";
@@ -8,11 +9,26 @@ export default class JoystickInputComponent extends InputComponent {
   yPos = false;
   yNeg = false;
 
-  gamepadActive: boolean = false;
+  gamepadActive: boolean = true;
   pos:[x: number, y: number] = [0, 0];
-  radius: number = 50;
-  calcPos = (x: number, y: number) => {};
-  updatePosition = (active: boolean, pos: [x: number, y: number]) => {};
+
+  radius: number;
+  calcPos: (x: number, y: number) => void;
+  updatePosition: (active: boolean, pos: [x: number, y: number]) => void;
+
+  constructor(
+      input: Input,
+      radius: number,
+      calcPos: (x: number, y: number) => void,
+      updatePosition: (active: boolean, pos: [x: number, y: number]) => void,
+      focusElement?: HTMLElement,
+      requiresFocus: boolean = false
+    ) {
+    super(input, focusElement, requiresFocus);
+    this.radius = radius;
+    this.calcPos = calcPos;
+    this.updatePosition = updatePosition;
+  }
 
   onrelease(): void {
     let x = this.pos[0];
