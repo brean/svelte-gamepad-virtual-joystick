@@ -2,14 +2,15 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import Icon from "./Icon.svelte";
 
+  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+
+  import { angle, distance, clamp, findCoord } from "$lib/utils.js";
+  
   import type JoystickInput from "$lib/models/JoystickInput.js";
   import JoystickInputComponent from "$lib/input_handling/JoystickInputComponent.js";
-  import GamepadButtons from "$lib/constants/GamepadButtons.js";
-
-  import { angle, distance, clamp, findCoord, thisGamepad } from "$lib/utils.js";
-  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
 
   interface Props {
     disabled?: boolean

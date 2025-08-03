@@ -3,13 +3,16 @@
 press a special button to activate a custom function 
 for example show all warnings
 */
-  import GamepadButtons from "$lib/constants/GamepadButtons.js";
-    import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
-    import type ButtonInput from "$lib/models/ButtonInput.js";
-    import { onMount } from "svelte";
-    import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+  import { onMount } from "svelte";
 
-   interface Props {
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
+
+  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+
+  import type ButtonInput from "$lib/models/ButtonInput.js";
+  import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
+
+  interface Props {
     disabled?: boolean
     onpressed?: () => void,
     onhold?: () => void,

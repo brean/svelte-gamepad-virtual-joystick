@@ -1,14 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import type PrevNextInput from "$lib/models/PrevNextInput.js";
-
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
-
-  import PrevNextInputComponent from "$lib/input_handling/PrevNextInputComponent.js"; 
-  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
-  import { focusNextElement } from "$lib/utils.js";
   import Hint from "./Hint.svelte";
+
+  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+
+  import { focusNextElement } from "$lib/utils.js";
+
+  import type PrevNextInput from "$lib/models/PrevNextInput.js";
+  import PrevNextInputComponent from "$lib/input_handling/PrevNextInputComponent.js"; 
 
   interface Props {
     items: string[]

@@ -1,11 +1,13 @@
 <script lang="ts">
   import { onMount, type Snippet } from "svelte";
 
-  import type ButtonInput from "$lib/models/ButtonInput.js";
-  import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
-  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import Hint from "./Hint.svelte";
+
+  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+
+  import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
+  import type ButtonInput from "$lib/models/ButtonInput.js";
 
   interface Props {
     children: Snippet,

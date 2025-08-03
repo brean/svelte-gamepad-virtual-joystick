@@ -1,13 +1,15 @@
 <script lang="ts">
-    import GamepadButtons from "$lib/constants/GamepadButtons.js";
-    import type SliderInput from "$lib/models/SliderInput.js";
-    import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
-    import { fade } from "svelte/transition";
-    import Icon from "./Icon.svelte";
-    import { onMount } from "svelte";
-    import SliderInputComponent from "$lib/input_handling/SliderInputComponent.js";
-    import { focusNextElement } from "$lib/utils.js";
+  import { onMount } from "svelte";
+
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import Hint from "./Hint.svelte";
+
+  import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+
+  import { focusNextElement } from "$lib/utils.js";
+
+  import type SliderInput from "$lib/models/SliderInput.js";
+  import SliderInputComponent from "$lib/input_handling/SliderInputComponent.js";
 
   interface Props {
     onpressed?: () => void,

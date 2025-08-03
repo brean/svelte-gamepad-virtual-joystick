@@ -1,6 +1,7 @@
 <script lang="ts">
   import { component_state } from "$lib/state/components.svelte.js";
   import { fade } from "svelte/transition";
+
   import Icon from "./Icon.svelte";
   
   let {
