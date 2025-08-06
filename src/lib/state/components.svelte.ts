@@ -13,6 +13,12 @@ export const component_state = $state<{
   context: 'default'
 });
 
+export const addActiveComponent = (component: InputComponent) => {
+  if (!component_state.activeComponents.includes(component)) {
+    component_state.activeComponents.push(component);
+  }
+}
+
 export const registerComponent = (
     context: string[], 
     component: InputComponent) => {
@@ -26,13 +32,13 @@ export const registerComponent = (
   // if they are in the default context
   // TODO: focus first element, add first focusable element to activecomponents
   if (!component.requiresFocus && context.includes('default')) {
-    component_state.activeComponents.push(component);
+    addActiveComponent(component);
   }
 
   if (component.focusElement && component.requiresFocus) {
     component.focusElement.addEventListener('focus', () => {
       if (context.includes(component_state.context)) {
-        component_state.activeComponents.push(component);
+        addActiveComponent(component);
       }
     })
     component.focusElement.addEventListener('blur', () => {

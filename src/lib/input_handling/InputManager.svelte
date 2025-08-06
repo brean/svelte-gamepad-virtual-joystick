@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { thisGamepad } from "$lib/utils.js";
-  import { component_state } from "$lib/state/components.svelte.js";
+  import { addActiveComponent, component_state } from "$lib/state/components.svelte.js";
   interface INavigator {
     getGamepads: () => Gamepad[];
   }
@@ -29,7 +29,7 @@
     const components = component_state.components[newContext];
     components.forEach((component) => {
       if (!component.requiresFocus || component.focusElement === document.activeElement) {
-        component_state.activeComponents.push(component);
+        addActiveComponent(component);
       } 
     })
     component_state.context = newContext;

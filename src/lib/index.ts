@@ -24,7 +24,7 @@ import Hint from "./components/Hint.svelte";
 import Icon from "./components/Icon.svelte";
 
 // states
-import { component_state, registerComponent, unregisterComponent } from '$lib/state/components.svelte.js';
+import { component_state, registerComponent, unregisterComponent, addActiveComponent } from '$lib/state/components.svelte.js';
 
 // utils
 import { 
@@ -52,6 +52,7 @@ export {
     Icon, Hint,
     // state management
     component_state, registerComponent, unregisterComponent,
+    addActiveComponent,
     // utils
     distance, angle, findCoord, radians, degrees, clamp,
     focusNextElement, focusPreviousElement };

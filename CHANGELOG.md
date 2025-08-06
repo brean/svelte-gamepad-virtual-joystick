@@ -1,3 +1,10 @@
+# 1.0.5
+- export "addActiveComponent"-function
+
+# 1.0.4
+## Bugfix
+- Do not add elements to list of activeElements that are already active
+
 # 1.0.3
 - Dependency update to current versions
 
