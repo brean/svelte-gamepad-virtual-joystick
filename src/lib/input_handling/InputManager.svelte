@@ -18,6 +18,7 @@
     updateUsingInterval = true,
     timeout = 1000.0 / 25.0,  // 25 fps = 40 ms.
   }: Props = $props();
+  let updateAnim = true;
 
   const changeContext = (newContext: string) => {
     component_state.activeComponents.forEach((inp) => {
@@ -92,16 +93,26 @@
 
   const updateAnimationFrame = () => {
     updateGamepadValues();
-    requestAnimationFrame(updateAnimationFrame);
+    if (updateAnim) {
+      requestAnimationFrame(updateAnimationFrame);
+    }
   }
 
   onMount(() => {
+    let interval: number | undefined;
     if (updateUsingAnimationFrame) {
+      updateAnim = true;
       updateAnimationFrame();
     }
     else if (updateUsingInterval) {
-      setInterval(updateGamepadValues, timeout)
+      interval = setInterval(updateGamepadValues, timeout)
     }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+      updateAnim = false;
+    };
   });
 
   // --- Keyboard ---
