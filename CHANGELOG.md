@@ -1,3 +1,7 @@
+# 1.0.6
+## Bugfix
+- Stop update on onmount of InputManager
+
 # 1.0.5
 - export "addActiveComponent"-function
 
