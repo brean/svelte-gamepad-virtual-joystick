@@ -2,9 +2,6 @@
   import { onMount } from "svelte";
   import { thisGamepad } from "$lib/utils.js";
   import { addActiveComponent, component_state } from "$lib/state/components.svelte.js";
-  interface INavigator {
-    getGamepads: () => Gamepad[];
-  }
 
   interface Props {
     updateUsingAnimationFrame?: boolean,
@@ -41,17 +38,9 @@
 
   // --- GamePad ---
   // save button states to handle pressed/hold events.
-  let navigator: INavigator;
-  const gamePadConnected = (evt: any) => {
-    navigator = evt.target.navigator;
-  }
-
+  
   const updateGamepadValues = () => {
     let components = component_state.activeComponents;
-    // get all values from gamepad
-    if (!navigator) {
-      return;
-    }
     // Chrome only updates the gamepad state when we call getGamepads
     for (let pad of navigator.getGamepads()) {
       if (!pad) {
@@ -78,14 +67,14 @@
           // onbuttonrelease.forEach((func) => func(pad, i));
           components.forEach((comp) => {
             if (comp.thisGamepadButton(pad, i)) {
-              comp.onbuttonrelease(pad, i)
+              comp.onbuttonrelease(pad, i);
             }
          });
         }
       }
       components.forEach((handler) => {
         if (thisGamepad(handler.input, pad)) {
-          handler.onupdate(pad)
+          handler.onupdate(pad);
         }
       });
     }
@@ -112,6 +101,7 @@
         clearInterval(interval);
       }
       updateAnim = false;
+      component_state.activeComponents = [];
     };
   });
 
@@ -152,7 +142,6 @@
 </script>
 
 <svelte:window
-  ongamepadconnected={gamePadConnected}
   onkeydown={keydown}
   onkeyup={release}
 />

@@ -1,3 +1,7 @@
+# 1.0.7
+## Bugfix
+- Do not set navigator only on input event, use global window.navigator instead
+
 # 1.0.6
 ## Bugfix
 - Stop update on onmount of InputManager
