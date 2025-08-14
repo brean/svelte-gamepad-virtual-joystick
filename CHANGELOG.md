@@ -1,3 +1,7 @@
+# 1.0.10
+## Bugfix
+- joystick-area as class, not id
+
 # 1.0.9
 ## Feature
 - Add hints to DPad

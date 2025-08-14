@@ -148,7 +148,7 @@
 
 <svelte:window on:pointerup={reset} />
 
-<div id="joystick_area"
+<div class="joystick_area"
     bind:this={element}
     tabindex={0}
     role="button"
@@ -277,7 +277,7 @@
     touch-action: none; /* This prevents pull-to-refresh */
   }
 
-  #joystick_area {
+  .joystick_area {
     touch-action: none;
   }
 
