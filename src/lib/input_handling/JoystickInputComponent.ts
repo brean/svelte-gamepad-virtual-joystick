@@ -64,32 +64,4 @@ export default class JoystickInputComponent extends DPadInputComponent {
     this.calcPos(x * this.radius, y * this.radius);
     this.gamepadActive = false;
   }
-
-onupdate(gamepad: Gamepad): void {
-    if (this.disabled || !this.gamepadActive || !thisGamepad(this.input, gamepad)) {
-      return
-    }
-    const inputMapping = this.input as DPadInput;
-    let xcoord = gamepad.axes[inputMapping.axes_x];
-    let ycoord = gamepad.axes[inputMapping.axes_y];
-    if (inputMapping.invert_x) {
-      xcoord = -xcoord;
-    }
-    if (inputMapping.invert_y) {
-      ycoord = -ycoord;
-    }
-    if (Math.abs(xcoord) < inputMapping.deadzoneX && 
-        Math.abs(ycoord) < inputMapping.deadzoneY) {
-      this.updatePosition(false, [0, 0]);
-      return;
-    }
-    this.updatePosition(true, [xcoord, ycoord]);
-  }
-
-  activateGamepad = () => {
-    if (this.disabled) {
-      return
-    }
-    this.gamepadActive = true;
-  }
 }
