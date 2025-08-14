@@ -1,3 +1,8 @@
+# 1.0.8
+## Feature
+- New D-Pad
+- Split elements of demo into different pages.
+
 # 1.0.7
 ## Bugfix
 - Do not set navigator only on input event, use global window.navigator instead

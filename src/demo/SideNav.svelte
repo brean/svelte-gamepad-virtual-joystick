@@ -1,15 +1,31 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+
   import Button from "$lib/components/Button.svelte";
-import List from "$lib/components/List.svelte";
+  import List from "$lib/components/List.svelte";
   import { GamepadButtons } from "$lib/index.js";
+  import InputManager from "$lib/input_handling/InputManager.svelte";
+
+  interface Props {
+    mgr?: InputManager
+    open?: boolean
+  }
+  let {
+    open = $bindable(false),
+    mgr = $bindable()
+  }: Props = $props();
 
   const listItems = [
-    'Main',
-    'Second',
-    'Third',
-    'Settings',
-    'Fifth',
+    'Main', 'Joystick', 'D-Pad', 'List', 'Slider'
   ];
+  const base_url = '/svelte-gamepad-virtual-joystick'
+  const urls = {
+    'Main': '/',
+    'Joystick': '/joystick',
+    'D-Pad': '/d-pad',
+    'List': '/list',
+    'Slider': '/slider'
+  }
 
   let lstElement: List;
 
@@ -17,21 +33,15 @@ import List from "$lib/components/List.svelte";
     return lstElement.getElement();
   }
 
-  interface Props {
-    open: boolean
-  }
-  let {
-    open = $bindable(false)
-  }: Props = $props();
 
   let selectedIndex = $state(0);
 
   function listItemPressed(): void {
     const item = listItems[selectedIndex];
-    if (item === 'Settings') {
-      // TODO: show config dialog in main menu
-    }
+    const uri = `${base_url}${urls[item]}`;
     open = false;
+    mgr?.changeContext('default');
+    goto(uri);
   }
 </script>
 
@@ -42,7 +52,11 @@ import List from "$lib/components/List.svelte";
     >
   <Button
     cssclassWrapper="closebtn"
-    onpressed={() => {open = false;}}
+    onpressed={() => {
+      open = false;
+      mgr?.changeContext('default');
+    }}
+      context={['nav']}
       inputMapping={{
       name: 'close side nav',
       gamepad: -1,
@@ -53,6 +67,8 @@ import List from "$lib/components/List.svelte";
     &times;
   </Button>
   <List
+    context={['nav']}
+    requiresFocus={false}
     bind:this={lstElement}
     disabled={!open}
     onpressed={listItemPressed}

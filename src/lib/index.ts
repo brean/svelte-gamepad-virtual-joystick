@@ -9,12 +9,14 @@ import InputComponent from "./input_handling/InputComponent.js";
 
 // Input Components
 import ButtonInputComponent from "./input_handling/ButtonInputComponent.js"
+import DPadInputComponent from "./input_handling/DPadInputComponent.js"
 import JoystickInputComponent from "./input_handling/JoystickInputComponent.js";
 import PrevNextInputComponent from "./input_handling/PrevNextInputComponent.js"
 import SliderInputComponent from "./input_handling/SliderInputComponent.js"
 
 // Implemented components using basic HTML elements
 import Button from "./components/Button.svelte";
+import DPad from "./components/DPad.svelte";
 import Joystick from "./components/Joystick.svelte";
 import List from "./components/List.svelte";
 import Slider from "./components/Slider.svelte";
@@ -34,6 +36,7 @@ import {
 // models
 import type Input from "./models/Input.js";
 import type ButtonInput from "./models/ButtonInput.js";
+import type DPadInput from "./models/DPadInput.js";
 import type JoystickInput from "./models/JoystickInput.js";
 import type PrevNextInput from "./models/PrevNextInput.js";
 import type SliderInput from "./models/SliderInput.js";
@@ -44,10 +47,11 @@ export {
     // basics
     InputManager, InputComponent,
     // Input Components (typescript classes)
-    ButtonInputComponent, JoystickInputComponent, 
+    ButtonInputComponent, 
+    DPadInputComponent, JoystickInputComponent, 
     PrevNextInputComponent, SliderInputComponent,
     // implemented components using basic HTML elements
-    Button, Joystick, List, Slider, VirtualButton,
+    Button, DPad, Joystick, List, Slider, VirtualButton,
     // Icon and Hint
     Icon, Hint,
     // state management
@@ -57,4 +61,7 @@ export {
     distance, angle, findCoord, radians, degrees, clamp,
     focusNextElement, focusPreviousElement };
 // models
-export type { Input, ButtonInput, JoystickInput, PrevNextInput, SliderInput };
+export type {
+    Input, ButtonInput, DPadInput,
+    JoystickInput, PrevNextInput, SliderInput
+};

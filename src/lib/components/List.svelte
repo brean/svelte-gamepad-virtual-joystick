@@ -59,7 +59,7 @@
     return clz
   }
 
-  function focusItemAtIndex(new_idx: number) {
+  export function focusItemAtIndex(new_idx: number) {
     if (new_idx >= items.length) {
       new_idx = wrap ? 0 : items.length - 1;
     }

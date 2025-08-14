@@ -1,33 +1,22 @@
-import type { Input } from "$lib/index.js";
+import { DPadInputComponent, type Input } from "$lib/index.js";
 import type JoystickInput from "$lib/models/JoystickInput.js";
 import { thisGamepad } from "$lib/utils.js";
-import InputComponent from "./InputComponent.js";
 
-export default class JoystickInputComponent extends InputComponent {
-  xPos = false;
-  xNeg = false;
-  yPos = false;
-  yNeg = false;
-
-  gamepadActive: boolean = true;
-  pos:[x: number, y: number] = [0, 0];
-
+export default class JoystickInputComponent extends DPadInputComponent {
   radius: number;
   calcPos: (x: number, y: number) => void;
-  updatePosition: (active: boolean, pos: [x: number, y: number]) => void;
 
   constructor(
-      input: Input,
+      input: JoystickInput,
       radius: number,
       calcPos: (x: number, y: number) => void,
       updatePosition: (active: boolean, pos: [x: number, y: number]) => void,
       focusElement?: HTMLElement,
       requiresFocus: boolean = false
     ) {
-    super(input, focusElement, requiresFocus);
+    super(input, updatePosition, focusElement, requiresFocus);
     this.radius = radius;
     this.calcPos = calcPos;
-    this.updatePosition = updatePosition;
   }
 
   onrelease(): void {
@@ -70,72 +59,17 @@ export default class JoystickInputComponent extends InputComponent {
       return
     }
 
+    this.pos = [x, y];
     // Proceed with calculations now that we know a valid key was pressed.
     this.calcPos(x * this.radius, y * this.radius);
-    this.pos = [x, y];
     this.gamepadActive = false;
   }
 
-  // keyboard
-  updateKeys(event: KeyboardEvent) {
-    const inputMapping = this.input as JoystickInput;
-    const key = event.key.toLowerCase()
-    this.xPos = inputMapping.key_x_pos.includes(key);
-    this.xNeg = inputMapping.key_x_neg.includes(key);
-    this.yPos = inputMapping.key_y_pos.includes(key);
-    this.yNeg = inputMapping.key_y_neg.includes(key);
-  }
-
-  thisKey(event: KeyboardEvent): boolean {
-    return this.xPos || this.xNeg || this.yPos || this.yNeg;
-  }
-
-  onkeyrelease(event: KeyboardEvent): void {
-    if (this.disabled) {
-      return
-    }
-    this.updateKeys(event)
-    super.onkeyrelease(event);
-  }
-
-  onkeyhold(event: KeyboardEvent): void {
-    if (this.disabled) {
-      return
-    }
-    this.updateKeys(event)
-    super.onkeyhold(event);
-  }
-
-  // gamepad
-  updateButton(idx: number) {
-    const inputMapping = this.input as JoystickInput;
-    this.xPos = inputMapping.button_x_pos.includes(idx);
-    this.xNeg = inputMapping.button_x_neg.includes(idx);
-    this.yPos = inputMapping.button_y_pos.includes(idx);
-    this.yNeg = inputMapping.button_y_neg.includes(idx);
-  }
-
-  onbuttonhold(gamepad: Gamepad, btn: number): void {
-    if (this.disabled) {
-      return
-    }
-    this.updateButton(btn)
-    super.onbuttonhold(gamepad, btn);
-  }
-
-  onbuttonrelease(gamepad: Gamepad, btn: number): void {
-    if (this.disabled) {
-      return
-    }
-    this.updateButton(btn)
-    super.onbuttonrelease(gamepad, btn);
-  }
-
-  onupdate(gamepad: Gamepad): void {
+onupdate(gamepad: Gamepad): void {
     if (this.disabled || !this.gamepadActive || !thisGamepad(this.input, gamepad)) {
       return
     }
-    const inputMapping = this.input as JoystickInput;
+    const inputMapping = this.input as DPadInput;
     let xcoord = gamepad.axes[inputMapping.axes_x];
     let ycoord = gamepad.axes[inputMapping.axes_y];
     if (inputMapping.invert_x) {
@@ -154,8 +88,8 @@ export default class JoystickInputComponent extends InputComponent {
 
   activateGamepad = () => {
     if (this.disabled) {
-        return
-      }
-      this.gamepadActive = true;
+      return
+    }
+    this.gamepadActive = true;
   }
 }
