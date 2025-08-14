@@ -1,3 +1,7 @@
+# 1.0.9
+## Feature
+- Add hints to DPad
+
 # 1.0.8
 ## Feature
 - New D-Pad

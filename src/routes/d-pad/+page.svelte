@@ -7,7 +7,10 @@
 
 <MainNav />
 <br />
-<DPad bind:position />
+<br />
+<br />
+<br />
+<DPad bind:position style={''} />
 <div >
 x: {position[0].toFixed(3)}<br />
 y: {position[1].toFixed(3)}

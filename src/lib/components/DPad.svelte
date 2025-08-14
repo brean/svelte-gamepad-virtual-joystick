@@ -1,9 +1,15 @@
 <script lang="ts">
-  import GamepadButtons from "$lib/constants/GamepadButtons.js";
-  import DPadInputComponent from "$lib/input_handling/DPadInputComponent.js";
-  import type DPadInput from "$lib/models/DPadInput.js";
-    import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
+
+  import GamepadButtons from "$lib/constants/GamepadButtons.js";
+  import Icon from "./Icon.svelte";
+
+  import { component_state, registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
+
+  import type DPadInput from "$lib/models/DPadInput.js";
+  import DPadInputComponent from "$lib/input_handling/DPadInputComponent.js";
+
   
   interface Props {
     inputMapping?: DPadInput
@@ -11,6 +17,9 @@
     context?: string[]
     requiresFocus?: boolean
     scale?: number
+    backgroundWidth?: number
+    backgroundHeight?: number
+    style?: string
   }
   
   let {
@@ -38,7 +47,10 @@
     position = $bindable([0, 0]),
     context=['default'],
     requiresFocus=false,
-    scale=1.5
+    scale=1.5,
+    backgroundWidth = 200,
+    backgroundHeight = 200,
+    style = 'background-color: rgb(215, 219, 221);', /* MOON_GRAY */
   }: Props = $props();
 
   let comp: DPadInputComponent | undefined;
@@ -73,12 +85,93 @@
   });
 </script>
 
-<div bind:this={element} 
-  tabindex={0}
-  role="button"
-  onkeydown={() => {element.focus()}}
-  onclick={() => {element.focus()}}
->
+<div class="dpad_area"
+    bind:this={element}
+    tabindex={0}
+    role="button"
+    onkeydown={() => {element.focus()}}
+    onclick={() => {element.focus()}}
+    {style}
+    style:width={backgroundWidth + 'px'}
+    style:height={backgroundHeight + 'px'}
+    onpointerup={() => {comp?.activateGamepad()}}
+    ontouchstart={() => {}}
+    ontouchend={() => {comp?.activateGamepad()}}
+    onpointerout={() => {comp?.activateGamepad()}}
+    >
+
+{#if component_state.showHints && context.includes(component_state.context)}
+  <div
+    class="hints_container"
+    style:width={backgroundWidth + 'px'}
+    style:height={backgroundHeight + 'px'}
+    out:fade in:fade
+  >
+    <div class="hint">
+      {#if [0, 1].includes(inputMapping.axes_x) && [0, 1].includes(inputMapping.axes_y) }
+      <Icon 
+          type='generic'
+          input={'axis_left'}
+          ></Icon>
+      {:else if [2, 3].includes(inputMapping.axes_x) && [2, 3].includes(inputMapping.axes_y) }
+      <Icon 
+          type='generic'
+          input={'axis_right'}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-up">
+      {#if inputMapping.key_y_neg.length > 0 }
+        <Icon 
+          type='keyboard_mouse'
+          input={inputMapping.key_y_neg[0]}></Icon>
+      {/if}
+      {#if inputMapping.button_y_neg.length > 0 }
+        <Icon
+          type='generic'
+          input={inputMapping.button_y_neg[0]}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-down">
+      {#if inputMapping.key_y_pos.length > 0}
+        <Icon 
+          type='keyboard_mouse'
+          input={inputMapping.key_y_pos[0]}></Icon>
+      {/if}
+      {#if inputMapping.button_y_pos.length > 0 }
+        <Icon
+          type='generic'
+          input={inputMapping.button_y_pos[0]}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-left">
+      {#if inputMapping.key_x_neg.length > 0}
+        <Icon 
+          type='keyboard_mouse'
+          input={inputMapping.key_x_neg[0]}></Icon>
+        <br />
+      {/if}
+      {#if inputMapping.button_x_neg.length > 0 }
+        <Icon
+          type='generic'
+          input={inputMapping.button_x_neg[0]}></Icon>
+      {/if}
+    </div>
+    <div class="hint hint-right">
+      {#if inputMapping.key_x_pos.length > 0}
+        <Icon 
+          type='keyboard_mouse'
+          input={inputMapping.key_x_pos[0]}></Icon>
+        <br />
+      {/if}
+      {#if inputMapping.button_x_pos.length > 0 }
+        <Icon
+          type='generic'
+          input={inputMapping.button_x_pos[0]}></Icon>
+      {/if}
+    </div>
+  </div>
+  {/if}
+
 <svg width={96*scale} height={96*scale} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <!-- SVG definitions and base paths remain the same -->
   <defs>
@@ -134,6 +227,16 @@
 <svelte:window onpointerup={() => {position = [0, 0]}} />
 
 <style>
+  .dpad_area {
+    display: flex;
+    justify-content: center; 
+  }
+
+  .dpad_area svg {
+    display: block;
+    margin: auto;
+  }
+
   .dpad-arrow {
     fill: #323240;
   }
@@ -171,5 +274,45 @@
 
   .dpad-button.active .ripple, .dpad-button:active .ripple {
     animation: ripple-animation 0.3s ease-out;
+  }
+
+  /* Hint styles */
+   .hints_container {
+    position: absolute;
+    pointer-events: none; /* Prevents this layer from capturing clicks */
+    user-select: none;   /* Prevents text selection */
+  }
+
+  .hint {
+    position: absolute;
+    color: #555;
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  /* Position each hint inside the square hints_container */
+  .hint-up {
+    top: -5px; /* Small padding from the top edge */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .hint-down {
+    bottom: -5px; /* Small padding from the bottom edge */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .hint-left {
+    left: -5px; /* Small padding from the left edge */
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .hint-right {
+    right: -5px; /* Small padding from the right edge */
+    top: 50%;
+    transform: translateY(-50%);
   }
 </style>
