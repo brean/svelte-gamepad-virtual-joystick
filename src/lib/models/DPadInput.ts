@@ -8,6 +8,7 @@ export default interface DPadInput extends Input {
   button_x_neg: number[],
   button_y_pos: number[],
   button_y_neg: number[],
+
   deadzoneX: number;
   deadzoneY: number;
   invert_x: boolean;
@@ -18,4 +19,6 @@ export default interface DPadInput extends Input {
   key_x_neg: string[]; // KEY_DOWN?
   key_y_pos: string[];
   key_y_neg: string[];
+
+  disable_axes?: string[] | undefined;
 }

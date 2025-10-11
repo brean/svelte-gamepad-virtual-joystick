@@ -99,6 +99,15 @@
   }
 
   function calcPos(x:number, y:number) {
+    if (inputMapping.disable_axes) {
+      if (inputMapping.disable_axes.includes('x')) {
+        x = 0;
+      }
+      if (inputMapping.disable_axes.includes('y')) {
+        y = 0;
+      }
+    }
+
     // distance of touched point from the center
     const raw_dist = distance(x, y)
     const a = angle(x, y)
@@ -129,6 +138,14 @@
 
   function updatePositionFromGamepad(active: boolean, pos: [x: number, y: number]) {
     opacity = active ? activeOpacity : defaultOpacity;
+    if (inputMapping.disable_axes) {
+      if (inputMapping.disable_axes.includes('x')) {
+        pos[0] = 0;
+      }
+      if (inputMapping.disable_axes.includes('y')) {
+        pos[1] = 0;
+      }
+    }
     position = pos;
   }
 
@@ -191,56 +208,61 @@
           input={'axis_right'}></Icon>
       {/if}
     </div>
-    <div class="hint hint-up">
-      {#if inputMapping.key_y_neg.length > 0 }
-        <Icon 
-          type='keyboard_mouse'
-          input={inputMapping.key_y_neg[0]}></Icon>
-      {/if}
-      {#if inputMapping.button_y_neg.length > 0 }
-        <Icon
-          type='generic'
-          input={inputMapping.button_y_neg[0]}></Icon>
-      {/if}
-    </div>
-    <div class="hint hint-down">
-      {#if inputMapping.key_y_pos.length > 0}
-        <Icon 
-          type='keyboard_mouse'
-          input={inputMapping.key_y_pos[0]}></Icon>
-      {/if}
-      {#if inputMapping.button_y_pos.length > 0 }
-        <Icon
-          type='generic'
-          input={inputMapping.button_y_pos[0]}></Icon>
-      {/if}
-    </div>
-    <div class="hint hint-left">
-      {#if inputMapping.key_x_neg.length > 0}
-        <Icon 
-          type='keyboard_mouse'
-          input={inputMapping.key_x_neg[0]}></Icon>
-        <br />
-      {/if}
-      {#if inputMapping.button_x_neg.length > 0 }
-        <Icon
-          type='generic'
-          input={inputMapping.button_x_neg[0]}></Icon>
-      {/if}
-    </div>
-    <div class="hint hint-right">
-      {#if inputMapping.key_x_pos.length > 0}
-        <Icon 
-          type='keyboard_mouse'
-          input={inputMapping.key_x_pos[0]}></Icon>
-        <br />
-      {/if}
-      {#if inputMapping.button_x_pos.length > 0 }
-        <Icon
-          type='generic'
-          input={inputMapping.button_x_pos[0]}></Icon>
-      {/if}
-    </div>
+    {#if !(inputMapping.disable_axes?.includes('y'))}
+      <div class="hint hint-up">
+        {#if inputMapping.key_y_neg.length > 0 }
+          <Icon 
+            type='keyboard_mouse'
+            input={inputMapping.key_y_neg[0]}></Icon>
+        {/if}
+        {#if inputMapping.button_y_neg.length > 0 }
+          <Icon
+            type='generic'
+            input={inputMapping.button_y_neg[0]}></Icon>
+        {/if}
+      </div>
+      <div class="hint hint-down">
+        {#if inputMapping.key_y_pos.length > 0}
+          <Icon 
+            type='keyboard_mouse'
+            input={inputMapping.key_y_pos[0]}></Icon>
+        {/if}
+        {#if inputMapping.button_y_pos.length > 0 }
+          <Icon
+            type='generic'
+            input={inputMapping.button_y_pos[0]}></Icon>
+        {/if}
+      </div>
+    {/if}
+
+    {#if !(inputMapping.disable_axes?.includes('x'))}
+      <div class="hint hint-left">
+        {#if inputMapping.key_x_neg.length > 0}
+          <Icon 
+            type='keyboard_mouse'
+            input={inputMapping.key_x_neg[0]}></Icon>
+          <br />
+        {/if}
+        {#if inputMapping.button_x_neg.length > 0 }
+          <Icon
+            type='generic'
+            input={inputMapping.button_x_neg[0]}></Icon>
+        {/if}
+      </div>
+      <div class="hint hint-right">
+        {#if inputMapping.key_x_pos.length > 0}
+          <Icon 
+            type='keyboard_mouse'
+            input={inputMapping.key_x_pos[0]}></Icon>
+          <br />
+        {/if}
+        {#if inputMapping.button_x_pos.length > 0 }
+          <Icon
+            type='generic'
+            input={inputMapping.button_x_pos[0]}></Icon>
+        {/if}
+      </div>
+    {/if}
   </div>
   {/if}
 
