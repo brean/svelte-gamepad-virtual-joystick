@@ -5,6 +5,7 @@
   import button_color_x_square from "$lib/assets/kenney_input_prompts/generic/button_color_x_square.svg?raw"
   import button_color_y_triangle from "$lib/assets/kenney_input_prompts/generic/button_color_y_triangle.svg?raw"
 
+  import keyboard_any from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_any.svg?raw"
   import keyboard_slash_forward from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_slash_forward.svg?raw"
   import keyboard_asterisk from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_asterisk.svg?raw"
   import keyboard_comma from "$lib/assets/kenney_input_prompts/keyboard_mouse/keyboard_comma.svg?raw"
@@ -91,18 +92,61 @@
   import playstation_trigger_r2 from "$lib/assets/kenney_input_prompts/ps/playstation_trigger_r2.svg?raw"
   import playstation4_button_share from "$lib/assets/kenney_input_prompts/ps/playstation4_button_share.svg?raw"
   import playstation4_button_options from "$lib/assets/kenney_input_prompts/ps/playstation4_button_options.svg?raw"
-  import playstation_stick_l_down from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_down.svg?raw"
-  import playstation_stick_r_down from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_down.svg?raw"
+  import playstation_stick_l_press from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_press.svg?raw"
+  import playstation_stick_r_press from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_press.svg?raw"
   import playstation_dpad_up from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_up.svg?raw"
   import playstation_dpad_down from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_down.svg?raw"
   import playstation_dpad_left from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_left.svg?raw"
   import playstation_dpad_right from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_right.svg?raw"
   import playstation_button_circle from "$lib/assets/kenney_input_prompts/ps/playstation_button_circle.svg?raw"
   import playstation_stick_l from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l.svg?raw"
+  import playstation_stick_l_horizontal from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_horizontal.svg?raw"
+  import playstation_stick_l_vertical from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_vertical.svg?raw"
+  import playstation_stick_l_up from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_up.svg?raw"
+  import playstation_stick_l_right from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_right.svg?raw"
+  import playstation_stick_l_left from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_left.svg?raw"
+  import playstation_stick_l_down from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_down.svg?raw"
   import playstation_stick_r from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r.svg?raw"
+  import playstation_stick_r_horizontal from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_horizontal.svg?raw"
+  import playstation_stick_r_vertical from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_vertical.svg?raw"
+  import playstation_stick_r_up from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_up.svg?raw"
+  import playstation_stick_r_right from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_right.svg?raw"
+  import playstation_stick_r_left from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_left.svg?raw"
+  import playstation_stick_r_down from "$lib/assets/kenney_input_prompts/ps/playstation_stick_r_down.svg?raw"
+
+  import xbox_button_color_a from "$lib/assets/kenney_input_prompts/xbox/xbox_button_color_a.svg?raw"
+  import xbox_button_color_b from "$lib/assets/kenney_input_prompts/xbox/xbox_button_color_b.svg?raw"
+  import xbox_button_color_x from "$lib/assets/kenney_input_prompts/xbox/xbox_button_color_x.svg?raw"
+  import xbox_button_color_y from "$lib/assets/kenney_input_prompts/xbox/xbox_button_color_y.svg?raw"
+  import xbox_lb from "$lib/assets/kenney_input_prompts/xbox/xbox_lb.svg?raw"
+  import xbox_rb from "$lib/assets/kenney_input_prompts/xbox/xbox_rb.svg?raw"
+  import xbox_lt from "$lib/assets/kenney_input_prompts/xbox/xbox_lt.svg?raw"
+  import xbox_rt from "$lib/assets/kenney_input_prompts/xbox/xbox_rt.svg?raw"
+  import xbox_stick_l_press from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_press.svg?raw"
+  import xbox_stick_r_press from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r_press.svg?raw"
+  import xbox_dpad_up from "$lib/assets/kenney_input_prompts/xbox/xbox_dpad_up.svg?raw"
+  import xbox_dpad_down from "$lib/assets/kenney_input_prompts/xbox/xbox_dpad_down.svg?raw"
+  import xbox_dpad_left from "$lib/assets/kenney_input_prompts/xbox/xbox_dpad_left.svg?raw"
+  import xbox_dpad_right from "$lib/assets/kenney_input_prompts/xbox/xbox_dpad_right.svg?raw"
+  import xbox_button_view from "$lib/assets/kenney_input_prompts/xbox/xbox_button_view.svg?raw"
+  import xbox_button_menu from "$lib/assets/kenney_input_prompts/xbox/xbox_button_menu.svg?raw"
+  import xbox_stick_l from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l.svg?raw"
+  import xbox_stick_l_horizontal from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_horizontal.svg?raw"
+  import xbox_stick_l_vertical from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_vertical.svg?raw"
+  import xbox_stick_l_up from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_up.svg?raw"
+  import xbox_stick_l_right from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_right.svg?raw"
+  import xbox_stick_l_left from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_left.svg?raw"
+  import xbox_stick_l_down from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_down.svg?raw"
+  import xbox_stick_r from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r.svg?raw"
+  import xbox_stick_r_horizontal from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r_horizontal.svg?raw"
+  import xbox_stick_r_vertical from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r_vertical.svg?raw"
+  import xbox_stick_r_up from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r_up.svg?raw"
+  import xbox_stick_r_right from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r_right.svg?raw"
+  import xbox_stick_r_left from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r_left.svg?raw"
+  import xbox_stick_r_down from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_r_down.svg?raw"
 
   interface Props {
-    type: 'keyboard_mouse' | 'ps4' | 'generic'
+    type: 'keyboard_mouse' | 'ps4' | 'xbox' | 'generic'
     input: string | number,
     width?: number,
     height?: number,
@@ -128,18 +172,64 @@
     '7': playstation_trigger_r2,
     '8': playstation4_button_share,
     '9': playstation4_button_options,
-    '10': playstation_stick_l_down,
-    '11': playstation_stick_r_down,
+    '10': playstation_stick_l_press,
+    '11': playstation_stick_r_press,
     '12': playstation_dpad_up,
     '13': playstation_dpad_down,
     '14': playstation_dpad_left,
     '15': playstation_dpad_right,
     '16': playstation_button_circle,
-    'axis_left': playstation_stick_l,
-    'axis_right': playstation_stick_r,
+    'left_axis': playstation_stick_l,
+    'left_horizontal': playstation_stick_l_horizontal,
+    'left_vertical': playstation_stick_l_vertical,
+    'left_up': playstation_stick_l_up,
+    'left_right': playstation_stick_l_right,
+    'left_left': playstation_stick_l_left,
+    'left_down': playstation_stick_l_down,
+    'right_axis': playstation_stick_r,
+    'right_horizontal': playstation_stick_r_horizontal,
+    'right_vertical': playstation_stick_r_vertical,
+    'right_up': playstation_stick_r_up,
+    'right_right': playstation_stick_r_right,
+    'right_left': playstation_stick_r_left,
+    'right_down': playstation_stick_r_down,
+  };
+  const xbox_buttons = {
+  
+    '0': xbox_button_color_a,
+    '1': xbox_button_color_b,
+    '2': xbox_button_color_x,
+    '3': xbox_button_color_y,
+    '4': xbox_lb,
+    '5': xbox_rb,
+    '6': xbox_lt,
+    '7': xbox_rt,
+    '8': xbox_stick_l_press,
+    '9': xbox_stick_r_press,
+    '10': xbox_dpad_up,
+    '11': xbox_dpad_down,
+    '12': xbox_dpad_left,
+    '13': xbox_dpad_right,
+    '14': xbox_button_view,
+    '15': xbox_button_menu,
+    'left_axis': xbox_stick_l,
+    'left_horizontal': xbox_stick_l_horizontal,
+    'left_vertical': xbox_stick_l_vertical,
+    'left_up': xbox_stick_l_up,
+    'left_right': xbox_stick_l_right,
+    'left_left': xbox_stick_l_left,
+    'left_down': xbox_stick_l_down,
+    'right_axis': xbox_stick_r,
+    'right_horizontal': xbox_stick_r_horizontal,
+    'right_vertical': xbox_stick_r_vertical,
+    'right_up': xbox_stick_r_up,
+    'right_right': xbox_stick_r_right,
+    'right_left': xbox_stick_r_left,
+    'right_down': xbox_stick_r_down,
   };
   const keyboard = {
   
+    'any': keyboard_any,
     '/': keyboard_slash_forward,
     '*': keyboard_asterisk,
     ',': keyboard_comma,
@@ -229,11 +319,14 @@
   if (['ps4', 'ps5'].includes(type)) {
     base_type = 'ps';
   }
-  switch (type) {
+  switch (base_type) {
     case 'keyboard_mouse':
       let inp = (input as string).toLowerCase();
       icon = keyboard[inp as keyof typeof keyboard];
       break;
+    case 'xbox':
+      icon = xbox_buttons[input as keyof typeof xbox_buttons];
+      break
     case 'ps4':
       icon = ps4_buttons[input as keyof typeof ps4_buttons];
       break

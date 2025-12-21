@@ -111,12 +111,12 @@
       {#if [0, 1].includes(inputMapping.axes_x) && [0, 1].includes(inputMapping.axes_y) }
       <Icon 
           type='generic'
-          input={'axis_left'}
+          input={'left_axis'}
           ></Icon>
       {:else if [2, 3].includes(inputMapping.axes_x) && [2, 3].includes(inputMapping.axes_y) }
       <Icon 
           type='generic'
-          input={'axis_right'}></Icon>
+          input={'right_axis'}></Icon>
       {/if}
     </div>
     <div class="hint hint-up">

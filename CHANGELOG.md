@@ -1,3 +1,7 @@
+# 1.0.12
+## Feature
+- add XBox button icons
+
 # 1.0.10
 ## Bugfix
 - joystick-area as class, not id
