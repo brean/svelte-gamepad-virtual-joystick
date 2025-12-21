@@ -1,3 +1,7 @@
+# 1.0.13
+## Bugfix
+- Show ps-buttons again (ps4 icons for both ps4 and ps5)
+
 # 1.0.12
 ## Feature
 - add XBox button icons
