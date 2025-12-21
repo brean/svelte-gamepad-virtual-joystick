@@ -99,6 +99,8 @@
   import playstation_dpad_left from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_left.svg?raw"
   import playstation_dpad_right from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_right.svg?raw"
   import playstation_button_circle from "$lib/assets/kenney_input_prompts/ps/playstation_button_circle.svg?raw"
+  import playstation_dpad_horizontal from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_horizontal.svg?raw"
+  import playstation_dpad_vertical from "$lib/assets/kenney_input_prompts/ps/playstation_dpad_vertical.svg?raw"
   import playstation_stick_l from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l.svg?raw"
   import playstation_stick_l_horizontal from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_horizontal.svg?raw"
   import playstation_stick_l_vertical from "$lib/assets/kenney_input_prompts/ps/playstation_stick_l_vertical.svg?raw"
@@ -130,6 +132,8 @@
   import xbox_dpad_right from "$lib/assets/kenney_input_prompts/xbox/xbox_dpad_right.svg?raw"
   import xbox_button_view from "$lib/assets/kenney_input_prompts/xbox/xbox_button_view.svg?raw"
   import xbox_button_menu from "$lib/assets/kenney_input_prompts/xbox/xbox_button_menu.svg?raw"
+  import xbox_dpad_horizontal from "$lib/assets/kenney_input_prompts/xbox/xbox_dpad_horizontal.svg?raw"
+  import xbox_dpad_vertical from "$lib/assets/kenney_input_prompts/xbox/xbox_dpad_vertical.svg?raw"
   import xbox_stick_l from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l.svg?raw"
   import xbox_stick_l_horizontal from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_horizontal.svg?raw"
   import xbox_stick_l_vertical from "$lib/assets/kenney_input_prompts/xbox/xbox_stick_l_vertical.svg?raw"
@@ -161,7 +165,6 @@
   }: Props = $props();
 
   const ps4_buttons = {
-  
     '0': playstation_button_color_cross,
     '1': playstation_button_color_circle,
     '2': playstation_button_color_square,
@@ -179,6 +182,8 @@
     '14': playstation_dpad_left,
     '15': playstation_dpad_right,
     '16': playstation_button_circle,
+    'dpad_horizontal': playstation_dpad_horizontal,
+    'dpad_vertical': playstation_dpad_vertical,
     'left_axis': playstation_stick_l,
     'left_horizontal': playstation_stick_l_horizontal,
     'left_vertical': playstation_stick_l_vertical,
@@ -212,6 +217,8 @@
     '13': xbox_dpad_right,
     '14': xbox_button_view,
     '15': xbox_button_menu,
+    'dpad_horizontal': xbox_dpad_horizontal,
+    'dpad_vertical': xbox_dpad_vertical,
     'left_axis': xbox_stick_l,
     'left_horizontal': xbox_stick_l_horizontal,
     'left_vertical': xbox_stick_l_vertical,
@@ -307,7 +314,6 @@
     'f12': keyboard_f12,
   };
   const generic_buttons = {
-  
     '0': button_color_a_cross,
     '1': button_color_b_circle,
     '2': button_color_x_square,
@@ -327,7 +333,7 @@
     case 'xbox':
       icon = xbox_buttons[input as keyof typeof xbox_buttons];
       break
-    case 'ps':
+    case 'ps4':
       icon = ps4_buttons[input as keyof typeof ps4_buttons];
       break
     case 'generic':

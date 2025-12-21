@@ -24,6 +24,24 @@ export default class GamepadButtons {
 
   public static HOME = 16;
 
+  public static DPAD_HORIZONTAL = 'dpad_horizontal';
+  public static DPAD_VERTICAL = 'dpad_vertical';
+
+  public static LEFT_AXIS = 'left_axis';
+  public static LEFT_HORIZONTAL = 'left_horizontal';
+  public static LEFT_VERTICAL = 'left_vertical';
+  public static LEFT_UP = 'left_up';
+  public static LEFT_RIGHT = 'left_right';
+  public static LEFT_LEFT = 'left_left';
+  public static LEFT_DOWN = 'left_down';
+  public static RIGHT_AXIS = 'right_axis';
+  public static RIGHT_HORIZONTAL = 'right_horizontal';
+  public static RIGHT_VERTICAL = 'right_vertical';
+  public static RIGHT_UP = 'right_up';
+  public static RIGHT_RIGHT = 'right_right';
+  public static RIGHT_LEFT = 'right_left';
+  public static RIGHT_DOWN = 'right_down';
+
   // PS 4
   public static CROSS = 0;
   public static CIRCLE = 1;
@@ -56,5 +74,5 @@ export default class GamepadButtons {
   public static BACK = 8;
   public static START = 9;
 
-  public static XBOX = 16
+  public static XBOX = 16;
 }
