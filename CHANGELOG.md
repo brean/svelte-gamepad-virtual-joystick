@@ -1,3 +1,7 @@
+# 1.0.15
+## Bugfix
+- fix template to generate "ps"-case for icons correctly.
+
 # 1.0.14
 ## Feature
 - Add horizontal/vertical d-pad icons

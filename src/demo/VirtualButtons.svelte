@@ -63,8 +63,7 @@
       <Icon 
         type="keyboard_mouse" 
         input={hintMapping.keys[0]}
-        color="#FFFFFF"></Icon>
-      or 
+        color="#FFFFFF"></Icon> or 
       <Icon
         type="ps4"
         input={hintMapping.buttons[0]}
