@@ -10,10 +10,12 @@ Provides custom focus and context management.
 ## Examples
 See the [+page.svelte](https://github.com/brean/svelte-gamepad-virtual-joystick/blob/main/src/routes/%2Bpage.svelte) file for a basic demo.
 
-Take a look at [SMUI Gamepad Components](https://github.com/brean/smui-gamepad-components) for an integration into [Svelte Material UI](https://sveltematerialui.com/)
+You can find [Material 3](https://m3.material.io/) components using [noph.dev](https://noph.dev) as [Noph gamepad components](https://github.com/brean/noph-gamepad-components).
+
+For [Material 2](https://m2.material.io/design) Take a look at [SMUI Gamepad Components](https://github.com/brean/smui-gamepad-components) for an integration into [Svelte Material UI](https://sveltematerialui.com/).
 
 ## Application
-This library is used to reimagine the control of robotic systems but can also be useful in web game development prototyping.
+This library is used to control robotic systems, but can also be useful in web game development prototyping.
 
 ## Installation
 This library can be installed using npm:
