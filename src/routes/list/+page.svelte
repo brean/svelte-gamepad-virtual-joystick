@@ -2,15 +2,17 @@
   import MainNav from "../../demo/MainNav.svelte";
   
   import List from "$lib/components/List.svelte";
-    import { onMount } from "svelte";
+    import { untrack } from "svelte";
 
   const items = ['banana', 'orange', 'apple', 'strawberry'];
   let selectedItemIndex = $state(0);
   let lst: List;
 
-  onMount(() => {
-    lst.getElement().focus();
-    lst.focusItemAtIndex(0);
+  $effect(() => {
+    untrack(() => {
+      lst.getElement().focus();
+      lst.focusItemAtIndex(0);
+    });
   })
 </script>
 

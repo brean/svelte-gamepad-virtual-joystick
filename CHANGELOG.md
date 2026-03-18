@@ -1,3 +1,8 @@
+# 1.0.16
+## Bugfix
+- update dependencies running npm audit fix
+- switch from onMount to $effect (fixes bugs in noph-gamepad-demo)
+
 # 1.0.15
 ## Bugfix
 - fix template to generate "ps"-case for icons correctly.

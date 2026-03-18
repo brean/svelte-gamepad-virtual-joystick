@@ -3,14 +3,13 @@
 press a special button to activate a custom function 
 for example show all warnings
 */
-  import { onMount } from "svelte";
-
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
 
   import { registerComponent, unregisterComponent } from "$lib/state/components.svelte.js";
 
   import type ButtonInput from "$lib/models/ButtonInput.js";
   import ButtonInputComponent from "$lib/input_handling/ButtonInputComponent.js";
+    import { untrack } from "svelte";
 
   interface Props {
     disabled?: boolean
@@ -37,13 +36,16 @@ for example show all warnings
     context = ['default']
   }: Props = $props();
 
-  onMount(() => {
-    const btnElement = new ButtonInputComponent(
-      inputMapping, undefined, false,
-      onpressed, onhold, onrelease
-      );
-    btnElement.disabled = disabled;
-    registerComponent(context, btnElement);
+  $effect(() => {
+    let btnElement: ButtonInputComponent;
+    untrack(() => {
+      btnElement = new ButtonInputComponent(
+        inputMapping, undefined, false,
+        onpressed, onhold, onrelease
+        );
+      btnElement.disabled = disabled;
+      registerComponent(context, btnElement);
+    });
     return () => {
       if (!btnElement) { return };
       unregisterComponent(context, btnElement);

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
@@ -9,6 +8,7 @@
 
   import type DPadInput from "$lib/models/DPadInput.js";
   import DPadInputComponent from "$lib/input_handling/DPadInputComponent.js";
+    import { untrack } from "svelte";
 
   
   interface Props {
@@ -74,10 +74,12 @@
     position = new_pos;
   }
 
-  onMount(() => {
-    comp = new DPadInputComponent(
-      inputMapping, update, element, requiresFocus);
-    registerComponent(context, comp);
+  $effect(() => {
+    untrack(() => {
+      comp = new DPadInputComponent(
+        inputMapping, update, element, requiresFocus);
+      registerComponent(context, comp);
+    });
     return () => {
       if (!comp) return;
       unregisterComponent(context, comp);

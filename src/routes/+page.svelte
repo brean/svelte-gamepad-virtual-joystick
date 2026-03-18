@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import Button from "$lib/components/Button.svelte";
 
   
@@ -10,6 +8,8 @@
 
   import MainNav from "../demo/MainNav.svelte";
   import InputManager from "$lib/input_handling/InputManager.svelte";
+  import { page } from "$app/state";
+    import { untrack } from "svelte";
 
   let positionFirst: [x: number, y: number] = $state([0, 0]);
   let contextButtonDisabled = $state(true);
@@ -17,10 +17,12 @@
   let showInfo = $state(true);
   let mgr: InputManager | undefined = $state(undefined);
 
-  onMount(() => {
-    setTimeout(() => {
-      showInfo = false;
-    }, 2000);
+  $effect(() => {
+    untrack(() => {
+      setTimeout(() => {
+        showInfo = false;
+      }, 2000)
+    });
   });
 
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { thisGamepad } from "$lib/utils.js";
   import { addActiveComponent, component_state } from "$lib/state/components.svelte.js";
+    import { untrack } from "svelte";
 
   interface Props {
     updateUsingAnimationFrame?: boolean,
@@ -87,15 +87,17 @@
     }
   }
 
-  onMount(() => {
+  $effect(() => {
     let interval: number | undefined;
-    if (updateUsingAnimationFrame) {
-      updateAnim = true;
-      updateAnimationFrame();
-    }
-    else if (updateUsingInterval) {
-      interval = setInterval(updateGamepadValues, timeout)
-    }
+    untrack(() => {
+      if (updateUsingAnimationFrame) {
+        updateAnim = true;
+        updateAnimationFrame();
+      }
+      else if (updateUsingInterval) {
+        interval = setInterval(updateGamepadValues, timeout)
+      }
+    });
     return () => {
       if (interval) {
         clearInterval(interval);

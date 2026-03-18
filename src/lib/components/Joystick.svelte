@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
@@ -11,6 +10,7 @@
   
   import type JoystickInput from "$lib/models/JoystickInput.js";
   import JoystickInputComponent from "$lib/input_handling/JoystickInputComponent.js";
+    import { untrack } from "svelte";
 
   interface Props {
     disabled?: boolean
@@ -149,12 +149,14 @@
     position = pos;
   }
 
-  onMount(() => {
-    comp = new JoystickInputComponent(
-      inputMapping, 
-      radius, calcPos, updatePositionFromGamepad,
-      element, requiresFocus);
-    registerComponent(context, comp);
+  $effect(() => {
+    untrack(() => {
+      comp = new JoystickInputComponent(
+        inputMapping, 
+        radius, calcPos, updatePositionFromGamepad,
+        element, requiresFocus);
+      registerComponent(context, comp);
+    })
     return () => {
       if (!comp) return;
       unregisterComponent(context, comp);

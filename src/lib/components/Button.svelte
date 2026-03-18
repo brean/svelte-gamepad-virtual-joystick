@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, type Snippet } from "svelte";
+  import { untrack, type Snippet } from "svelte";
 
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import Hint from "./Hint.svelte";
@@ -57,12 +57,14 @@
     return element;
   }
 
-  onMount(() => {
-    btnElement = new PlainButtonInputElement(
-      inputMapping, element, requiresFocus,
-      onpressed, onhold, onrelease,
-      consumePress);
-    registerComponent(context, btnElement);
+  $effect(() => {
+    untrack(() => {
+      btnElement = new PlainButtonInputElement(
+        inputMapping, element, requiresFocus,
+        onpressed, onhold, onrelease,
+        consumePress);
+      registerComponent(context, btnElement);
+    });
     return () => {
       if (!btnElement) { return };
       unregisterComponent(context, btnElement);

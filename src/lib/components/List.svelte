@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import Hint from "./Hint.svelte";
 
@@ -10,6 +8,7 @@
 
   import type PrevNextInput from "$lib/models/PrevNextInput.js";
   import PrevNextInputComponent from "$lib/input_handling/PrevNextInputComponent.js"; 
+    import { untrack } from "svelte";
 
   interface Props {
     items: string[]
@@ -83,12 +82,15 @@
     return element;
   }
 
-  onMount(() => {
-    const lst = new PrevNextInputComponent(
-      inputMapping, 
-      (direction: 1 | -1) => {focusItemAtIndex(focussed+direction);},
-      element, requiresFocus, changeSelected);
-    registerComponent(context, lst);
+  $effect(() => {
+    let lst: PrevNextInputComponent;
+    untrack(() => {
+      lst = new PrevNextInputComponent(
+        inputMapping, 
+        (direction: 1 | -1) => {focusItemAtIndex(focussed+direction);},
+        element, requiresFocus, changeSelected);
+      registerComponent(context, lst);
+    });
     return () => {
       unregisterComponent(context, lst);
     }

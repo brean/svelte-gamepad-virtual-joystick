@@ -1,11 +1,10 @@
 <script lang="ts">
   import Slider from "$lib/components/Slider.svelte";
-    import { onMount } from "svelte";
   import MainNav from "../../demo/MainNav.svelte";
 
   let firstSlider: Slider;
 
-  onMount(() => {
+  $effect(() => {
     firstSlider.getElement().focus();
   })
 </script>

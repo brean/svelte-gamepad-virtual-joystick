@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
 
   import GamepadButtons from "$lib/constants/GamepadButtons.js";
   import Hint from "./Hint.svelte";
@@ -10,6 +9,7 @@
 
   import type SliderInput from "$lib/models/SliderInput.js";
   import SliderInputComponent from "$lib/input_handling/SliderInputComponent.js";
+    import { untrack } from "svelte";
 
   interface Props {
     onpressed?: () => void,
@@ -57,14 +57,17 @@
     if (onpressed) onpressed();
   }
 
-  onMount(() => {
-    const slid = new SliderInputComponent(
-      inputMapping,
-      (_value: number) => { value = _value; },
-      () => {return value;},
-      min, max, step,
-      element, requiresFocus,  _onpressed);
-    registerComponent(context, slid);
+  $effect(() => {
+    let slid: SliderInputComponent;
+    untrack(() => {
+      slid = new SliderInputComponent(
+        inputMapping,
+        (_value: number) => { value = _value; },
+        () => {return value;},
+        min, max, step,
+        element, requiresFocus,  _onpressed);
+      registerComponent(context, slid);
+    });
     return () => {
       unregisterComponent(context, slid);
     }
