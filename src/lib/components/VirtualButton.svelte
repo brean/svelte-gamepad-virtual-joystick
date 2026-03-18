@@ -38,17 +38,18 @@ for example show all warnings
 
   $effect(() => {
     let btnElement: ButtonInputComponent;
+    const activeContext = [...context];
     untrack(() => {
       btnElement = new ButtonInputComponent(
         inputMapping, undefined, false,
         onpressed, onhold, onrelease
         );
       btnElement.disabled = disabled;
-      registerComponent(context, btnElement);
+      registerComponent(activeContext, btnElement);
     });
     return () => {
       if (!btnElement) { return };
-      unregisterComponent(context, btnElement);
+      unregisterComponent(activeContext, btnElement);
     }
   });
 

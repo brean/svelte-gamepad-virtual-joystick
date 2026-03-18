@@ -26,7 +26,9 @@ export const registerComponent = (
     if (!component_state.components[ctx]) {
       component_state.components[ctx] = [];
     }
-    component_state.components[ctx].push(component);
+    if (!component_state.components[ctx].includes(component)) {
+      component_state.components[ctx].push(component);
+    }
   });
   // set all components active in the beginning that do not require focus,
   // if they are in the default context
@@ -36,28 +38,49 @@ export const registerComponent = (
   }
 
   if (component.focusElement && component.requiresFocus) {
-    component.focusElement.addEventListener('focus', () => {
+    const onFocus = () => {
       if (context.includes(component_state.context)) {
         addActiveComponent(component);
       }
-    })
-    component.focusElement.addEventListener('blur', () => {
-      component_state.activeComponents.splice(
-        component_state.activeComponents.indexOf(component), 1);
-    });
+    };
+    const onBlur = () => {
+      removeActiveComponent(component);
+    };
+
+    component.focusElement.addEventListener('focus', onFocus);
+    component.focusElement.addEventListener('blur', onBlur);
+
+    // @ts-ignore - dynamic property for internal management
+    component._focusCleanup = () => {
+      component.focusElement?.removeEventListener('focus', onFocus);
+      component.focusElement?.removeEventListener('blur', onBlur);
+    };
   }
+};
+
+export const removeActiveComponent = (component: InputComponent) => {
+  component_state.activeComponents = component_state.activeComponents.filter(
+    (c) => c !== component
+  );
 };
 
 export const unregisterComponent = (
     context: string[], 
     component: InputComponent) => {
+
   context.forEach((ctx) => {
     if (component_state.components[ctx]) {
-      component_state.components[ctx].splice(component_state.components[ctx].indexOf(component), 1);
+      component_state.components[ctx] = component_state.components[ctx].filter(
+        (c) => c !== component);
     }
   });
-  if (component_state.activeComponents.includes(component)) {
-    component_state.activeComponents.slice(component_state.activeComponents.indexOf(component));
+  
+  removeActiveComponent(component);
+
+  // @ts-ignore
+  if (component._focusCleanup) {
+    // @ts-ignore
+    component._focusCleanup();
   }
 }
 

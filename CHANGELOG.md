@@ -1,3 +1,8 @@
+# 1.0.17
+## Bugfix
+- Instead of slice which creates a copy of the array use filter to remove the elements of the active component list.
+- Remove blur and focus eventlistener from focusElements.
+
 # 1.0.16
 ## Bugfix
 - update dependencies running npm audit fix
