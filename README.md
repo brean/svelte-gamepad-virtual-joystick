@@ -7,30 +7,4 @@ The virtual Joystick can either be used as fallback when a real gamepad is not c
 
 Provides custom focus and context management.
 
-## Examples
-See the [+page.svelte](https://github.com/brean/svelte-gamepad-virtual-joystick/blob/main/src/routes/%2Bpage.svelte) file for a basic demo.
-
-You can find [Material 3](https://m3.material.io/) components using [noph.dev](https://noph.dev) as [Noph gamepad components](https://github.com/brean/noph-gamepad-components).
-
-For [Material 2](https://m2.material.io/design) Take a look at [SMUI Gamepad Components](https://github.com/brean/smui-gamepad-components) for an integration into [Svelte Material UI](https://sveltematerialui.com/).
-
-## Application
-This library is used to control robotic systems, but can also be useful in web game development prototyping.
-
-## Installation
-This library can be installed using npm:
-```
-npm i -D svelte-gamepad-virtual-joystick
-```
-
-## Sources
-based on code from
- - https://github.com/arturcarvalho/svelte-gamepad/ (I first thought to just use it and updated to use vite and integrate more complex button/axis handling but I also wanted to support more than 4 gamepads, have a virtual joystick and keyboard controls so this became its own thing instead of just a fork)
- - nipple.js (nipple.js itself is not svelte compatible because it directly accesses `window`)
-
-
-## Deploy to NPM
-TODO!
-
-## License
-BSD-3
+Moved to Codeberg: https://codeberg.org/brean/svelte-gamepad-virtual-joystick
